@@ -1,0 +1,10 @@
+^.cvsignore
+^.lwpcookies
+^.releaserc
+^blib/
+^Finance-Bank-Postbank-.*
+CVS/
+^pm_to_blib
+.tar.gz$
+.old$
+^Makefile$

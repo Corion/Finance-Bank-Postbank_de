@@ -1,0 +1,31 @@
+Revision history for Perl extension Finance::Bank::Postbank_de.
+
+0.06 20030207
+  - Restructured ::Postbank_de::Account::transactions()
+  - Introduced some aliases for field names
+  - talked to Briac Pilpre about moving to common Account / Transaction classes
+  - One synopsis example is possibly still failing under Perl 5.8, but I can't
+    confirm / reproduce it
+  - hopefully fixed the inline tests so that they work under Perl 5.8
+
+0.05 20030206
+  - Fixed inline POD tests/examples (how I hate broken synopsis code)
+  - Added access_denied() to Finance::Bank::Postbank_de
+  - Added error_page() to Finance::Bank::Postbank_de for generic error recognition
+
+0.04 20030204
+  - Revamped tests to include the examples
+  - Examples use List::Sliding::Changes
+
+0.03 20030126
+  - Updated dependencies of the test files in Makefile.PL
+  - Different handling of EOL for better compatibility with Unix
+
+0.02 20030123
+  - Added checking for https capability of LWP to all tests
+  - Name change from Finance::Bank::Postbank to Finance::Bank::Postbank_de due to
+    conflicting different bank in the netherlands with the same name
+
+0.01  Sat Jan 11 12:28:10 2003
+  - original version; created by h2xs 1.21 with options
+    -X Finance::Bank::Postbank
