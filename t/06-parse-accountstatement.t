@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 12;
+use Test::More tests => 16;
 use FindBin;
 
 use_ok("Finance::Bank::Postbank_de::Account");
@@ -35,7 +35,7 @@ my $canned_statement = do {local $/ = undef;
 
 # Check that the account number gets verified / set from the account data :
 eval { $account_2->parse_statement( file => $acctnames[0] ) };
-like( $@, "/^Account statement for different account/", "Existing account number gets verified");
+like( $@, "/^Wrong/mixed account kontonummer: Got '9999999999', expected '666666'/", "Existing account number gets verified");
 $account_3->parse_statement( file => $acctnames[0] );
 is($account_3->number, "9999999999", "Empty account number gets filled");
 
@@ -43,96 +43,128 @@ is($account_3->number, "9999999999", "Empty account number gets filled");
 eval { $account->parse_statement( content => '' ) };
 like($@,"/^Don't know what to do with empty content/","Passing no parameter");
 eval { $account->parse_statement( content => 'foo' ) };
-like($@,"/^No valid account statement/","Passing bogus content");
+like($@,"/^No valid account statement: 'foo'/","Passing bogus content");
 eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\nfoo" ) };
-like($@,"/^No owner found in account statement \\(foo\\)/","Passing other bogus content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n\nfoo" )};
-like($@,"/^No IBAN found in account statement \\(\\)/","Passing no IBAN in content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n                IBAN DE31 2001 0020 9999 9999 99\nfoo" )};
-like($@,"/^No summary found in account statement \\(foo\\)/","Passing no summary in content");
+like($@,"/^Expected an empty line/","Passing other bogus content");
+eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n\nfoo" )};
+like($@,"/^Field 'Name' not found in account statement/","Passing no Name in content");
+eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nfoo" )};
+like($@,"/^Field 'BLZ' not found in account statement/","Passing no BLZ in content");
+eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nfoo" )};
+like($@,"/^Field 'Kontonummer' not found in account statement/","Passing no Kontonummer in content");
+eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nfoo" )};
+like($@,"/^Field 'IBAN' not found in account statement/","Passing no IBAN in content");
+eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\nfoo" )};
+like($@,"/^Expected an empty line after the information, got 'foo' at /","Passing no empty line after summary");
+eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\n\nfoo" )};
+like($@,"/^No summary found in account statement \\(foo\\) for balance at /","Passing no summary in content");
 
-my @expected_statements = ({ name => "PFIFFIG, PETRA",
+my @expected_statements = ({ name => "PETRA PFIFFIG",
                        blz => "20010020",
                        number => "9999999999",
-                       iban => "DE31 2001 0020 9999 9999 99",
-                       balance => ["20030111","2500.00"],
-                       balance_prev => ["20030102","347.36"],
+                       iban => "DE31200100209999999999",
+		       account_type => 'Girokonto',
+                       balance => ["????????","5314.05"],
+                       transactions_future => ['????????',-11.33],
                        transactions => [
-                         { tradedate => "20030111", valuedate => "20030111", type => "GUTSCHRIFT",
-                           comment => "KINDERGELD                 KINDERGELD-NR 234568/133",
-                           receiver => "ARBEITSAMT BONN", sender => '', amount => "154.00", },
-                         { tradedate => "20030111", valuedate => "20030111", type => "ÜBERWEISUNG",
-                           comment => "FINANZKASSE 3991234        STEUERNUMMER 007 03434     EST-VERANLAGUNG 99",
-                           receiver => "FINANZAMT KÖLN-SÜD", sender => '', amount => -328.75, },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "RECHNUNG 03121999          BUCHUNGSKONTO 9876543210",
-                           receiver => "TELEFON AG KÖLN", sender => '', amount => "-125.80", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "SCHECK",
+                         { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
+                           comment => "111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434",
+                           receiver => "Finanzkasse K\xf6ln-S\xfcd", sender => 'PETRA PFIFFIG', amount => "-328.75",
+			   running_total => '5.314,05' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
+                           comment => "111111/3299999999/20010020 Übertrag auf SparCard 3299999999",
+                           receiver => "Petra Pfiffig", sender => 'PETRA PFIFFIG', amount => "-228.61",
+			   running_total => '5.642,80' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "Gutschrift",
+                           comment => "Bez\xfcge Pers.Nr. 70600170/01 Arbeitgeber u. Co",
+                           receiver => "PETRA PFIFFIG", sender => 'Petra Pfiffig', amount => "2780.70", 
+			   running_total => '5.871,41' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
+                           comment => "DA 1000001",
+                           receiver => "Verlagshaus Scribere GmbH", sender => 'PETRA PFIFFIG', amount => "-31.50",
+			   running_total => '3.090,71' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "Scheckeinreichung",
+                           comment => "Eingang vorbehalten Gutbuchung 12345",
+                           receiver => "PETRA PFIFFIG", sender => 'Ein Fremder', amount => "1830.00",
+			   running_total => '3.122,21' },
+                         { tradedate => "20041116", valuedate => "20041116", type => "Lastschrift",
+                           comment => "Miete 600+250 EUR Obj22/328 Schulstr.7, 12345 Meinheim",
+                           receiver => "Eigenheim KG", sender => 'PETRA PFIFFIG', amount => "-850.00", 
+			   running_total => '1.292,21' },
+                         { tradedate => "20041116", valuedate => "20041116", type => "Inh. Scheck",
                            comment => "",
-                           receiver => "EC1037406000003", sender => '', amount => "-511.20", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "TEILNEHMERNUMMER 123456789 RUNDFUNK VON 1099 BIS 1299",
-                           receiver => "GEZ KÖLN", sender => '', amount => -84.75, },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "STROMKOSTEN                KD-NR 1462347              JAHRESABRECHNUNG",
-                           receiver => "STADTWERKE MUSTERSTADT", sender => '', amount => -580.06, },
-                         { tradedate => "20030104", valuedate => "20030104", type => "INH.SCHECK",
-                           comment => "",
-                           receiver => "2000123456789", sender => '', amount => "-100.00", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "SCHECKEINR",
-                           comment => "EINGANG VORBEHALTEN",
-                           receiver => "GUTBUCHUNG 12345", sender => '', amount => "1830.00", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "DAUER ÜBERW",
-                           comment => "DA 100001",
-                           receiver => "", sender => 'MUSTERMANN, HANS', amount => "-31.50", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "GUTSCHRIFT",
-                           comment => "BEZÜGE                     PERSONALNUMMER 700600170/01",
-                           receiver => "ARBEITGEBER U. CO", sender => '', amount => "2780.70", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT",
-                           receiver => "EIGENHEIM KG", sender => '', amount => "-850.00", },
+                           receiver => "2000123456789", sender => 'PETRA PFIFFIG', amount => "-75.00",
+			   running_total => '2.142,21' },
+                         { tradedate => "20041114", valuedate => "20041114", type => "Lastschrift",
+                           comment => "Teilnehmernr 1234567 Rundfunk 0103-1203",
+                           receiver => "GEZ", sender => 'PETRA PFIFFIG', amount => -84.75,
+			   running_total => '2.217,21' },
+                         { tradedate => "20041112", valuedate => "20041112", type => "Lastschrift",
+                           comment => "Rechnung 03121999",
+                           receiver => "Telefon AG K\xf6ln", sender => 'PETRA PFIFFIG', amount => "-125.80", 
+			   running_total => '2.301,96' },
+                         { tradedate => "20041110", valuedate => "20041110", type => "Lastschrift",
+                           comment => "Stromkosten Kd.Nr.1462347 Jahresabrechnung",
+                           receiver => "Stadtwerke Musterstadt", sender => 'PETRA PFIFFIG', amount => -580.06,
+			   running_total => '2.427,76' },
+                         { tradedate => "20041110", valuedate => "20041110", type => "Gutschrift",
+                           comment => "Kindergeld Kindergeld-Nr. 1462347",
+                           receiver => "PETRA PFIFFIG", sender => 'Arbeitsamt Bonn', amount => "154.00", 
+			   running_total => '3.007,82' },
                        ],
                      },
-{ name => "PFIFFIG, PETRA",
+{ name => "PETRA PFIFFIG",
                        blz => "20010020",
                        number => "9999999999",
-                       iban => "DE31 2001 0020 9999 9999 99",
-                       balance => ["20030111","-2500.00"],
-                       balance_prev => ["20030102","-347.36"],
+                       iban => "DE31200100209999999999",
+		       account_type => 'Girokonto',
+                       balance => ["????????","5314.05"],
+                       transactions_future => ['????????',-11.33],
                        transactions => [
-                         { tradedate => "20030111", valuedate => "20030111", type => "GUTSCHRIFT",
-                           comment => "KINDERGELD                 KINDERGELD-NR 234568/133",
-                           receiver => "ARBEITSAMT BONN", sender => '', amount => "-154.00", },
-                         { tradedate => "20030111", valuedate => "20030111", type => "ÜBERWEISUNG",
-                           comment => "FINANZKASSE 3991234        STEUERNUMMER 007 03434     EST-VERANLAGUNG 99",
-                           receiver => "FINANZAMT KÖLN-SÜD", sender => '', amount => -328.75, },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "RECHNUNG 03121999          BUCHUNGSKONTO 9876543210",
-                           receiver => "TELEFON AG KÖLN", sender => '', amount => "125.80", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "SCHECK",
+                         { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
+                           comment => "111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434",
+                           receiver => "Finanzkasse K\xf6ln-S\xfcd", sender => 'PETRA PFIFFIG', amount => "-328.75",
+			   running_total => '5.314,05' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
+                           comment => "111111/3299999999/20010020 Übertrag auf SparCard 3299999999",
+                           receiver => "Petra Pfiffig", sender => 'PETRA PFIFFIG', amount => "-228.61",
+			   running_total => '5.642,80' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "Gutschrift",
+                           comment => "Bez\xfcge Pers.Nr. 70600170/01 Arbeitgeber u. Co",
+                           receiver => "PETRA PFIFFIG", sender => 'Petra Pfiffig', amount => "2780.70", 
+			   running_total => '5.871,41' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
+                           comment => "DA 1000001",
+                           receiver => "Verlagshaus Scribere GmbH", sender => 'PETRA PFIFFIG', amount => "-31.50",
+			   running_total => '3.090,71' },
+                         { tradedate => "20041117", valuedate => "20041117", type => "Scheckeinreichung",
+                           comment => "Eingang vorbehalten Gutbuchung 12345",
+                           receiver => "PETRA PFIFFIG", sender => 'Ein Fremder', amount => "1830.00",
+			   running_total => '3.122,21' },
+                         { tradedate => "20041116", valuedate => "20041116", type => "Lastschrift",
+                           comment => "Miete 600+250 EUR Obj22/328 Schulstr.7, 12345 Meinheim",
+                           receiver => "Eigenheim KG", sender => 'PETRA PFIFFIG', amount => "-850.00", 
+			   running_total => '1.292,21' },
+                         { tradedate => "20041116", valuedate => "20041116", type => "Inh. Scheck",
                            comment => "",
-                           receiver => "EC1037406000003", sender => '', amount => "511.20", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "TEILNEHMERNUMMER 123456789 RUNDFUNK VON 1099 BIS 1299",
-                           receiver => "GEZ KÖLN", sender => '', amount => -84.75, },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "STROMKOSTEN                KD-NR 1462347              JAHRESABRECHNUNG",
-                           receiver => "STADTWERKE MUSTERSTADT", sender => '', amount => 580.06, },
-                         { tradedate => "20030104", valuedate => "20030104", type => "INH.SCHECK",
-                           comment => "",
-                           receiver => "2000123456789", sender => '', amount => "100.00", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "SCHECKEINR",
-                           comment => "EINGANG VORBEHALTEN",
-                           receiver => "GUTBUCHUNG 12345", sender => '', amount => "-1830.00", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "DAUER ÜBERW",
-                           comment => "DA 100001",
-                           receiver => "", sender => 'MUSTERMANN, HANS', amount => "31.50", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "GUTSCHRIFT",
-                           comment => "BEZÜGE                     PERSONALNUMMER 700600170/01",
-                           receiver => "ARBEITGEBER U. CO", sender => '', amount => "-2780.70", },
-                         { tradedate => "20030104", valuedate => "20030104", type => "LASTSCHRIFT",
-                           comment => "MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT",
-                           receiver => "EIGENHEIM KG", sender => '', amount => "850.00", },
+                           receiver => "2000123456789", sender => 'PETRA PFIFFIG', amount => "-75.00",
+			   running_total => '2.142,21' },
+                         { tradedate => "20041114", valuedate => "20041114", type => "Lastschrift",
+                           comment => "Teilnehmernr 1234567 Rundfunk 0103-1203",
+                           receiver => "GEZ", sender => 'PETRA PFIFFIG', amount => -84.75,
+			   running_total => '2.217,21' },
+                         { tradedate => "20041112", valuedate => "20041112", type => "Lastschrift",
+                           comment => "Rechnung 03121999",
+                           receiver => "Telefon AG K\xf6ln", sender => 'PETRA PFIFFIG', amount => "-125.80", 
+			   running_total => '2.301,96' },
+                         { tradedate => "20041110", valuedate => "20041110", type => "Lastschrift",
+                           comment => "Stromkosten Kd.Nr.1462347 Jahresabrechnung",
+                           receiver => "Stadtwerke Musterstadt", sender => 'PETRA PFIFFIG', amount => -580.06,
+			   running_total => '2.427,76' },
+                         { tradedate => "20041110", valuedate => "20041110", type => "Gutschrift",
+                           comment => "Kindergeld Kindergeld-Nr. 1462347",
+                           receiver => "PETRA PFIFFIG", sender => 'Arbeitsamt Bonn', amount => "154.00", 
+			   running_total => '3.007,82' },
                        ],
                      });
 

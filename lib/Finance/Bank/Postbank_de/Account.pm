@@ -7,31 +7,36 @@ use POSIX qw(strftime);
 use Finance::Bank::Postbank_de;
 use base 'Class::Accessor';
 
-use vars qw[ $VERSION %tags %totals %columns ];
+use vars qw[ $VERSION %tags %totals %columns %safety_check ];
 
 $VERSION = '0.11';
 
 BEGIN {
-  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev transactions_future iban blz account_type));
+  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev transactions_future iban blz account_type name));
 };
 
 sub new {
   my $self = $_[0]->SUPER::new();
   my ($class,%args) = @_;
 
-  if (exists $args{number} and exists $args{name}) {
-    croak "If you specify both, 'name' and 'number', they must be equal"
-      unless $args{number} eq $args{name};
-  };
+  my $num = delete $args{number} || delete $args{kontonummer};
+  croak "'kontonummer' is '$args{kontonummer}' and 'number' is '$num'"
+    if $args{kontonummer} and $args{kontonummer} ne $num;
 
-  $self->number($args{number} || $args{name});
+  $self->number($num) if (defined $num);
+    
+  $self->name($args{name})
+    if (exists $args{name});
 
   $self;
 };
 
-# name is an alias for number
-*name = *number;
 *kontonummer = *number;
+
+%safety_check = (
+  name		=> 1,
+  kontonummer	=> 1,
+);
 
 %tags = (
   Girokonto => [qw(Name BLZ Kontonummer IBAN)],
@@ -119,6 +124,11 @@ sub parse_statement {
     $lines[0] =~ /^\Q$tag\E: (.*)$/
       or croak "Field '$tag' not found in account statement ($lines[0])";
     my $method = lc($tag);
+
+    # special check for special fields:
+    croak "Wrong/mixed account $method: Got '$1', expected '" . $self->$method . "'"
+      if (exists $safety_check{$method} and defined $self->$method and $self->$method ne $1);
+
     $self->$method($1);
     shift @lines;
   };
@@ -126,13 +136,13 @@ sub parse_statement {
   $lines[0] =~ m!^\s*$!
     or croak "Expected an empty line after the information, got '$lines[0]'";
   shift @lines;
-
   
   for my $total (@{ $totals{ $self->account_type }||[] }) {
     my ($re,$method) = @$total;
     $lines[0] =~ /^$re:\s*(.*) Euro$/
       or croak "No summary found in account statement ($lines[0]) for $method";
     shift @lines;
+
     my ($balance) = $1;
     if ($balance =~ /^(-?[0-9.,]+)$/) {
       $self->$method( ['????????',$self->parse_amount($balance)]);
@@ -175,6 +185,10 @@ sub parse_statement {
     my (@row) = split /\t/, $line;
     scalar @row == scalar @fields
       or die "Malformed cashflow ($line): Expected ".scalar(@fields)." entries, got ".scalar(@row);
+
+    for (@row) {
+      s!^\s+!!; s!\s+$!!;
+    };
 
     my (%rec);
     @rec{@fields} = @row;
@@ -252,7 +266,6 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
                 password => '11111',
               );
   # Retrieve account data :
-  print "Statement date : ",$statement->balance->[0],"\n";
   print "Balance : ",$statement->balance->[1]," EUR\n";
 
   # Output CSV for the transactions
@@ -264,9 +277,8 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
 
 =for example_testing
   isa_ok($statement,"Finance::Bank::Postbank_de::Account");
-  $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
   my $expected = <<EOX;
-Balance : 2500.00 EUR
+Balance : 5314.05 EUR
 20030520;20030520;GUTSCHRIFT;KINDERGELD                 KINDERGELD-NR 234568/133;ARBEITSAMT BONN;;154.00
 20030520;20030520;ÜBERWEISUNG;FINANZKASSE 3991234        STEUERNUMMER 007 03434     EST-VERANLAGUNG 99;FINANZAMT KÖLN-SÜD;;-328.75
 20030513;20030513;LASTSCHRIFT;RECHNUNG 03121999          BUCHUNGSKONTO 9876543210;TELEFON AG KÖLN;;-125.80

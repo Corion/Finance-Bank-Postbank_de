@@ -2,6 +2,21 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
 
 0.20 20041113
   - Moved to the new web interface and hopefully didn't break anything
+  ! The account accessor C<name> is now different from C<number> !!!
+    They used both to contain the account number but now the name
+    contains the name of the account owner(s).
+  ! White space in the comment fields may have changed positions!
+  ! White space at the end of fields is stripped! This is different
+    from the files you download directly from the web interface!
+  ! The type names have changed:
+      'GUTSCHRIFT' 	=>  'Gutschrift'
+      'ÜBERWEISUNG'  =>   "\xfcberweisung"
+      'SCHECK'		=>   "Scheckeinreichung"
+      'LASTSCHRIFT'	=>   "Lastschrift"
+      'INH. SCHECK'	=>   "Inh. Scheck"
+    The names are passed through directly so you will need to adapt
+    your program(s).
+  ! The postbank now fills in more fields (sender/receiver) all the time.
 
 0.11 20041108
   - Fixed erroneous skip count in t/02-maintenance.t.

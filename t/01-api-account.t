@@ -5,7 +5,7 @@ use vars qw(@accessors);
 
 BEGIN { @accessors = qw( name number balance balance_prev iban )};
 
-use Test::More tests => 12 + scalar @accessors * 2;
+use Test::More tests => 4 + scalar @accessors * 2;
 
 use_ok("Finance::Bank::Postbank_de::Account");
 
@@ -35,26 +35,27 @@ for (@accessors) {
   test_scalar_accessor($_,"0999999999")
 };
 
-# also check that ->name and ->number are aequivalent :
-
-$account->number("12345");
-is($account->name,"12345","Setting number");
-$account->name("54321");
-is($account->number,"54321","Setting name");
-
-$account = Finance::Bank::Postbank_de::Account->new( name => 12345 );
-is($account->name,"12345","Constructor accepts 'name' argument");
-is($account->number,"12345","Constructor accepts 'name' argument");
+$account = Finance::Bank::Postbank_de::Account->new( name => "Heinz Huber" );
+is($account->name,"Heinz Huber","Constructor accepts 'name' argument");
 
 $account = Finance::Bank::Postbank_de::Account->new( number => 12345 );
-is($account->name,"12345","Constructor accepts 'number' argument");
 is($account->number,"12345","Constructor accepts 'number' argument");
+is($account->kontonummer,"12345","Kontonummer is an alias for number");
 
-$account = Finance::Bank::Postbank_de::Account->new( number => 12345, name => "12345" );
-is($account->name,"12345","Constructor accepts 'number' argument");
+$account = Finance::Bank::Postbank_de::Account->new( kontonummer => 12345 );
+is($account->number,"12345","Constructor accepts 'kontonummer' argument");
+is($account->kontonummer,"12345","Number is an alias for kontonummer");
+
+$account = Finance::Bank::Postbank_de::Account->new( kontonummer => 12345, number => 12345 );
+is($account->number,"12345","Constructor accepts 'kontonummer' and number argument");
+is($account->kontonummer,"12345","Number is an alias for kontonummer");
+
+$account = eval {Finance::Bank::Postbank_de::Account->new( kontonummer => 12345, number => 67890 ); };
+like( $@, "/^'kontonummer' is '12345' and 'number' is '67890' at /", "If both, kontonummer and number are specified, they must be 'eq'ual");
+
+$account = eval {Finance::Bank::Postbank_de::Account->new( kontonummer => 12345, number => "012345" ); };
+like( $@, "/^'kontonummer' is '12345' and 'number' is '012345' at /", "If both, kontonummer and number are specified, they must be 'eq'ual");
+
+$account = Finance::Bank::Postbank_de::Account->new( number => 12345, name => "Heinz Huber" );
+is($account->name,"Heinz Huber","Constructor accepts 'name' argument");
 is($account->number,"12345","Constructor accepts 'number' argument");
-
-eval { $account = Finance::Bank::Postbank_de::Account->new( number => 12345, name => "67890" ); };
-like($@,qr"^If you specify both, 'name' and 'number', they must be equal","Constructor checks that name and number are 'eq'ual");
-eval { $account = Finance::Bank::Postbank_de::Account->new( number => 12345, name => "012345" ); };
-like($@,qr"^If you specify both, 'name' and 'number', they must be equal","Constructor checks that name and number are 'eq'ual");

@@ -66,7 +66,7 @@ SKIP: {
       my ($fh,$tempname) = File::Temp::tempfile();
       close $fh;
       my $statement = $account->get_account_statement(file => $tempname);
-      is($statement->iban, 'DE31 2001 0020 9999 9999 99', "Got the correct IBAN");
+      is($statement->iban, 'DE31200100209999999999', "Got the correct IBAN");
 
       my $downloaded_statement = do {local $/ = undef;
                                      local *F;

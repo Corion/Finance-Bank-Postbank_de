@@ -295,7 +295,7 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
   $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
   my $expected = <<EOX;
 New Finance::Bank::Postbank_de created
-Connecting to https://banking-classic.postbank.de/anfang.jsp
+Connecting to https://banking.postbank.de/iob3/welcome.do
 Logging into function ACCOUNTBALANCE
 Getting account statement (default or only one there)
 Downloading print version
