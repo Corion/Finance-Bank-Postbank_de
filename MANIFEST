@@ -24,3 +24,4 @@ t/embedded-Finance-Bank-Postbank_de-Account.t
 t/accountstatement.txt
 t/accountstatement-negative.txt
 t/giroselection.html
+META.yml                                 Module meta-data (added by MakeMaker)
