@@ -211,7 +211,6 @@ sub get_account_statement {
   $self->agent->form("kontoumsatzForm");
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
-    #$agent->current_form->value('konto', delete $args{account_number});
     $agent->current_form->param( konto => [ delete $args{account_number}]);
   } else {
     my @accounts = $agent->current_form->value('konto');
