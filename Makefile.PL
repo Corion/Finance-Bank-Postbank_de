@@ -14,7 +14,7 @@ Edit Makefile.PL if you want to install the module anyway"
 WriteMakefile(
     'NAME'    => 'Finance::Bank::Postbank_de',
     'VERSION_FROM'  => 'lib/Finance/Bank/Postbank_de.pm', # finds $VERSION
-    'PREREQ_PM'    => { 'WWW::Mechanize' => 0.70,
+    'PREREQ_PM'    => { 'WWW::Mechanize' => 0.64,
                         'Test::More' => 0,
                         'Test::MockObject' => 0,
                         'Class::Accessor' => 0,
