@@ -8,6 +8,8 @@ lib/Finance/Bank/Postbank_de/Account.pm
 t/01-api-account.t
 t/01-api-postbank.t
 t/02-form-login.t
+t/02-maintenance.t
+t/02-maintenance.html
 t/03-login-access-denied.t
 t/03-login-logout.t
 t/04-form-accountstatement.t

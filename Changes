@@ -1,5 +1,12 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.08 20031107
+  - The error number for wrong PIN changed from 10011 to 9501
+  - The maintenance screen now got an error number: 5010
+  - The tests now dump html files if they don't match expectations
+  - added test to check for maintenance mode detection
+  - the $agent now moves to the previous page after downloading stuff
+
 0.07 20030520
   - Thanks to Markus Preis for reporting the bugs fixed in this release
   - Fixed Finance::Postbank_de::Account synopsis

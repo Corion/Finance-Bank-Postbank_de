@@ -4,7 +4,19 @@ use FindBin;
 
 use Test::More tests => 9;
 
-use_ok("Finance::Bank::Postbank_de");
+BEGIN { use_ok("Finance::Bank::Postbank_de"); };
+
+sub save_content {
+  my ($account,$name) = @_;
+  local *F;
+  my $filename = "$0-$name.html";
+  open F, "> $filename"
+    or diag "Couldn't dump current page to '$filename': $!";
+  binmode F;
+  print F $account->agent->content;
+  close F;
+  diag "Current page saved to '$filename'";
+};
 
 # Check that we have SSL installed :
 SKIP: {
@@ -35,7 +47,8 @@ SKIP: {
     $account->agent(undef);
     $account->new_session();
     ok($account->error_page(),"We got an error page");
-    ok($account->access_denied(),"Access denied for wrong password");
+    ok($account->access_denied(),"Access denied for wrong password")
+      or save_content($account,"wrong-password");
     is($account->close_session(),'Never logged in',"Session is silently discarded if never logged in");
     is($account->agent(),undef,"agent was discarded");
 
@@ -52,7 +65,8 @@ SKIP: {
 
     $account->new_session();
     ok($account->error_page(),"We got an error page");
-    ok($account->access_denied(),"Access denied for wrong account");
+    ok($account->access_denied(),"Access denied for wrong account")
+      or save_content($account,"wrong-account");
     is($account->close_session(),'Never logged in',"Session is silently discarded if never logged in");
     is($account->agent(),undef,"agent was discarded");
   };

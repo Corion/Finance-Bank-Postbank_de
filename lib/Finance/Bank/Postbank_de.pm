@@ -10,7 +10,7 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent ));
@@ -20,8 +20,10 @@ use constant LOGIN => 'https://banking.postbank.de/anfang.jsp';
 use vars qw(%functions);
 BEGIN {
   %functions = (
-    quit => qr/Banking\s+beenden/,
-    accountstatement => qr/Kontoauszug/,
+    #quit => qr/Banking\s+beenden/,
+    #accountstatement => qr/Kontoauszug/,
+    quit => 'Banking beenden',
+    accountstatement => 'Kontoauszug',
   );
 };
 
@@ -89,13 +91,19 @@ sub get_login_page {
 sub error_page {
   # Check if an error page is shown (a page with much red on it)
   my ($self) = @_;
-  $self->agent->content =~ /<tr valign="top" bgcolor="#FF0033">/sm;
+     $self->agent->content =~ /<tr valign="top" bgcolor="#FF0033">/sm 
+  # or $self->agent->content =~ /<tr valign="top" bgcolor="#FF0000">/sm;
 };
 
 sub maintenance {
   my ($self) = @_;
   $self->error_page and
-  $self->agent->content =~ /derzeit steht das Internet Banking aufgrund von Wartungsarbeiten leider nicht zur Verf&uuml;gung.\s*<br>\s*In K&uuml;rze wird das Internet Banking wieder wie gewohnt erreichbar sein./gsm;
+#  $self->agent->content =~ /derzeit steht das Internet Banking aufgrund von Wartungsarbeiten leider nicht zur Verf&uuml;gung.\s*<br>\s*In K&uuml;rze wird das Internet Banking wieder wie gewohnt erreichbar sein./gsm;
+  $self->agent->content =~ /Sehr\s+geehrte\s+Kundin,\s+sehr\s+geehrter\s+Kunde,
+                           \s+aus\s+technischen\s+Gr&uuml;nden\s+ist\s+zurzeit\s+kein\s+Online-Banking\s+m&ouml;glich.
+                           \s+Bitte\s+versuchen\s+Sie\s+es\s+sp&auml;ter\s+noch\s+einmal\.
+                           \s+Wir\s+bitten\s+um\s+Ihr\s+Verst&auml;ndnis\.
+                           \s+Mit\s+freundlichen\s+Gr&uuml;&szlig;en\s+Ihre\s+Postbank\s+\(5010\)/xgsim;
 };
 
 sub access_denied {
@@ -104,7 +112,8 @@ sub access_denied {
 
   $self->error_page and
   (  $content =~ /Die eingegebene Kontonummer ist unvollst&auml;ndig oder falsch\..*\(2051\)/gsm
-  or $content =~ /Die eingegebene PIN ist falsch\. Bitte geben Sie die richtige PIN ein\.\s*\(10011\)/gsm
+  # or $content =~ /Die eingegebene PIN ist falsch\. Bitte geben Sie die richtige PIN ein\.\s*\(10011\)/gsm
+  or $content =~ /Die eingegebene PIN ist falsch\. Bitte geben Sie die richtige PIN ein\.\s*\(9501\)/gsm
   or $content =~ /Die von Ihnen eingegebene Kontonummer ist ung&uuml;ltig und entspricht keiner Postbank-Kontonummer.\s*\(3040\)/gsm );
 };
 
@@ -120,12 +129,13 @@ sub select_function {
 
   $self->new_session unless $self->agent;
 
-  $self->agent->follow($functions{$function});
+  # $self->agent->follow($functions{$function});
+  $self->agent->follow_link( text => $functions{$function});
   if ($self->session_timed_out) {
     $self->log("Session timed out");
     $self->agent(undef);
     $self->new_session();
-    $self->agent->follow($functions{$function});
+    $self->agent->follow_link( text => $functions{$function});
   };
   $self->log_httpresult();
   $self->agent->status;
@@ -176,6 +186,7 @@ sub get_account_statement {
 
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
+    # die $agent->content unless $agent->current_form;
     $agent->current_form->value('GIROSELECTION', delete $args{account_number});
   } else {
     $self->log("Getting account statement (default or only one there)");
@@ -201,7 +212,9 @@ sub get_account_statement {
   };
 
   if ($agent->status == 200) {
-    return Finance::Bank::Postbank_de::Account->parse_statement(content => $agent->content);
+    my $result = $agent->content;
+    $agent->back;
+    return Finance::Bank::Postbank_de::Account->parse_statement(content => $result);
   } else {
     return wantarray ? () : undef;
   };
