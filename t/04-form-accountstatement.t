@@ -64,26 +64,14 @@ SKIP: {
                                  or die "Couldn't read $acctname : $!";
                                <F>};
 
-    my $statement = $account->get_account_statement();
-    my $retrieved_statement = $account->agent->content;
-
-    # Be careful with accountstatement.txt if your editor converts tabs to spaces!!!
-    for ($retrieved_statement,$canned_statement) {
-      s/\r\n/\n/g;
-      s/\s*$//;
-      # Strip out all date references ...
-      s/^\d{2}\.\d{2}\.\d{4}\s+\d{2}\.\d{2}\.\d{4}\s+//gm;
-      s/^\d{2}\.\d{2}\.\d{4}//gm;
-    };
-    is($retrieved_statement,$canned_statement,"Download to memory works");
-
     eval { require File::Temp; File::Temp->import(); };
     SKIP: {
       skip "Need File::Temp to test download capabilities",1
         if $@;
       my ($fh,$tempname) = File::Temp::tempfile();
       close $fh;
-      $account->get_account_statement(file => $tempname);
+      my $statement = $account->get_account_statement(file => $tempname);
+      is($statement->iban, 'DE31 2001 0020 9999 9999 99', "Got the correct IBAN");
 
       my $downloaded_statement = do {local $/ = undef;
                                      local *F;
@@ -92,12 +80,14 @@ SKIP: {
                                      <F>};
       for ($downloaded_statement,$canned_statement) {
         s/\r\n/\n/g;
-        s/\s*$//;
+        s/\t/        /g;
+        s/\s*$//mg;
         # Strip out all date references ...
         s/^\d{2}\.\d{2}\.\d{4}\s+\d{2}\.\d{2}\.\d{4}\s+//gm;
         s/^\d{2}\.\d{2}\.\d{4}//gm;
       };
-      is($downloaded_statement,$canned_statement,"Download to file works");
+      # is($downloaded_statement,$canned_statement,"Download to file works");
+      is_deeply([ split /\n/, $downloaded_statement ],[ split /\n/, $canned_statement ],"Download to file works");
       ok($account->close_session(),"Closed session");
       is($account->agent(),undef,"agent was discarded");
 

@@ -12,7 +12,7 @@ use vars qw[ $VERSION ];
 $VERSION = '0.08';
 
 BEGIN {
-  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev  ));
+  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev iban ));
 };
 
 sub new {
@@ -99,7 +99,12 @@ sub parse_statement {
     unless $num;
   shift @lines;
 
+  # Collect the IBAN:
+  $lines[0] =~ /IBAN (DE\d\d \d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d \d\d)/
+    or croak "No IBAN found in account statement ($lines[0])";
+  $self->{iban} = $1;
   shift @lines;
+  
   $lines[0] =~ /^Kontostand\s+Datum\s+Betrag\s+EUR$/
     or croak "No summary found in account statement ($lines[0])";
   shift @lines;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 11;
+use Test::More tests => 12;
 use FindBin;
 
 use_ok("Finance::Bank::Postbank_de::Account");
@@ -47,11 +47,14 @@ like($@,"/^No valid account statement/","Passing bogus content");
 eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\nfoo" ) };
 like($@,"/^No owner found in account statement \\(foo\\)/","Passing other bogus content");
 eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n\nfoo" )};
+like($@,"/^No IBAN found in account statement \\(\\)/","Passing no IBAN in content");
+eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n                IBAN DE31 2001 0020 9999 9999 99\nfoo" )};
 like($@,"/^No summary found in account statement \\(foo\\)/","Passing no summary in content");
 
 my @expected_statements = ({ name => "PFIFFIG, PETRA",
                        blz => "20010020",
                        number => "9999999999",
+                       iban => "DE31 2001 0020 9999 9999 99",
                        balance => ["20030111","2500.00"],
                        balance_prev => ["20030102","347.36"],
                        transactions => [
@@ -93,6 +96,7 @@ my @expected_statements = ({ name => "PFIFFIG, PETRA",
 { name => "PFIFFIG, PETRA",
                        blz => "20010020",
                        number => "9999999999",
+                       iban => "DE31 2001 0020 9999 9999 99",
                        balance => ["20030111","-2500.00"],
                        balance_prev => ["20030102","-347.36"],
                        transactions => [
