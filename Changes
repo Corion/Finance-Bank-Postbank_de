@@ -1,6 +1,6 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
-0.11 ????????
+0.11 20041108
   - Fixed erroneous skip count in t/02-maintenance.t.
     This bogus failure was only triggered when no SSL capability
     is available.
