@@ -1,4 +1,4 @@
-^.cvsignore
+.cvsignore$
 ^.lwpcookies
 ^.releaserc
 ^blib/
@@ -8,3 +8,4 @@ CVS/
 .tar.gz$
 .old$
 ^Makefile$
+^cvstest$

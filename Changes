@@ -1,8 +1,10 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
-0.07
+0.07 20030520
+  - Thanks to Markus Preis for reporting the bugs fixed in this release
   - Fixed Finance::Postbank_de::Account synopsis
   - Added test and fix for negative account balance ...
+  - Added tests to actually test the Synopsis of both modules
 
 0.06 20030207
   - Restructured ::Postbank_de::Account::transactions()
