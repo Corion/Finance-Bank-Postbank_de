@@ -3,7 +3,7 @@ use strict;
 
 use vars qw(@accessors);
 
-BEGIN { @accessors = qw( name number balance balance_prev )};
+BEGIN { @accessors = qw( name number balance balance_prev iban )};
 
 use Test::More tests => 12 + scalar @accessors * 2;
 

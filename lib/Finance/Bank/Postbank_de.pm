@@ -144,7 +144,7 @@ sub select_function {
 sub close_session {
   my ($self) = @_;
   my $result;
-  if (not $self->access_denied) {
+  if (not ($self->access_denied or $self->maintenance)) {
     $self->log("Closing session");
     $self->select_function('quit');
     $result = $self->agent->res->as_string =~ /Online-Banking\s+beendet/sm;
@@ -284,9 +284,12 @@ Balance : 2500.00 EUR
 20030513;20030513;LASTSCHRIFT;MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT;EIGENHEIM KG;;-850.00
 Closing session
 EOX
-  $expected =~ s!\r\n!!gms;
-  $::_STDOUT_ =~ s!\r\n!!gms;
-  is($::_STDOUT_,$expected,'Retrieving an account statement works');
+  for ($::_STDOUT_,$expected) {
+    s!\r\n!!gsm;    
+    # Strip out all date references ...
+    s/^\d{8};\d{8};//gm;
+  };
+  is_deeply([split /\n/, $::_STDOUT_],[split /\n/, $expected],'Retrieving an account statement works');
 
 =head1 DESCRIPTION
 

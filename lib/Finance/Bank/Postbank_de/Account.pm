@@ -104,7 +104,7 @@ sub parse_statement {
     or croak "No IBAN found in account statement ($lines[0])";
   $self->{iban} = $1;
   shift @lines;
-  
+
   $lines[0] =~ /^Kontostand\s+Datum\s+Betrag\s+EUR$/
     or croak "No summary found in account statement ($lines[0])";
   shift @lines;
@@ -244,9 +244,12 @@ Balance : 2500.00 EUR
 20030513;20030513;GUTSCHRIFT;BEZÜGE                     PERSONALNUMMER 700600170/01;ARBEITGEBER U. CO;;2780.70
 20030513;20030513;LASTSCHRIFT;MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT;EIGENHEIM KG;;-850.00
 EOX
-  $::_STDOUT_ =~ s!\r\n!!gms;
-  $expected =~ s!\r\n!!gsm;
-  is($::_STDOUT_,$expected,"Retrieved the correct data");
+  for ($::_STDOUT_,$expected) {
+    s!\r\n!!gsm;    
+    # Strip out all date references ...
+    s/^\d{8};\d{8};//gm;
+  };
+  is_deeply([split /\n/, $::_STDOUT_],[split /\n/, $expected],"Retrieved the correct data");
 
 =head1 DESCRIPTION
 

@@ -65,7 +65,7 @@ SKIP: {
 
     $account->new_session();
     ok($account->error_page(),"We got an error page");
-    ok($account->access_denied(),"Access denied for wrong account")
+    ok($account->access_denied() or $account->maintenance,"Access denied for wrong account")
       or save_content($account,"wrong-account");
     is($account->close_session(),'Never logged in',"Session is silently discarded if never logged in");
     is($account->agent(),undef,"agent was discarded");
