@@ -52,6 +52,7 @@ eval q{
     local $^W = 0;
 
 #line 220 lib/Finance/Bank/Postbank_de.pm
+
   use strict;
   use Finance::Bank::Postbank_de;
   my $account = Finance::Bank::Postbank_de->new(

@@ -217,6 +217,7 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
 =head1 SYNOPSIS
 
 =begin example
+
   use strict;
   use Finance::Bank::Postbank_de;
   my $account = Finance::Bank::Postbank_de->new(

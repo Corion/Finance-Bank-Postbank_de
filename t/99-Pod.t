@@ -1,39 +1,36 @@
+use Test::More;
+
+# Check our Pod
+# The test was provided by Andy Lester,
+# who stole it from Brian D. Foy
+# Thanks to both !
+
+use File::Spec;
+use File::Find;
 use strict;
 
-use vars qw( @modules );
-
-BEGIN { @modules = qw(
-  Finance::Bank::Postbank_de
-  Finance::Bank::Postbank_de::Account
-)};
-
-use Test::More tests => scalar @modules;
-
-sub test_module_pod {
-  my $modulename;
-
-  for $modulename (@_) {
-    # We assume that we live in the t/ directory, and that our main module lives below t/../lib/
-    my @modulepath = (File::Spec->splitpath($FindBin::Bin));
-    pop @modulepath;
-    push @modulepath, "lib",split /::/, $modulename;
-    my $constructed_module_name = File::Spec->catfile(@modulepath) . ".pm";
-
-    pop @modulepath;
-    pod_ok($constructed_module_name);
-  };
+eval {
+  require Test::Pod;
+  Test::Pod->import;
 };
 
-SKIP: {
-  eval { require FindBin; FindBin->import() };
-  skip "Need FindBin to check the Pod",scalar @modules if $@;
-  eval { require File::Spec; File::SpecBase->import() };
-  skip "Need File::Spec to check the Pod",scalar @modules if $@;
-  eval { require Test::Pod; Test::Pod->import() };
-  skip "Need Test::Pod to check the Pod",scalar @modules if $@;
+my @files;
 
-  test_module_pod($_) for @modules;
+if ($@) {
+  plan skip_all => "Test::Pod required for testing POD";
+}
+elsif ($Test::Pod::VERSION < 0.95) {
+  plan skip_all => "Test::Pod 0.95 required for testing POD";
+}
+else {
+  my $blib = File::Spec->catfile(qw(blib lib));
+  find(\&wanted, $blib);
+  plan tests => scalar @files;
+  foreach my $file (@files) {
+    pod_file_ok($file);
+  }
+}
 
-  # make warnings.pm happy
-  $FindBin::Bin eq $FindBin::Bin or 1;
-};
+sub wanted {
+  push @files, $File::Find::name if /\.p(l|m|od)$/;
+}
