@@ -16,7 +16,8 @@ BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password ));
 };
 
-use constant LOGIN => 'https://banking.postbank.de/iob3/welcome.do';
+use constant LOGIN => 'https://banking.postbank.de/';
+#use constant LOGIN => 'https://banking.postbank.de/iob3/welcome.do';
 #use constant LOGIN => 'https://banking-classic.postbank.de/anfang.jsp';
 use vars qw(%functions);
 BEGIN {
@@ -123,7 +124,7 @@ sub access_denied {
     my $message = $self->error_message;
 
     return (
-        $message =~ m!^\s*Die Kontonummer ist nicht f.r das Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Online-Banking freischalten".<br />\s*$!sm
+        $message =~ m!^\s*Die Kontonummer ist nicht f.r das Internet Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Internet Online-Banking freischalten".<br />\s*$!sm
      or $message =~ m!^\s*Sie haben zu viele Zeichen in das Feld eingegeben.<br />\s*$!sm
     )
   } else {
@@ -192,6 +193,9 @@ sub account_numbers {
     } else {
       $self->log("No related account numbers found");
     };
+
+    # Discard credit card numbers:
+    @numbers = grep /^\d+$/, @numbers;
     \@numbers
   };
   @{ $self->{account_numbers} };
@@ -295,8 +299,8 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
   $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
   my $expected = <<EOX;
 New Finance::Bank::Postbank_de created
-Connecting to https://banking.postbank.de/iob3/welcome.do
-Logging into function ACCOUNTBALANCE
+Connecting to https://banking.postbank.de/
+Activating (?-xism:^Kontoums.*?tze$)
 Getting account statement (default or only one there)
 Downloading print version
 Balance : 2500.00 EUR
@@ -377,6 +381,12 @@ Closes the session and invalidates it on the server.
 
 Returns the C<WWW::Mechanize> object. You can retrieve the
 content of the current page from there.
+
+=head2 C<< $session->account_numbers >>
+
+Returns the account numbers. Only numeric account numbers
+are returned - the credit card account numbers are not
+returned.
 
 =head2 $account->select_function STRING
 

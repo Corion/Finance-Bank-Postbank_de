@@ -10,7 +10,6 @@ BEGIN {
                           3299999999
                           9999999998
                           9999999999
-                          9999999999999999~KREDITKARTE
                           );
 };
 
@@ -104,5 +103,5 @@ SKIP: {
               ->set_always('current_form',HTML::Form->parse($content,'https://banking.postbank.de'));
   $agent->set_always( form => 1 );
   $account->agent($agent);
-  is_deeply([$account->account_numbers],["9999999999"],"Single account number works");
+  is_deeply([$account->account_numbers],["999999999"],"Single account number works");
 };
