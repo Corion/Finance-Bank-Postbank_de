@@ -1,4 +1,5 @@
 blib
+blibdirs
 Makefile
 *.old
 *.tar.gz
