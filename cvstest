@@ -1,3 +1,8 @@
 #!/bin/bash
 perl Makefile.PL 2>&1
-exec make test 2>&1
+make test 2>&1
+make distclean
+
+echo "Perl 5.8"
+/opt/perl58/bin/perl Makefile.PL 2>&1
+make test 2>&1
