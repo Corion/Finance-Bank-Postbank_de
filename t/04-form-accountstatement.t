@@ -6,9 +6,9 @@ require 't/test_form.pm';
 
 use vars qw(@fields);
 BEGIN {
-  @fields = qw(GIROSELECTION CHOICE SUBMIT);
+  @fields = qw(konto zeitraum tage action);
 };
-use Test::More tests => 7 + scalar @fields;
+use Test::More tests => 8;
 
 use_ok("Finance::Bank::Postbank_de");
 

@@ -168,6 +168,10 @@ my @expected_statements = ({ name => "PETRA PFIFFIG",
                        ],
                      });
 
+# Reinitialize the account
+$account = Finance::Bank::Postbank_de::Account->new(
+                number => '9999999999',
+           );
 my $statement = $account->parse_statement(content => $canned_statement);
 is_deeply($statement,$expected_statements[0], "Parsing from memory works");
 

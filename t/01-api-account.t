@@ -3,9 +3,9 @@ use strict;
 
 use vars qw(@accessors);
 
-BEGIN { @accessors = qw( name number balance balance_prev iban )};
+BEGIN { @accessors = qw( name number balance transactions_future iban account_type )};
 
-use Test::More tests => 4 + scalar @accessors * 2;
+use Test::More tests => 13 + scalar @accessors * 2;
 
 use_ok("Finance::Bank::Postbank_de::Account");
 
