@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use Test::More tests => 7;
+use Data::Dumper;
 
 use_ok("Finance::Bank::Postbank_de");
 
@@ -33,11 +34,15 @@ SKIP: {
     skip "Banking is unavailable due to maintenance", 4
       if $account->maintenance;
 
+    my @forms = $account->agent->forms();
+    is( scalar(grep({ ($_->attr('name')||"") eq 'loginForm' } @forms)), 1, "Found 'loginForm'");
+    $account->agent->form('loginForm');
+
     # Check that the expected form fields are available :
-    my @fields = qw(Kontonummer PIN FUNCTION LOGIN);
+    my @fields = qw(accountNumber PNINumber action);
     my $field;
     for $field (@fields) {
-      diag $account->agent->current_form->inputs
+      diag $account->agent->current_form->dump
         unless ok(defined $account->agent->current_form->find_input($field),"Login form has field '$field'");
     };
   };

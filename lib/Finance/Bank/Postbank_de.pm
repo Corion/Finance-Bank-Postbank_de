@@ -10,19 +10,19 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.11';
+$VERSION = '0.20';
 
 BEGIN {
-  Finance::Bank::Postbank_de->mk_accessors(qw( agent ));
+  Finance::Bank::Postbank_de->mk_accessors(qw( agent login password ));
 };
 
-#use constant LOGIN => 'https://banking.postbank.de/anfang.jsp';
-use constant LOGIN => 'https://banking-classic.postbank.de/anfang.jsp';
+use constant LOGIN => 'https://banking.postbank.de/iob3/welcome.do';
+#use constant LOGIN => 'https://banking-classic.postbank.de/anfang.jsp';
 use vars qw(%functions);
 BEGIN {
   %functions = (
-    quit => 'Banking beenden',
-    accountstatement => 'Kontoauszug',
+    quit		=> qr'^Banking beenden$',
+    accountstatement	=> qr'^Kontoums.*?tze$',
   );
 };
 
@@ -51,9 +51,9 @@ sub log { $_[0]->{logger}->(@_); };
 sub log_httpresult { $_[0]->log("HTTP Code",$_[0]->agent->status,$_[0]->agent->res->as_string) };
 
 sub new_session {
-  # Reset our user agent
   my ($self) = @_;
 
+  # Reset our user agent
   $self->close_session()
     if ($self->agent);
     
@@ -64,12 +64,16 @@ sub new_session {
       die "Banking unavailable due to maintenance";
     };
     my $agent = $self->agent();
-    my $function = 'ACCOUNTBALANCE';
-    $self->log("Logging into function $function");
-    $agent->current_form->value('Kontonummer',$self->{login});
-    $agent->current_form->value('PIN',$self->{password});
-    $agent->current_form->value('FUNCTION',$function);
-    $agent->click('LOGIN');
+    $agent->form("loginForm");
+    eval {
+      $agent->current_form->value( accountNumber => $self->login );
+      $agent->current_form->value( PNINumber => $self->password );
+    };
+    if ($@) {
+      warn $agent->content;
+      croak $@;
+    };
+    $agent->submit;
     $self->log_httpresult();
     $result = $agent->status;
   };
@@ -83,8 +87,6 @@ sub get_login_page {
 
   my $agent = $self->agent();
   $agent->add_header("If-SSL-Cert-Subject" => qr'/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Systems AG/OU=Terms of use at www\.verisign\.com/rpa \(c\)00');
-#/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Electronic Banking/OU=Terms of use
-  $agent->add_header("If-SSL-Cert-Subject" => qr'/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Electronic Banking/OU=Terms of use');
 
   $agent->get(LOGIN);
   $self->log_httpresult();
@@ -95,30 +97,38 @@ sub get_login_page {
 sub error_page {
   # Check if an error page is shown (a page with much red on it)
   my ($self) = @_;
-     $self->agent->content =~ /<tr valign="top" bgcolor="#FF0033">/sm
-  # or $self->agent->content =~ /<tr valign="top" bgcolor="#FF0000">/sm;
+     $self->agent->content =~ m!<h3 class="h3Error">Es ist ein Fehler aufgetreten</h3>!sm
+  or $self->maintenance;
+};
+
+sub error_message {
+  my ($self) = @_;
+  die "No error condition detected in:\n" . $self->agent->content
+    unless $self->error_page;
+  $self->agent->content =~ m!<p class="errorText">(.*?)</p>!sm
+    or die "No error message found in:\n" . $self->agent->content;
+  $1
 };
 
 sub maintenance {
   my ($self) = @_;
-  $self->error_page and
-#  $self->agent->content =~ /derzeit steht das Internet Banking aufgrund von Wartungsarbeiten leider nicht zur Verf&uuml;gung.\s*<br>\s*In K&uuml;rze wird das Internet Banking wieder wie gewohnt erreichbar sein./gsm;
-  $self->agent->content =~ /Sehr\s+geehrte\s+Kundin,\s+sehr\s+geehrter\s+Kunde,
-                           \s+aus\s+technischen\s+Gr&uuml;nden\s+ist\s+zurzeit\s+kein\s+Online-Banking\s+m&ouml;glich.
-                           \s+Bitte\s+versuchen\s+Sie\s+es\s+sp&auml;ter\s+noch\s+einmal\.
-                           \s+Wir\s+bitten\s+um\s+Ihr\s+Verst&auml;ndnis\.
-                           \s+Mit\s+freundlichen\s+Gr&uuml;&szlig;en\s+Ihre\s+Postbank\s+\(5010\)/xgsim;
+  #$self->error_page and
+  $self->agent->content =~ m!Sehr geehrter <span lang="en">Online-Banking</span>\s+Nutzer,\s+wegen einer hohen Auslastung kommt es derzeit im Online-Banking zu\s*l&auml;ngeren Wartezeiten.!sm
+  or $self->agent->content =~ m!&nbsp;Wartung\b!;
 };
 
 sub access_denied {
   my ($self) = @_;
-  my $content = $self->agent->content;
+  if ($self->error_page) {
+    my $message = $self->error_message;
 
-  $self->error_page and
-  (  $content =~ /Die eingegebene Kontonummer ist unvollst&auml;ndig oder falsch\..*\(2051\)/gsm
-  # or $content =~ /Die eingegebene PIN ist falsch\. Bitte geben Sie die richtige PIN ein\.\s*\(10011\)/gsm
-  or $content =~ /Die eingegebene PIN ist falsch\. Bitte geben Sie die richtige PIN ein\.\s*\(9501\)/gsm
-  or $content =~ /Die von Ihnen eingegebene Kontonummer ist ung&uuml;ltig und entspricht keiner Postbank-Kontonummer.\s*\(3040\)/gsm );
+    return (
+        $message =~ m!^\s*Die Kontonummer ist nicht f.r das Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Online-Banking freischalten".<br />\s*$!sm
+     or $message =~ m!^\s*Sie haben zu viele Zeichen in das Feld eingegeben.<br />\s*$!sm
+    )
+  } else {
+    return;
+  };
 };
 
 sub session_timed_out {
@@ -133,8 +143,10 @@ sub select_function {
 
   $self->new_session unless $self->agent;
 
-  # $self->agent->follow($functions{$function});
-  $self->agent->follow_link( text => $functions{$function});
+  $self->log( "Activating $functions{$function}" );
+  $self->agent->follow_link( text_regex => $functions{$function})
+    or do {
+    };
   if ($self->session_timed_out) {
     $self->log("Session timed out");
     $self->agent(undef);
@@ -151,7 +163,7 @@ sub close_session {
   if (not ($self->access_denied or $self->maintenance)) {
     $self->log("Closing session");
     $self->select_function('quit');
-    $result = $self->agent->res->as_string =~ /Online-Banking\s+beendet/sm;
+    $result = $self->agent->res->as_string =~ m!<p class="pHeadlineLeft"><span lang="en">Online-Banking</span> beendet</p>!sm;
   } else {
     $result = 'Never logged in';
   };
@@ -161,24 +173,28 @@ sub close_session {
 
 sub account_numbers {
   my ($self,%args) = @_;
-  $self->log("Getting related account numbers");
-  $self->select_function("accountstatement");
+  $self->{account_numbers} ||= do {
+    my @numbers;
 
-  #local *F;
-  #open F, ">", "giroselection.html"
-  #  or die "uhoh : $!";
-  #print F $self->agent->content;
-  #close F;
-  my $giro_input = $self->agent->current_form->find_input('GIROSELECTION');
-  if (defined $giro_input) {
-    if ($giro_input->type eq 'hidden') {
-      ($giro_input->value())
+    $self->log("Getting related account numbers");
+    $self->select_function("accountstatement");
+    $self->agent->form("kontoumsatzForm");
+
+    my $giro_input = $self->agent->current_form->find_input('konto');
+    if (defined $giro_input) {
+      if ($giro_input->type eq 'hidden') {
+        @numbers = $giro_input->value();
+        $self->log("Only one related account number found: @numbers");
+      } else {
+        @numbers = $giro_input->possible_values();
+        $self->log( scalar(@numbers) . " related account numbers found: @numbers");
+      };
     } else {
-      $giro_input->possible_values()
+      $self->log("No related account numbers found");
     };
-  } else {
-    return ();
+    \@numbers
   };
+  @{ $self->{account_numbers} };
 };
 
 sub get_account_statement {
@@ -188,36 +204,29 @@ sub get_account_statement {
 
   my $agent = $self->agent();
 
+  $self->agent->form("kontoumsatzForm");
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
-    # die $agent->content unless $agent->current_form;
-    $agent->current_form->value('GIROSELECTION', delete $args{account_number});
+    #$agent->current_form->value('konto', delete $args{account_number});
+    $agent->current_form->param( konto => [ delete $args{account_number}]);
   } else {
-    $self->log("Getting account statement (default or only one there)");
+    my @accounts = $agent->current_form->value('konto');
+    $self->log("Getting account statement via default (@accounts)");
   };
 
-  $agent->current_form->value('CHOICE','COMPLETE');
-  $agent->click('SUBMIT');
-  $self->log("Downloading print version");
+  $agent->current_form->value('zeitraum','tage');
+  $agent->current_form->param('tage',['90']);
+  $self->log("Downloading text version");
+  $agent->click('action');
 
-  # find the form with the "DOWNLOAD" button:
-  my @forms = $agent->forms;
-  my $download_action = 0;
-  for my $form ($agent->forms) {
-    $download_action++;
-    last if $form->find_input( 'DOWNLOAD', 'image' );
-  };
-  if (! $download_action) {
-    warn $agent->content;
-    croak "Couldn't find a button named 'DOWNLOAD'";
+  if ($agent->find_link(text_regex => qr'Download Kontoums.*?tze')) {
+    $agent->follow_link(text_regex => qr'Download Kontoums.*?tze');
+    $self->log_httpresult();
   } else {
-    #$self->log("Download form is form number $download_action");
+    # keine Umsaetze
+    $self->log("No transactions found");
+    return ();
   };
-  
-  $agent->form($download_action);
-  $agent->click('DOWNLOAD');
-
-  $self->log_httpresult();
 
   if ($args{file}) {
     $self->log("Saving to $args{file}");
@@ -232,6 +241,7 @@ sub get_account_statement {
 
   if ($agent->status == 200) {
     my $result = $agent->content;
+    #warn $result;
     $agent->back;
     return Finance::Bank::Postbank_de::Account->parse_statement(content => $result);
   } else {
@@ -370,7 +380,10 @@ content of the current page from there.
 
 =head2 $account->select_function STRING
 
-Selects a function. The two currently supported functions are C<accountstatement> and C<quit>.
+Selects a function. The currently supported functions are
+
+	accountstatement
+	quit
 
 =head2 $account->get_account_statement
 

@@ -7,12 +7,12 @@ use POSIX qw(strftime);
 use Finance::Bank::Postbank_de;
 use base 'Class::Accessor';
 
-use vars qw[ $VERSION ];
+use vars qw[ $VERSION %tags %totals %columns ];
 
 $VERSION = '0.11';
 
 BEGIN {
-  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev iban ));
+  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev transactions_future iban blz account_type));
 };
 
 sub new {
@@ -30,7 +30,31 @@ sub new {
 };
 
 # name is an alias for number
-sub name { shift->number(@_); };
+*name = *number;
+*kontonummer = *number;
+
+%tags = (
+  Girokonto => [qw(Name BLZ Kontonummer IBAN)],
+  Sparcard => [qw(Name BLZ Kontonummer )],
+  Kreditkarte => [qw(Name BLZ Kontonummer IBAN)],
+);
+
+%totals = (
+  Girokonto => [[qr'Aktueller Kontostand' => 'balance'],[qr'Summe vorgemerkter Ums.tze' => 'transactions_future']],
+  Sparcard => [[qr'Aktueller Kontostand' => 'balance'],],
+);
+
+%columns = (
+  qr'Datum'		=> 'tradedate',
+  qr'Wertstellung'	=> 'valuedate',
+  qr'Art'		=> 'type',
+  qr'Buchungshinweis'	=> 'comment',
+  qr'Verwendungszweck'	=> 'comment',
+  qr'Auftraggeber'	=> 'sender',
+  qr'Empf.nger'		=> 'receiver',
+  qr'Betrag Euro'	=> 'amount',
+  qr'Saldo Euro'	=> 'running_total',
+);
 
 sub parse_date {
   my ($self,$date) = @_;
@@ -81,52 +105,63 @@ sub parse_statement {
     unless $raw_statement;
 
   my @lines = split /\r?\n/, $raw_statement;
-  croak "No valid account statement"
-    unless $lines[0] eq 'Postbank Kontoauszug Girokonto';
+  croak "No valid account statement: '$lines[0]'"
+    unless $lines[0] =~ /^Postbank Kontoauszug (.*)$/;
+  shift @lines;
+  $self->account_type($1);
+
+  $lines[0] =~ m!^\s*$!
+    or croak "Expected an empty line as the second line, got '$lines[0]'";
   shift @lines;
 
-  # PFIFFIG, PETRA  BLZ: 20010020  Kontonummer: 9999999999
-  $lines[0] =~ /^(.*?)\s+BLZ:\s+(\d{8})\s+Kontonummer:\s+(\d+)$/
-    or croak "No owner found in account statement ($lines[0])";
-  $self->{name} = $1;
-  $self->{blz} = $2;
-
-  # Verify resp. set the account number from what we read
-  my $num = $self->number;
-  croak "Account statement for different account"
-    unless (not defined $num) or ($num eq $3);
-  $self->number($3)
-    unless $num;
-  shift @lines;
-
-  # Collect the IBAN:
-  $lines[0] =~ /IBAN (DE\d\d \d\d\d\d \d\d\d\d \d\d\d\d \d\d\d\d \d\d)/
-    or croak "No IBAN found in account statement ($lines[0])";
-  $self->{iban} = $1;
-  shift @lines;
-
-  $lines[0] =~ /^Kontostand\s+Datum\s+Betrag\s+EUR$/
-    or croak "No summary found in account statement ($lines[0])";
-  shift @lines;
-  my ($balance_now,$balance_prev);
-  for ($balance_now,$balance_prev) {
-    if ($lines[0] =~ /^([0-9.]{10})\s+(-?[0-9.,]+)$/) {
-      $_ = [$self->parse_date($1),$self->parse_amount($2)];
-    } else {
-      die "Couldn't find a balance statement in ($lines[0])";
-    };
+  # Name: PETRA PFIFFIG
+  for my $tag (@{ $tags{ $self->account_type }||[] }) {
+    $lines[0] =~ /^\Q$tag\E: (.*)$/
+      or croak "Field '$tag' not found in account statement ($lines[0])";
+    my $method = lc($tag);
+    $self->$method($1);
     shift @lines;
+  };
+
+  $lines[0] =~ m!^\s*$!
+    or croak "Expected an empty line after the information, got '$lines[0]'";
+  shift @lines;
+
+  
+  for my $total (@{ $totals{ $self->account_type }||[] }) {
+    my ($re,$method) = @$total;
+    $lines[0] =~ /^$re:\s*(.*) Euro$/
+      or croak "No summary found in account statement ($lines[0]) for $method";
+    shift @lines;
+    my ($balance) = $1;
+    if ($balance =~ /^(-?[0-9.,]+)$/) {
+      $self->$method( ['????????',$self->parse_amount($balance)]);
+    } else {
+      die "Invalid number '$_' found for $total";
+    };
+  };
+
+  $lines[0] =~ m!^\s*$!
+    or croak "Expected an empty line after the account balances, got '$lines[0]'";
+  shift @lines;
+
+  # Now parse the lines for each cashflow :
+  $lines[0] =~ /^Datum\tWertstellung\tArt/
+    or croak "Couldn't find start of transactions ($lines[0])";
+
+  my (@fields);
+  COLUMN:
+  for my $col (split /\t/, $lines[0]) {
+    for my $target (keys %columns) {
+      if ($col =~ m!^$target$!) {
+        push @fields, $columns{$target};
+        next COLUMN;
+      };
+    };
+    die "Unknown column '$col'";
   };
   shift @lines;
 
-  $self->balance( $balance_now );
-  $self->balance_prev( $balance_prev );
-
-  # Now parse the lines for each cashflow :
-  $lines[0] =~ /^Datum\s+Wertstellung\s+Art\s+Verwendungszweck\s+Auftraggeber\s+Empfänger\s+Betrag\s+EUR$/
-    or croak "Couldn't find start of transactions ($lines[0])";
-  shift @lines;
-  my (@fields) = qw[tradedate valuedate type comment receiver sender amount];
   my (%convert) = (
     tradedate => \&parse_date,
     valuedate => \&parse_date,
@@ -139,7 +174,7 @@ sub parse_statement {
     next if $line =~ /^\s*$/;
     my (@row) = split /\t/, $line;
     scalar @row == scalar @fields
-      or die "Malformed cashflow ($line)";
+      or die "Malformed cashflow ($line): Expected ".scalar(@fields)." entries, got ".scalar(@row);
 
     my (%rec);
     @rec{@fields} = @row;

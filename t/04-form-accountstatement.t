@@ -2,6 +2,8 @@
 use strict;
 use FindBin;
 
+require 't/test_form.pm';
+
 use vars qw(@fields);
 BEGIN {
   @fields = qw(GIROSELECTION CHOICE SUBMIT);
@@ -46,14 +48,7 @@ SKIP: {
       skip "Couldn't get to account statement (LWP: $status)",5;
     };
 
-    # Check that the expected form fields are available :
-    my $field;
-    for $field (@fields) {
-      unless (defined $account->agent->current_form->find_input($field)) {
-        diag $account->agent->current_form->inputs;
-      };
-      ok(defined $account->agent->current_form->find_input($field),"ACCOUNTSTATEMENT form has field '$field'");
-    };
+    form_ok( $account->agent, kontoumsatzForm => @fields );
     ok($account->close_session(),"Closed session");
     is($account->agent(),undef,"agent was discarded");
 

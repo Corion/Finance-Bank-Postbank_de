@@ -5,8 +5,13 @@ use FindBin;
 
 use vars qw(@related_accounts);
 BEGIN {
-  @related_accounts = qw( 0999999999
-                          9999999999 );
+  @related_accounts = qw( 
+                          3299999998
+                          3299999999
+                          9999999998
+                          9999999999
+                          9999999999999999~KREDITKARTE
+                          );
 };
 
 use Test::More tests => 5 + scalar @related_accounts *2;
@@ -51,7 +56,7 @@ SKIP: {
       diag $account->agent->res->as_string;
       skip "Didn't get a connection to ".&Finance::Bank::Postbank_de::LOGIN."(LWP: $status)",3;
     };
-    skip "Banking is unavailable due to maintenance", 3
+    skip "Banking is unavailable due to maintenance", 3 + @related_accounts*2
       if $account->maintenance;
     $account->agent(undef);
 
@@ -95,7 +100,9 @@ SKIP: {
 
   no warnings 'once';
   local *Finance::Bank::Postbank_de::select_function = sub {};
-  my $agent = Test::MockObject->new()->set_always('current_form',HTML::Form->parse($content,'https://banking.postbank.de'));
+  my $agent = Test::MockObject->new()
+              ->set_always('current_form',HTML::Form->parse($content,'https://banking.postbank.de'));
+  $agent->set_always( form => 1 );
   $account->agent($agent);
   is_deeply([$account->account_numbers],["9999999999"],"Single account number works");
 };
