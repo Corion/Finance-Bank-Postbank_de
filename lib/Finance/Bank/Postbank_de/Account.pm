@@ -223,8 +223,9 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
 =for example end
 
 =for example_testing
-  is($::_STDOUT_,'Statement date : 20030520
-Balance : 2500.00 EUR
+  isa_ok($statement,"Finance::Bank::Postbank_de::Account");
+  $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
+  is($::_STDOUT_,'Balance : 2500.00 EUR
 20030520;20030520;GUTSCHRIFT;KINDERGELD                 KINDERGELD-NR 234568/133;ARBEITSAMT BONN;;154.00
 20030520;20030520;ÜBERWEISUNG;FINANZKASSE 3991234        STEUERNUMMER 007 03434     EST-VERANLAGUNG 99;FINANZAMT KÖLN-SÜD;;-328.75
 20030513;20030513;LASTSCHRIFT;RECHNUNG 03121999          BUCHUNGSKONTO 9876543210;TELEFON AG KÖLN;;-125.80
