@@ -245,7 +245,7 @@ Balance : 2500.00 EUR
 20030513;20030513;LASTSCHRIFT;MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT;EIGENHEIM KG;;-850.00
 EOX
   for ($::_STDOUT_,$expected) {
-    s!\r\n!!gsm;    
+    s!\r\n!!gsm;
     # Strip out all date references ...
     s/^\d{8};\d{8};//gm;
   };
@@ -305,6 +305,12 @@ Parses the file C<$filename> instead of downloading data from the web.
 Parses the content of C<$string>  instead of downloading data from the web.
 
 =back
+
+=head2 $account->iban
+
+Returns the IBAN for the account as a string. Later, a move to L<Business::IBAN> is
+planned. The IBAN is a unique identifier for every account, that identifies the country,
+bank and account with that bank.
 
 =head2 $account->transactions %ARGS
 
