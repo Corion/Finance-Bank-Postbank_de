@@ -279,24 +279,30 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
   isa_ok($statement,"Finance::Bank::Postbank_de::Account");
   my $expected = <<EOX;
 Balance : 5314.05 EUR
-20030520;20030520;GUTSCHRIFT;KINDERGELD                 KINDERGELD-NR 234568/133;ARBEITSAMT BONN;;154.00
-20030520;20030520;ÜBERWEISUNG;FINANZKASSE 3991234        STEUERNUMMER 007 03434     EST-VERANLAGUNG 99;FINANZAMT KÖLN-SÜD;;-328.75
-20030513;20030513;LASTSCHRIFT;RECHNUNG 03121999          BUCHUNGSKONTO 9876543210;TELEFON AG KÖLN;;-125.80
-20030513;20030513;SCHECK;;EC1037406000003;;-511.20
-20030513;20030513;LASTSCHRIFT;TEILNEHMERNUMMER 123456789 RUNDFUNK VON 1099 BIS 1299;GEZ KÖLN;;-84.75
-20030513;20030513;LASTSCHRIFT;STROMKOSTEN                KD-NR 1462347              JAHRESABRECHNUNG;STADTWERKE MUSTERSTADT;;-580.06
-20030513;20030513;INH.SCHECK;;2000123456789;;-100.00
-20030513;20030513;SCHECKEINR;EINGANG VORBEHALTEN;GUTBUCHUNG 12345;;1830.00
-20030513;20030513;DAUER ÜBERW;DA 100001;;MUSTERMANN, HANS;-31.50
-20030513;20030513;GUTSCHRIFT;BEZÜGE                     PERSONALNUMMER 700600170/01;ARBEITGEBER U. CO;;2780.70
-20030513;20030513;LASTSCHRIFT;MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT;EIGENHEIM KG;;-850.00
+Überweisung;111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434;Finanzkasse Köln-Süd;PETRA PFIFFIG;-328.75
+Überweisung;111111/3299999999/20010020 Übertrag auf SparCard 3299999999;Petra Pfiffig;PETRA PFIFFIG;-228.61
+Gutschrift;Bezüge Pers.Nr. 70600170/01 Arbeitgeber u. Co;PETRA PFIFFIG;Petra Pfiffig;2780.70
+Überweisung;DA 1000001;Verlagshaus Scribere GmbH;PETRA PFIFFIG;-31.50
+Scheckeinreichung;Eingang vorbehalten Gutbuchung 12345;PETRA PFIFFIG;Ein Fremder;1830.00
+Lastschrift;Miete 600+250 EUR Obj22/328 Schulstr.7, 12345 Meinheim;Eigenheim KG;PETRA PFIFFIG;-850.00
+Inh. Scheck;;2000123456789;PETRA PFIFFIG;-75.00
+Lastschrift;Teilnehmernr 1234567 Rundfunk 0103-1203;GEZ;PETRA PFIFFIG;-84.75
+Lastschrift;Rechnung 03121999;Telefon AG Köln;PETRA PFIFFIG;-125.80
+Lastschrift;Stromkosten Kd.Nr.1462347 Jahresabrechnung;Stadtwerke Musterstadt;PETRA PFIFFIG;-580.06
+Gutschrift;Kindergeld Kindergeld-Nr. 1462347;PETRA PFIFFIG;Arbeitsamt Bonn;154.00
 EOX
   for ($::_STDOUT_,$expected) {
     s!\r\n!!gsm;
     # Strip out all date references ...
     s/^\d{8};\d{8};//gm;
   };
-  is_deeply([split /\n/, $::_STDOUT_],[split /\n/, $expected],"Retrieved the correct data");
+  is_deeply([split /\n/, $::_STDOUT_],[split /\n/, $expected],"Retrieved the correct data")
+    or do {
+      diag "--- Expected";
+      diag $expected;
+      diag "--- Got";
+      diag $::_STDOUT_;
+    };
 
 =head1 DESCRIPTION
 
