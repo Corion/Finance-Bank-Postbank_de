@@ -20,4 +20,5 @@ t/99-Pod.t
 t/embedded-Finance-Bank-Postbank_de.t
 t/embedded-Finance-Bank-Postbank_de-Account.t
 t/accountstatement.txt
+t/accountstatement-negative.txt
 t/giroselection.html

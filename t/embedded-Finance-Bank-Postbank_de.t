@@ -77,6 +77,7 @@ eval q{
   };
 
   $account->close_session;
+  
 ;
 
   }

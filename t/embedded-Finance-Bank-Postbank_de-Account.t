@@ -33,9 +33,9 @@ tie *STDERR, 'Catch', '_STDERR_' or die $!;
 
 SKIP: {
     # A header testing whether we find all prerequisites :
-      # Check for module Finance::Bank::Postbank_de
-  eval { require Finance::Bank::Postbank_de };
-  skip "Need module Finance::Bank::Postbank_de to run this test", 1
+      # Check for module Finance::Bank::Postbank_de::Account
+  eval { require Finance::Bank::Postbank_de::Account };
+  skip "Need module Finance::Bank::Postbank_de::Account to run this test", 1
     if $@;
 
   # Check for module strict
@@ -54,22 +54,19 @@ eval q{
 #line 207 lib/Finance/Bank/Postbank_de/Account.pm
 
   use strict;
-  use Finance::Bank::Postbank_de;
-  my $account = Finance::Bank::Postbank_de::Account->parse_statement(
+  use Finance::Bank::Postbank_de::Account;
+  my $statement = Finance::Bank::Postbank_de::Account->parse_statement(
                 number => '9999999999',
                 password => '11111',
               );
   # Retrieve account data :
-  my $retrieved_statement = $account->parse_statement();
-  print "Statement date : ",$retrieved_statement->balance->[0],"\n";
-  print "Balance : ",$retrieved_statement->balance->[1]," EUR\n";
+  print "Statement date : ",$statement->balance->[0],"\n";
+  print "Balance : ",$statement->balance->[1]," EUR\n";
 
   # Output CSV for the transactions
-  for my $row ($retrieved_statement->transactions) {
-    print join( ";", map { $row->{$_} } (qw( date valuedate type comment receiver sender amount ))),"\n";
+  for my $row ($statement->transactions) {
+    print join( ";", map { $row->{$_} } (qw( tradedate valuedate type comment receiver sender amount ))),"\n";
   };
-
-  $account->close_session;
 
 ;
 
@@ -126,7 +123,7 @@ eval q{
   my $example = sub {
     local $^W = 0;
 
-#line 328 lib/Finance/Bank/Postbank_de/Account.pm
+#line 325 lib/Finance/Bank/Postbank_de/Account.pm
 
   #!/usr/bin/perl -w
   use strict;
@@ -184,7 +181,7 @@ eval q{
 
   }
 };
-is($@, '', "example from line 328");
+is($@, '', "example from line 325");
 
 };
 SKIP: {

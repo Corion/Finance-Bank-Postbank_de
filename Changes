@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.07
+  - Fixed Finance::Postbank_de::Account synopsis
+  - Added test and fix for negative account statements ...
+
 0.06 20030207
   - Restructured ::Postbank_de::Account::transactions()
   - Introduced some aliases for field names

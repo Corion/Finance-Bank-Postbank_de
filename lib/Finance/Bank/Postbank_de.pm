@@ -216,7 +216,7 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
 
 =head1 SYNOPSIS
 
-=begin example
+=for example begin
 
   use strict;
   use Finance::Bank::Postbank_de;
@@ -242,7 +242,8 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
   };
 
   $account->close_session;
-=end example
+  
+=for example end
 
 =head1 DESCRIPTION
 

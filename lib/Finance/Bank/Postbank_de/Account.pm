@@ -105,7 +105,7 @@ sub parse_statement {
   shift @lines;
   my ($balance_now,$balance_prev);
   for ($balance_now,$balance_prev) {
-    if ($lines[0] =~ /^([0-9.]{10})\s+([0-9.,]+)$/) {
+    if ($lines[0] =~ /^([0-9.]{10})\s+(-?[0-9.,]+)$/) {
       $_ = [$self->parse_date($1),$self->parse_amount($2)];
     } else {
       die "Couldn't find a balance statement in ($lines[0])";
@@ -203,27 +203,24 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
 
 =head1 SYNOPSIS
 
-=begin example
+=for example begin
 
   use strict;
-  use Finance::Bank::Postbank_de;
-  my $account = Finance::Bank::Postbank_de::Account->parse_statement(
+  use Finance::Bank::Postbank_de::Account;
+  my $statement = Finance::Bank::Postbank_de::Account->parse_statement(
                 number => '9999999999',
                 password => '11111',
               );
   # Retrieve account data :
-  my $retrieved_statement = $account->parse_statement();
-  print "Statement date : ",$retrieved_statement->balance->[0],"\n";
-  print "Balance : ",$retrieved_statement->balance->[1]," EUR\n";
+  print "Statement date : ",$statement->balance->[0],"\n";
+  print "Balance : ",$statement->balance->[1]," EUR\n";
 
   # Output CSV for the transactions
-  for my $row ($retrieved_statement->transactions) {
-    print join( ";", map { $row->{$_} } (qw( date valuedate type comment receiver sender amount ))),"\n";
+  for my $row ($statement->transactions) {
+    print join( ";", map { $row->{$_} } (qw( tradedate valuedate type comment receiver sender amount ))),"\n";
   };
 
-  $account->close_session;
-
-=end example
+=for example end
 
 =head1 DESCRIPTION
 
@@ -324,7 +321,7 @@ C<trade_dates> is a convenience method that returns all trade dates on the accou
 
 =head2 Converting a daily download to a sequence
 
-=begin example
+=for example begin
 
   #!/usr/bin/perl -w
   use strict;
@@ -378,7 +375,7 @@ C<trade_dates> is a convenience method that returns all trade dates on the accou
   # And update our log with what we have seen
   push @statement, @new;
 
-=end example
+=for example end
 
 =head1 AUTHOR
 
