@@ -14,11 +14,12 @@ Edit Makefile.PL if you want to install the module anyway"
 WriteMakefile(
     'NAME'    => 'Finance::Bank::Postbank_de',
     'VERSION_FROM'  => 'lib/Finance/Bank/Postbank_de.pm', # finds $VERSION
-    'PREREQ_PM'    => { 'WWW::Mechanize' => 0.35,
+    'PREREQ_PM'    => { 'WWW::Mechanize' => 0.70,
                         'Test::More' => 0,
                         'Test::MockObject' => 0,
                         'Class::Accessor' => 0,
                         'MIME::Lite' => 3.00,
+                        'List::Sliding::Changes' => 0.02,
                       }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'lib/Finance/Bank/Postbank_de.pm', # retrieve abstract from module

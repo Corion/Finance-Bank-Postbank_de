@@ -1,5 +1,11 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.09 20031108
+  - Added List::Sliding::Changes as a hard prerequisite. It's only
+    needed for the examples, but I grew tired of the bug reports.
+  - Added certificate checking throuch LWP If-SSL-Cert-Subject header
+  - now needs WWW::Mechanize v0.70 due to autocheck => 1
+
 0.08 20031107
   - The error number for wrong PIN changed from 10011 to 9501
   - The maintenance screen now got an error number: 5010

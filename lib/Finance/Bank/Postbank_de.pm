@@ -10,7 +10,7 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.08';
+$VERSION = '0.09';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent ));
@@ -20,8 +20,6 @@ use constant LOGIN => 'https://banking.postbank.de/anfang.jsp';
 use vars qw(%functions);
 BEGIN {
   %functions = (
-    #quit => qr/Banking\s+beenden/,
-    #accountstatement => qr/Kontoauszug/,
     quit => 'Banking beenden',
     accountstatement => 'Kontoauszug',
   );
@@ -57,7 +55,7 @@ sub new_session {
 
   $self->close_session()
     if ($self->agent);
-
+    
   my $result = $self->get_login_page(LOGIN);
   if($result == 200) {
     if ($self->maintenance) {
@@ -80,9 +78,10 @@ sub new_session {
 sub get_login_page {
   my ($self,$url) = @_;
   $self->log("Connecting to $url");
-  $self->agent(WWW::Mechanize->new());
+  $self->agent(WWW::Mechanize->new( autocheck => 1 ));
 
   my $agent = $self->agent();
+  $agent->add_header("If-SSL-Cert-Subject" => '/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Electronic Banking/OU=Terms of use');
   $agent->get(LOGIN);
   $self->log_httpresult();
   $agent->status;
@@ -91,7 +90,7 @@ sub get_login_page {
 sub error_page {
   # Check if an error page is shown (a page with much red on it)
   my ($self) = @_;
-     $self->agent->content =~ /<tr valign="top" bgcolor="#FF0033">/sm 
+     $self->agent->content =~ /<tr valign="top" bgcolor="#FF0033">/sm
   # or $self->agent->content =~ /<tr valign="top" bgcolor="#FF0000">/sm;
 };
 
@@ -285,7 +284,7 @@ Balance : 2500.00 EUR
 Closing session
 EOX
   for ($::_STDOUT_,$expected) {
-    s!\r\n!!gsm;    
+    s!\r\n!!gsm;
     # Strip out all date references ...
     s/^\d{8};\d{8};//gm;
   };
