@@ -251,7 +251,8 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
   isa_ok($account,"Finance::Bank::Postbank_de");
   isa_ok($retrieved_statement,"Finance::Bank::Postbank_de::Account");
   $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
-  is($::_STDOUT_,'New Finance::Bank::Postbank_de created
+  my $expected = <<EOX;
+New Finance::Bank::Postbank_de created
 Connecting to https://banking.postbank.de/anfang.jsp
 Logging into function ACCOUNTBALANCE
 Getting account statement (default or only one there)
@@ -269,7 +270,9 @@ Balance : 2500.00 EUR
 20030513;20030513;GUTSCHRIFT;BEZÜGE                     PERSONALNUMMER 700600170/01;ARBEITGEBER U. CO;;2780.70
 20030513;20030513;LASTSCHRIFT;MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT;EIGENHEIM KG;;-850.00
 Closing session
-','Retrieving an account statement works');
+EOX
+  $expected =~ s!\r\n!\n!gms;
+  is($::_STDOUT_,'','Retrieving an account statement works');
 
 =head1 DESCRIPTION
 

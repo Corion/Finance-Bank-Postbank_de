@@ -9,7 +9,7 @@ use base 'Class::Accessor';
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 BEGIN {
   Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev  ));
@@ -225,7 +225,8 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
 =for example_testing
   isa_ok($statement,"Finance::Bank::Postbank_de::Account");
   $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
-  is($::_STDOUT_,'Balance : 2500.00 EUR
+  my $expected = <<EOX
+Balance : 2500.00 EUR
 20030520;20030520;GUTSCHRIFT;KINDERGELD                 KINDERGELD-NR 234568/133;ARBEITSAMT BONN;;154.00
 20030520;20030520;ÜBERWEISUNG;FINANZKASSE 3991234        STEUERNUMMER 007 03434     EST-VERANLAGUNG 99;FINANZAMT KÖLN-SÜD;;-328.75
 20030513;20030513;LASTSCHRIFT;RECHNUNG 03121999          BUCHUNGSKONTO 9876543210;TELEFON AG KÖLN;;-125.80
@@ -237,7 +238,9 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
 20030513;20030513;DAUER ÜBERW;DA 100001;;MUSTERMANN, HANS;-31.50
 20030513;20030513;GUTSCHRIFT;BEZÜGE                     PERSONALNUMMER 700600170/01;ARBEITGEBER U. CO;;2780.70
 20030513;20030513;LASTSCHRIFT;MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT;EIGENHEIM KG;;-850.00
-',"Retrieved the correct data");
+EOX
+  $expected =~ s!\r\n!\n!gsm;
+  is($::_STDOUT_,$expected,"Retrieved the correct data");
 
 =head1 DESCRIPTION
 
