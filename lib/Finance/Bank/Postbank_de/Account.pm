@@ -225,7 +225,7 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
 =for example_testing
   isa_ok($statement,"Finance::Bank::Postbank_de::Account");
   $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
-  my $expected = <<EOX
+  my $expected = <<EOX;
 Balance : 2500.00 EUR
 20030520;20030520;GUTSCHRIFT;KINDERGELD                 KINDERGELD-NR 234568/133;ARBEITSAMT BONN;;154.00
 20030520;20030520;ÜBERWEISUNG;FINANZKASSE 3991234        STEUERNUMMER 007 03434     EST-VERANLAGUNG 99;FINANZAMT KÖLN-SÜD;;-328.75

@@ -273,7 +273,7 @@ Closing session
 EOX
   $expected =~ s!\r\n!\n!gms;
   $::_STDOUT_ =~ s!\r\n!\n!gms;
-  is($::_STDOUT_,'','Retrieving an account statement works');
+  is($::_STDOUT_,$expected,'Retrieving an account statement works');
 
 =head1 DESCRIPTION
 
