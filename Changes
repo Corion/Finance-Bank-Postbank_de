@@ -17,6 +17,7 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
     The names are passed through directly so you will need to adapt
     your program(s).
   ! The postbank now fills in more fields (sender/receiver) all the time.
+  ! The credit card accounts are not returned!!
 
 0.11 20041108
   - Fixed erroneous skip count in t/02-maintenance.t.
