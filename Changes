@@ -1,9 +1,13 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.10 20040904
+  - The Postbank changed their certificate, which rightfully tripped
+    up the If-SSL-Cert-Subject header.
+
 0.09 20031108
   - Added List::Sliding::Changes as a hard prerequisite. It's only
     needed for the examples, but I grew tired of the bug reports.
-  - Added certificate checking throuch LWP If-SSL-Cert-Subject header
+  - Added certificate checking through LWP If-SSL-Cert-Subject header
   - now needs WWW::Mechanize v0.64 due to autocheck => 1
 
 0.08 20031107

@@ -10,7 +10,7 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.09';
+$VERSION = '0.10';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent ));
@@ -78,12 +78,14 @@ sub new_session {
 sub get_login_page {
   my ($self,$url) = @_;
   $self->log("Connecting to $url");
-  $self->agent(WWW::Mechanize->new( autocheck => 1 ));
+  $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
 
   my $agent = $self->agent();
-  $agent->add_header("If-SSL-Cert-Subject" => '/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Electronic Banking/OU=Terms of use');
+  $agent->add_header("If-SSL-Cert-Subject" => qr'/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Systems AG/OU=Terms of use at www\.verisign\.com/rpa \(c\)00');
+
   $agent->get(LOGIN);
   $self->log_httpresult();
+  #warn $agent->res->header('Client-SSL-Cert-Subject');
   $agent->status;
 };
 
