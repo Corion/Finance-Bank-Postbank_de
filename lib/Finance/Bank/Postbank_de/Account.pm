@@ -239,6 +239,7 @@ Balance : 2500.00 EUR
 20030513;20030513;GUTSCHRIFT;BEZÜGE                     PERSONALNUMMER 700600170/01;ARBEITGEBER U. CO;;2780.70
 20030513;20030513;LASTSCHRIFT;MIETE 600,00 EUR           NEBENKOSTEN 250,00 EUR     OBJEKT 22/328              MUSTERPFAD 567, MUSTERSTADT;EIGENHEIM KG;;-850.00
 EOX
+  $::_STDOUT_ =~ s!\r\n!\n!gms;
   $expected =~ s!\r\n!\n!gsm;
   is($::_STDOUT_,$expected,"Retrieved the correct data");
 
