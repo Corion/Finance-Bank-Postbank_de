@@ -305,10 +305,10 @@ Getting account statement via default (9999999999)
 Downloading text version
 Statement date : ????????
 Balance : 5314.05 EUR
-Überweisung;111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434;Finanzkasse Köln-Süd;PETRA PFIFFIG;-328.75
-Überweisung;111111/3299999999/20010020 Übertrag auf SparCard 3299999999;Petra Pfiffig;PETRA PFIFFIG;-228.61
-Gutschrift;Bezüge Pers.Nr. 70600170/01 Arbeitgeber u. Co;PETRA PFIFFIG;Petra Pfiffig;2780.70
-Überweisung;DA 1000001;Verlagshaus Scribere GmbH;PETRA PFIFFIG;-31.50
+.berweisung;111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434;Finanzkasse K.ln-S.d;PETRA PFIFFIG;-328.75
+.berweisung;111111/3299999999/20010020 .bertrag auf SparCard 3299999999;Petra Pfiffig;PETRA PFIFFIG;-228.61
+Gutschrift;Bez.ge Pers.Nr. 70600170/01 Arbeitgeber u. Co;PETRA PFIFFIG;Petra Pfiffig;2780.70
+.berweisung;DA 1000001;Verlagshaus Scribere GmbH;PETRA PFIFFIG;-31.50
 Scheckeinreichung;Eingang vorbehalten Gutbuchung 12345;PETRA PFIFFIG;Ein Fremder;1830.00
 Lastschrift;Miete 600+250 EUR Obj22/328 Schulstr.7, 12345 Meinheim;Eigenheim KG;PETRA PFIFFIG;-850.00
 Inh. Scheck;;2000123456789;PETRA PFIFFIG;-75.00
@@ -321,6 +321,7 @@ Activating (?-xism:^Banking beenden\$)
 EOX
   for ($::_STDOUT_,$expected) {
     s!\r\n!\n!gsm;
+    s![\x80-\xff]!.!gsm;
     # Strip out all date references ...
     s/^\d{8};\d{8};//gm;
   };

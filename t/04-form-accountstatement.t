@@ -15,7 +15,7 @@ use_ok("Finance::Bank::Postbank_de");
 # Check that we have SSL installed :
 SKIP: {
 
-  skip "Need SSL capability to access the website", 6 + scalar @fields
+  skip "Need SSL capability to access the website", 3 + scalar @fields
     unless LWP::Protocol::implementor('https');
 
   my $account = Finance::Bank::Postbank_de->new(
@@ -35,7 +35,7 @@ SKIP: {
   SKIP: {
     unless ($status == 200) {
       diag $account->agent->res->as_string;
-      skip "Didn't get a connection to ".&Finance::Bank::Postbank_de::LOGIN."(LWP: $status)", 9;
+      skip "Didn't get a connection to ".&Finance::Bank::Postbank_de::LOGIN."(LWP: $status)", 7;
     };
     skip "Banking is unavailable due to maintenance", 9
       if $account->maintenance;

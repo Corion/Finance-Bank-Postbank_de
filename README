@@ -1,4 +1,4 @@
-Finance/Bank/Postbank_de version 0.06
+Finance/Bank/Postbank_de version 0.20
 ==================================
 
 This is a module faciliating access to the german
@@ -39,4 +39,4 @@ COPYRIGHT AND LICENCE
 
 This module may be used under the same terms as Perl itself.
 
-Copyright (C) 2003 Max Maischein <corion@cpan.org>
+Copyright (C) 2003-2005 Max Maischein <corion@cpan.org>
