@@ -10,13 +10,14 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent ));
 };
 
-use constant LOGIN => 'https://banking.postbank.de/anfang.jsp';
+#use constant LOGIN => 'https://banking.postbank.de/anfang.jsp';
+use constant LOGIN => 'https://banking-classic.postbank.de/anfang.jsp';
 use vars qw(%functions);
 BEGIN {
   %functions = (
@@ -82,6 +83,8 @@ sub get_login_page {
 
   my $agent = $self->agent();
   $agent->add_header("If-SSL-Cert-Subject" => qr'/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Systems AG/OU=Terms of use at www\.verisign\.com/rpa \(c\)00');
+#/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Electronic Banking/OU=Terms of use
+  $agent->add_header("If-SSL-Cert-Subject" => qr'/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Electronic Banking/OU=Terms of use');
 
   $agent->get(LOGIN);
   $self->log_httpresult();
@@ -196,7 +199,22 @@ sub get_account_statement {
   $agent->current_form->value('CHOICE','COMPLETE');
   $agent->click('SUBMIT');
   $self->log("Downloading print version");
-  $agent->form(3);
+
+  # find the form with the "DOWNLOAD" button:
+  my @forms = $agent->forms;
+  my $download_action = 0;
+  for my $form ($agent->forms) {
+    $download_action++;
+    last if $form->find_input( 'DOWNLOAD', 'image' );
+  };
+  if (! $download_action) {
+    warn $agent->content;
+    croak "Couldn't find a button named 'DOWNLOAD'";
+  } else {
+    #$self->log("Download form is form number $download_action");
+  };
+  
+  $agent->form($download_action);
   $agent->click('DOWNLOAD');
 
   $self->log_httpresult();
@@ -267,7 +285,7 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
   $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
   my $expected = <<EOX;
 New Finance::Bank::Postbank_de created
-Connecting to https://banking.postbank.de/anfang.jsp
+Connecting to https://banking-classic.postbank.de/anfang.jsp
 Logging into function ACCOUNTBALANCE
 Getting account statement (default or only one there)
 Downloading print version
