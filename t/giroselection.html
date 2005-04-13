@@ -1,4 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+
+
 
 
 
@@ -9,7 +15,7 @@
 
 <head>
 
-<title>Postbank Online Banking</title>
+<title id="fst">Postbank Online-Banking</title>
 
 <!--
 <meta http-equiv="pragma" content="no-cache" />
@@ -25,13 +31,16 @@
 <link rel="icon" type="image/icon" href="favicon.ico" />
 -->
 
-<link rel="SHORTCUT ICON" href="common/images/favicon.ico" />
-<link rel="stylesheet" type="text/css" media="screen,projection,print" href="common/css/main.css" />
-<link rel="stylesheet" type="text/css" media="screen,projection,print" href="common/css/formular.css" />
+<link rel="SHORTCUT ICON" href="/app/static/images/favicon.ico" />
+<link rel="stylesheet" type="text/css" media="screen,projection,print" href="/app/static/css/main.css" />
+<link rel="stylesheet" type="text/css" media="screen,projection,print" href="/app/static/css/formular.css" />
 <!--[if gte IE 5]>
-<link rel="stylesheet" type="text/css" media="screen,projection" href="common/css/ie.css" />
+<link rel="stylesheet" type="text/css" media="screen,projection" href="/app/static/css/ie.css" />
 <![endif]-->
 
+<!--[if lt IE 6]>
+<link rel="stylesheet" type="text/css" media="screen,projection" href="/app/static/css/ie5.css" />
+<![endif]-->
 
 
 
@@ -42,7 +51,7 @@ var EXTERN_URL_GIRO_ABSCHLIESSEN = 'https://produktabschluss.postbank.de/giroplu
 var EXTERN_URL_POSTBANK_BANKING_FREISCHALTEN = 'https://produktabschluss.postbank.de/giroplus/online/online1a.jsp';
 
 
-var EXTERN_URL_KONTAKT_IPVK = 'https://produktabschluss.postbank.de/ipvk/kontakte/welcome.jsp?ipvk_aufruf=iob&url=https://banking.postbank.de/iob3/private/servlet.callback;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2';
+var EXTERN_URL_KONTAKT_IPVK = 'https://produktabschluss.postbank.de/ipvk/kontakte/welcome.jsp?ipvk_aufruf=iob&amp;url=https://banking.postbank.de/app/private/servlet.callback;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1';
 var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
@@ -52,12 +61,17 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
-<script type="text/javascript" language="JavaScript1.2" src="common/js/script.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="common/js/util.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="common/js/browserCheck.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="common/js/iob.js"></script>
+<script type="text/javascript" language="JavaScript1.2" src="/app/static/js/script.js"></script>
+<script type="text/javascript" language="JavaScript1.2" src="/app/static/js/util.js"></script>
+<script type="text/javascript" language="JavaScript1.2" src="/app/static/js/browserCheck.js"></script>
+
+<script type="text/javascript" language="JavaScript1.2" src="/app/static/js/iob.js"></script>
 
 </head>
+
+
+
+
 
 <body onload="init()">
 
@@ -65,6 +79,7 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 <h1 class="notvisible">Postbank Internet <span lang="en">Online-Banking</span></h1>
+
 <p class="notvisible"><a href="#level2">Direkt zum Inhalt</a></p>
 
 
@@ -75,7 +90,7 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
-	<img src="common/images/pblogo2.gif" width="140" height="90" alt="Postbank" />
+	<img src="/app/static/images/pblogo2.gif" width="140" height="90" alt="Postbank" />
 
 
 
@@ -91,7 +106,18 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
- 
+
+
+
+
+
+  
+  
+    
+      
+	  
+    
+  
 
 
 
@@ -102,83 +128,94 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
- 
 
-<div class="navigation" style="white-space:nowrap">
 
+
+
+
+
+<div class="navigation nowrap">
 <ul class="links">
 
   
   
-  
-  <li><div style="white-space:nowrap"><a href="/iob3/finanzstatus.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" tabindex="102" class="inaktiv">Finanzstatus</a></div></li>
-  
+  <li><div><a href="/app/finanzstatus.reduziert.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="f" tabindex="102" class="auswahl" title="Tastenkombination: Alt + f"><span class="underline">F</span>inanzstatus</a></div></li>
   
   
-    
   
 
   
+
+
   
   
-  <li class="liUnderEmpty"><div style="white-space:nowrap"><a href="/iob3/kontoumsatz.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?method=kontoumsatz" tabindex="103" class="auswahl">Kontoums&auml;tze</a></div></li>
-  
-  
-  
-  
-  
-  
-  <li><div style="white-space:nowrap"><a href="/iob3/ueberweisung.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" tabindex="104" class="inaktiv">&Uuml;berweisung</a></div></li>
-  
-  
-  
-  
-  
-  <li><div style="white-space:nowrap"><a href="/iob3/dauerauftrag.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?dauAction=neu" tabindex="105" class="inaktiv">Dauerauftrag</a></div></li>
-  
-  
-  
-  
-  
-  <li><div style="white-space:nowrap"><a href="/iob3/auslandsauftrag.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" tabindex="106" class="inaktiv">Auslandsauftrag</a></div></li>
+  <li class="liUnderEmpty"><div><a href="/app/kontoumsatz.umsatz.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="u" tabindex="103" class="inaktiv" title="Tastenkombination: Alt + u">Konto<span class="underline">u</span>ms&auml;tze</a></div></li>
   
   
 
   
   
   
-  <li><div style="white-space:nowrap"><a href="/iob3/initkomfortsparen.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?komfortAction=neu" tabindex="107" class="inaktiv">Komfort-Sparen</a></div></li>
+  <li><div><a href="/app/ueberweisung.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="ü" tabindex="104" class="inaktiv" title="Tastenkombination: Alt + ü"><span class="underline">&Uuml;</span>berweisung</a></div></li>
+
   
   
 
   
   
   
-  <li class="liUnderEmpty"><div style="white-space:nowrap"><a href="/iob3/verwaltung.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" tabindex="109" class="inaktiv">Einstellungen</a></div></li>
+
+  
+  
+  
+  <li><div><a href="/app/dauerauftrag.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="d" tabindex="105" class="inaktiv" title="Tastenkombination: Alt + d"><span class="underline">D</span>auerauftrag</a></div></li>
   
   
 
   
-  <li class="liUnderEmpty"><div style="white-space:nowrap"><a href="/iob3/logout.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" tabindex="110" class="iob-nav-close">Banking beenden</a></div></li>
+  
+  
+  <li><div><a href="/app/auslandsauftrag.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="a" tabindex="106" class="inaktiv" title="Tastenkombination: Alt + a"><span class="underline">A</span>uslandsauftrag</a></div></li>
+  
+  
+
+  
+  
+  
+  <li><div class="nowrap"><a href="/app/komfortsparen.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="k" tabindex="107" class="inaktiv" title="Tastenkombination: Alt + k"><span class="underline">K</span>omfort-Sparen</a></div></li>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  <li class="liUnderEmpty"><div><a href="/app/verwaltung.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="e" tabindex="109" class="inaktiv" title="Tastenkombination: Alt + e"><span class="underline">E</span>instellungen</a></div></li>
+  
+  
+
+  
+  <li class="liUnderEmpty"><div class="nowrap"><a href="/app/logout.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="b" tabindex="110" class="iob-nav-close" title="Tastenkombination: Alt + b"><span class="underline">B</span>anking beenden</a></div></li>
+
   
 </ul>
+
 <div class="NavTeaser">
 <a class="aTeaser" tabindex="111" title="Deutsche Post World Net - &Ouml;ffnet ein neues Fenster"
    href="http://www.dpwn.de/" target="_blank"><img
-   src="common/images/dpwn.gif" alt="Deutsche Post World Net" width="140" height="52" /></a>
+   src="/app/static/images/dpwn.gif" alt="Deutsche Post World Net" width="140" height="52" /></a>
 </div>
+
+
+
 </div>
-
- 
-
-
-
-
-
-
-
-
-
 
 
 
@@ -205,25 +242,13 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 <p class="keylinks">
 
 
-<a href="#logo" accesskey="1" tabindex="500" title="[Alt+1] Seitenanfang"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="#level2" accesskey="8" title="[Alt+8] Direkt zum Inhalt"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
+<a href="#logo" accesskey="1" tabindex="500" title="[Alt+1] Seitenanfang"><img src="/app/static/images/empty.gif" width="1" height="1" alt="" /></a>
+<a href="#level2" accesskey="8" title="[Alt+8] Direkt zum Inhalt"><img src="/app/static/images/empty.gif" width="1" height="1" alt="" /></a>
 
 
 
-<a href="/iob3/finanzstatus.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" accesskey="0" tabindex="500" title="[Alt+0] Startseite"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/sitemap.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" accesskey="7" tabindex="500" title="[Alt+7] Seiten&uuml;bersicht"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/logout.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" accesskey="b" tabindex="500" title="[Alt+b] Banking beenden"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-
-
-<a href="/iob3/finanzstatus.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" accesskey="f" tabindex="500" title="[Alt+f] Finanzstatus"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/kontoumsatz.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?method=kontoumsatz" accesskey="u" tabindex="500" title="[Alt+&uuml;] Kontoums&auml;tze"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/ueberweisung.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" accesskey="ü" tabindex="500" title="[Alt+w] &Uuml;berweisung"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/dauerauftrag.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?dauAction=neu" accesskey="d" tabindex="500" title="[Alt+d] Dauerauftrag"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/auslandsauftrag.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" accesskey="a" tabindex="500" title="[Alt+a] Auslandsauftrag"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/initkomfortsparen.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?komfortAction=neu" accesskey="k" tabindex="500" title="[Alt+k] Komfortsparen"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-<a href="/iob3/verwaltung.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" accesskey="e" tabindex="500" title="[Alt+e] Einstellungen"><img src="common/images/empty.gif" width="1" height="1" alt="" /></a>
-
-
+<a href="/app/finanzstatus.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="0" tabindex="500" title="[Alt+0] Startseite"><img src="/app/static/images/empty.gif" width="1" height="1" alt="" /></a>
+<a href="/app/sitemap.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" accesskey="7" tabindex="500" title="[Alt+7] Seiten&uuml;bersicht"><img src="/app/static/images/empty.gif" width="1" height="1" alt="" /></a>
 
 
 </p>
@@ -249,41 +274,59 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
+
+
+
+
+  
+    
+  
+  
+
+
+
+
+
+
 <div class="topNav"></div>
 
 
 
 <div class="topBar">
 
-<div class="visual"><img class="imgVisual" src="common/images/head_visual.jpg" alt="Postbank Online-Banking" width="430" height="65" /></div>
+<div class="visual"><img class="imgVisual" 
+  src="/app/static/images/head_visual.jpg" 
+  alt="Postbank Online-Banking" width="430" height="65" /></div>
 
-
-
-
-
-
-
-
-
+  
 
 <div class="headName">
-  <h4 class="h4HeadName">PETRA PFIFFIG</h4>
+  <h4 class="h4HeadName">MAISCHEIN, MAX
+  
+  </h4>
   <p class="pHeadName">
-    <br />Girokonto: <span class="digit">9999999999</span>
-    <br /><span class="abbr" title="Bankleitzahl"><abbr title="Bankleitzahl">BLZ:</abbr></span> <span class="digit">20010020</span>
+
+    <br />Girokonto: <span class="digit">999999999</span>
+    <br /><span class="abbr" title="Bankleitzahl"><abbr title="Bankleitzahl">BLZ:</abbr></span> 
+	  <span class="digit">50010060</span>
   </p>
+
+
+
 </div>
 
 
 
-
 <br />
+
+
+
+
 </div>
 
 
 
 <div class="advBar clearBoth"></div>
-
 
 
 
@@ -299,9 +342,12 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 <h2 class="notvisible">Hauptinhalt</h2>
 
 
+
+  
   
 
-<div class="mainlang">
+<div class="main">
+
 
 
 
@@ -320,540 +366,112 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 <div class="content">
 
 <div class="headline">
-  <p class="pHeadlineLeft">Bereits gebuchte Ums&auml;tze</p>
-  
-  
-  <p class="pHeadlineRight">13.11.2004 22:06</p>
+  <p class="pHeadlineLeft">Finanzstatus</p>
+  <p class="pHeadlineRight">13.04.2005 19:57</p>
   <br />
 </div>
 
-<div class="contentTabelle" style="width:100%">
+<div class="contentTabelle">
 
 <div class="innerContentTabelle">
-
 <div class="emptyline">&nbsp;</div>
 
+<table class="tableFinanzstatus" summary="Diese Tabelle beschreibt den aktuellen Finanzstatus Ihrer Konten.
+  Hier erhalten Sie Informationen &uuml;ber Art, Saldo und Ums&auml;tze bzw. Transaktionen Ihrer jeweiligen Konten.">
 
-<form name="kontoumsatzForm" method="post" action="/iob3/kontoumsatz.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2"><input type="hidden" name="org.apache.struts.taglib.html.TOKEN" value="be57a78af44e8f5c9397f9116f36cb76">
-<input type="hidden" name="method" value="kontoumsatz">
-
-
-<div class="leftCol" style="width:55%;min-width:24em">
-
-
-
-  <fieldset class="fieldset">
-  
-
-  
-  
-  
-  <div class="labelFixed3"><label for="konto"><span class="labelnofloat"><strong>Konto</strong> </span></label></div>
- <span class="floatleft">
-
-  <input type="hidden" name="konto" value="999999999">
-  <div class="pContent"><strong>Konto</strong> Postbank Girokonto,
-    999999999</div>
-  </span>
-  <br />
-  
-
-  
-
-  <div class="emptyline">&nbsp;</div>
-
-  <div class="labelFixed3"><span class="feldText" style="float:none"><strong>Zeitraum</strong></span></div>
-    <span class="floatleft"><input type="radio" name="zeitraum" tabindex="2" value="tage" checked="checked" class="radioButtonnofloat" title="Zeitraum - bitte w&auml;hlen Sie einen Zeitraum aus."></span>
-
-  
-  <span class="floatleft">
- <select name="tage" tabindex="3" style="width:12.5em" class="selectNormalLeftnofloat" title="Bitte w&auml;hlen Sie hier einen Zeitraum aus."><option value="10" selected="selected">10 Tage</option>
-    <option value="30">30 Tage</option>
-    <option value="60">60 Tage</option>
-    <option value="90">90 Tage</option>
-    <option value="00">alle Ums&auml;tze</option></select>
-  </span>
-  
-
-  
-
-  <div class="emptyline">&nbsp;</div>
-
-  <div class="labelFixed3">&nbsp;</div>
-    <span class="floatleft"><input type="radio" name="zeitraum" tabindex="4" value="datum" class="radioButtonnofloat" title="Zeitraum - bitte geben Sie in den folgenden drei Feldern ein Anfangsdatum an."></span>
-
-  <span class="feldText">von</span>
-  <span class="floatleft nowrap"><input type="text" name="tag" maxlength="2" size="2" tabindex="5" value="01" style="width:2.5em" class="textfeldnofloat" title="Datum Tag">
-  <input type="text" name="monat" maxlength="2" size="2" tabindex="6" value="11" style="width:2.5em" class="textfeldnofloat" title="Datum Monat">
-  <input type="text" name="jahr" maxlength="4" size="4" tabindex="7" value="2004" style="width:4em" class="textfeldnofloat" title="Datum Jahr"></span>
-  <span class="feldText nowrap"><abbr title="Tag Monat Jahr"><span class="abbr" title="Tag Monat Jahr">TT MM JJJJ</span></abbr></span><br />
-
-  </fieldset>
-  
-
-  <div class="emptyline">&nbsp;</div>
-
-  <div class="submitbuttons">
-    <input type="submit" name="action" tabindex="8" value="Umsatzauskunft aktualisieren" style="width:17.5em" class="button">
-    <br />
-  </div>
-
-
-
-</div>
-
-
-
-<div class="rightCol" style="width:44%">
-
-  <div class="finanzdatenBox floatleft">
-
-    <table class="transparent">
-    
-    
-    <tr>
-      <td class="noborder" width="55%"><h5 class="kontostand" style="margin-left:0px">Aktueller Kontostand:</h5></td>
-      <td class="noborder" style="text-align:right"><h5 class="kontostand">5.314,05&nbsp;&euro;</h5></td>
-    </tr>
-    
-    
-    
-    <tr>
-      <td class="noborder">Dispolimit:</td>
-      <td style="text-align:right" class="noborder"><span class="nowrap">3.000,00 &euro;</span></td>
-    </tr>
-    
-    
-    
-    
-    
-    <tr>
-      <td class="noborder" style="white-space:nowrap">Summe vorgemerkter Ums&auml;tze:</td>
-      <td style="text-align:right" class="noborderNeg"><span class="nowrap">-11,33
-         &euro;</span></td>
-    </tr>
-    
-    
-    </table>
-
-    
-    
-    
-    <div class="emptyline">&nbsp;</div>
-    <div class="submitbuttons">
-      <p class="pSubmitbuttonsRight alignRight"><a href="/iob3/kontoumsatz.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?method=kontovornotiz&cache=true&konto=9999999999&zeitraum=tage&tage=10&tag=01&monat=11&jahr=2004&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="9"><strong>Vorgemerkte Ums&auml;tze anzeigen</strong><img class="rightIcon"
-       src="common/images/ic_linkpfeil.gif" width="13" height="13" alt="" /></a></p><br />
-    </div>
-    
-    
-    
-
-    
-
-  </div><div class="emptyline">&nbsp;</div>
-</div>
-<br />
-</form>
-
-
-<div class="block" style="padding-bottom:0px">
-
-
-
-
-
-
-
-
-
-
-<h2 class="h2Block">Bereits gebuchte Ums&auml;tze</h2>
-
-
-
-
-
-<table class="tableFinanzstatus" summary="Diese Tabelle listet Ihre Konten auf und gibt Art, Saldo und m&ouml;gliche Transaktionen an">
 <tr>
-  <th class="thLeft" id="Spalte1" width="1%">Datum</th>
-  <th class="thLeft" id="Spalte2" width="1%">Wertstellung</th>
-  <th class="thLeft" id="Spalte3">Art</th>
-  <th class="thLeft" id="Spalte4">Buchungshinweis</th>
-  <th class="thCenter" id="Spalte5">Betrag&nbsp;(&euro;)</th>
-  <th class="thCenter" id="Spalte6">Saldo&nbsp;(&euro;)</th>
+  <th class="thLeft" id="Spalte1">Konto, Nummer</th>
+  <th class="thLeft" id="Spalte2">Art*</th>
+  <th class="thCenter" id="Spalte3">Saldo (&euro;)</th>
   
-  
-  <th class="thCenter" id="Spalte7">Aktion</th>
-  
+  <th class="thCenter" id="Spalte4">Aktion</th>
   
 </tr>
-
-
-
 
 <tr class="dark">
-  <td class="tdNormal" headers="Spalte1"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Überweisung</td>
-  
-  <td class="tdNormal" headers="Spalte4">111111/1000000000/37050198<BR />FINANZKASSE 3991234<BR />STEUERNUMMER 00703434
-    <BR />FINANZKASSE KÖLN-SÜD</td>
-  <td class="negSaldo" headers="Spalte5">-328,75</td>
-  <td class="saldo" headers="Spalte6">5.314,05</td>
   
   
-  <td class="endTD" headers="Spalte7">
   
   
-  <div class="center">
-    <a href="/iob3/initvorlage.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?action=kontoauskunft&empfaengerName=Finanzkasse+K%F6ln-S%FCd&kontonummer=1000000000&blz=37050198&betrag=328,75&verwendungszweck1=Finanzkasse+3991234&verwendungszweck2=Steuernummer+00703434&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="10" title="Vorlage aus &Uuml;berweisung erstellen"><img
-      src="common/images/ic_vorlage.gif" width="13" height="13"
-      alt="Vorlage aus &Uuml;berweisung erstellen" /></a>
-    &nbsp;
-    <a href="/iob3/ueberweisung.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?action=request&name=Finanzkasse+K%F6ln-S%FCd&kto=1000000000&blz=37050198&betrag=328,75&v1=Finanzkasse+3991234&v2=Steuernummer+00703434&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="10" title="&Uuml;berweisung vornehmen"><img
-      src="common/images/ueberweisung.gif" width="13" height="13"
-      alt="&Uuml;berweisung vornehmen" /></a>
-  </div>
   
+  
+  <td class="tdNormalNowrap" headers="Spalte1">
+    <a href="/app/kontoumsatz.umsatz.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1?konto=999999999" tabindex="10" title="Kontoums&auml;tze Girokonto">Postbank Giro plus, 999999999</a>
   </td>
   
   
-</tr>
+  
+  
+  
+   
+  
+  
+  <td class="tdNormal" headers="Spalte2"><abbr title="Einzelkonto"><span class="abbr" title="Einzelkonto">EK</span></abbr></td>
+  
+  <td class="posSaldo" headers="Spalte3">17.756,30</td>
+  <td class="endTD nowrap" headers="Spalte4">
 
-
-
-
-
-<tr class="bright">
-  <td class="tdNormal" headers="Spalte1"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Überweisung</td>
-  
-  <td class="tdNormal" headers="Spalte4">111111/3299999999/20010020<BR />ÜBERTRAG AUF SPARCARD<BR />3299999999
-    <BR />PETRA PFIFFIG</td>
-  <td class="negSaldo" headers="Spalte5">-228,61</td>
-  <td class="saldo" headers="Spalte6">5.642,80</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  
-  <div class="center">
-    <a href="/iob3/initvorlage.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?action=kontoauskunft&empfaengerName=Petra+Pfiffig&kontonummer=3299999999&blz=20010020&betrag=228,61&verwendungszweck1=%DCbertrag+auf+SparCard&verwendungszweck2=3299999999&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="10" title="Vorlage aus &Uuml;berweisung erstellen"><img
-      src="common/images/ic_vorlage.gif" width="13" height="13"
-      alt="Vorlage aus &Uuml;berweisung erstellen" /></a>
-    &nbsp;
-    <a href="/iob3/ueberweisung.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?action=request&name=Petra+Pfiffig&kto=3299999999&blz=20010020&betrag=228,61&v1=%DCbertrag+auf+SparCard&v2=3299999999&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="10" title="&Uuml;berweisung vornehmen"><img
-      src="common/images/ueberweisung.gif" width="13" height="13"
-      alt="&Uuml;berweisung vornehmen" /></a>
-  </div>
-  
+    <div class="center">
+    
+      <a href="/app/ueberweisung.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="10" title="&Uuml;berweisung vornehmen"><img class="icon"
+        src="/app/static/images/ueberweisung.gif" width="13" height="13" alt="&Uuml;berweisung vornehmen" border="0" /></a>&nbsp;&nbsp;
+      <a href="/app/dauerauftrag.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="10" title="Dauerauftrag erstellen"><img class="icon"
+        src="/app/static/images/dauerauftrag.gif" width="13" height="13" alt="Dauerauftrag erstellen" border="0" /></a>&nbsp;&nbsp;
+      <a href="/app/auslandsauftrag.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="10" title="Auslandsauftrag vornehmen"><img class="icon"
+        src="/app/static/images/auslandsauftrag.gif" width="13" height="13" alt="Auslandsauftrag vornehmen" border="0" /></a>&nbsp;&nbsp;
+    
+    </div>
   </td>
   
-  
 </tr>
-
-
-
-
-
-<tr class="dark">
-  <td class="tdNormal" headers="Spalte1"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Gutschrift</td>
-  
-  <td class="tdNormal" headers="Spalte4">BEZÜGE PERS.NR. 70600170/01<BR />ARBEITGEBER U. CO
-    <BR />PETRA PFIFFIG</td>
-  <td class="saldo" headers="Spalte5">2.780,70</td>
-  <td class="saldo" headers="Spalte6">5.871,41</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="bright">
-  <td class="tdNormal" headers="Spalte1"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Überweisung</td>
-  
-  <td class="tdNormal" headers="Spalte4">DA 1000001
-    <BR />VERLAGSHAUS SCRIBERE GMBH</td>
-  <td class="negSaldo" headers="Spalte5">-31,50</td>
-  <td class="saldo" headers="Spalte6">3.090,71</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  
-  <div class="center">
-    <a href="/iob3/initvorlage.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?action=kontoauskunft&empfaengerName=Verlagshaus+Scribere+GmbH&kontonummer=1206521345&blz=30020900&betrag=31,50&verwendungszweck1=&verwendungszweck2=&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="10" title="Vorlage aus &Uuml;berweisung erstellen"><img
-      src="common/images/ic_vorlage.gif" width="13" height="13"
-      alt="Vorlage aus &Uuml;berweisung erstellen" /></a>
-    &nbsp;
-    <a href="/iob3/ueberweisung.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?action=request&name=Verlagshaus+Scribere+GmbH&kto=1206521345&blz=30020900&betrag=31,50&v1=&v2=&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="10" title="&Uuml;berweisung vornehmen"><img
-      src="common/images/ueberweisung.gif" width="13" height="13"
-      alt="&Uuml;berweisung vornehmen" /></a>
-  </div>
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="dark">
-  <td class="tdNormal" headers="Spalte1"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>13.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Scheckeinreichung</td>
-  
-  <td class="tdNormal" headers="Spalte4">EINGANG VORBEHALTEN<BR />GUTBUCHUNG 12345
-    <BR />EIN FREMDER</td>
-  <td class="saldo" headers="Spalte5">1.830,00</td>
-  <td class="saldo" headers="Spalte6">3.122,21</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="bright">
-  <td class="tdNormal" headers="Spalte1"><strong>12.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>12.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Lastschrift</td>
-  
-  <td class="tdNormal" headers="Spalte4">MIETE 600+250 EUR OBJ22/328<BR />SCHULSTR.7, 12345 MEINHEIM
-    <BR />EIGENHEIM KG</td>
-  <td class="negSaldo" headers="Spalte5">-850,00</td>
-  <td class="saldo" headers="Spalte6">1.292,21</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="dark">
-  <td class="tdNormal" headers="Spalte1"><strong>12.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>12.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Inh. Scheck</td>
-  
-  <td class="tdNormal" headers="Spalte4">2000123456789</td>
-  <td class="negSaldo" headers="Spalte5">-75,00</td>
-  <td class="saldo" headers="Spalte6">2.142,21</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="bright">
-  <td class="tdNormal" headers="Spalte1"><strong>10.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>10.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Lastschrift</td>
-  
-  <td class="tdNormal" headers="Spalte4">TEILNEHMERNR 1234567<BR />RUNDFUNK 0103-1203
-    <BR />GEZ</td>
-  <td class="negSaldo" headers="Spalte5">-84,75</td>
-  <td class="saldo" headers="Spalte6">2.217,21</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="dark">
-  <td class="tdNormal" headers="Spalte1"><strong>08.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>08.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Lastschrift</td>
-  
-  <td class="tdNormal" headers="Spalte4">RECHNUNG 03121999
-    <BR />TELEFON AG KÖLN</td>
-  <td class="negSaldo" headers="Spalte5">-125,80</td>
-  <td class="saldo" headers="Spalte6">2.301,96</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="bright">
-  <td class="tdNormal" headers="Spalte1"><strong>06.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>06.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Lastschrift</td>
-  
-  <td class="tdNormal" headers="Spalte4">STROMKOSTEN KD.NR.1462347<BR />JAHRESABRECHNUNG
-    <BR />STADTWERKE MUSTERSTADT</td>
-  <td class="negSaldo" headers="Spalte5">-580,06</td>
-  <td class="saldo" headers="Spalte6">2.427,76</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
-
-
-
-
-<tr class="dark">
-  <td class="tdNormal" headers="Spalte1"><strong>06.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte2"><strong>06.11.2004</strong></td>
-  <td class="tdNormal" headers="Spalte3">Gutschrift</td>
-  
-  <td class="tdNormal" headers="Spalte4">KINDERGELD<BR />KINDERGELD-NR. 1462347
-    <BR />ARBEITSAMT BONN</td>
-  <td class="saldo" headers="Spalte5">154,00</td>
-  <td class="saldo" headers="Spalte6">3.007,82</td>
-  
-  
-  <td class="endTD" headers="Spalte7">
-  
-  </td>
-  
-  
-</tr>
-
 
 </table>
 
-
-
-
-
-
-
-
-</div>
-
-
-
-
-
-<div class="kontoumsaetzeLegende">
-  <p class="pLegende"><img class="legendeIcon" src="common/images/ic_vorlage.gif" width="13" height="13"
-     alt="Icon Vorlage erstellen" />&nbsp;=&nbsp;Vorlage aus &Uuml;berweisung erstellen</p>
-  <p class="pLegende"><img class="legendeIcon" src="common/images/ueberweisung.gif" width="13" height="13"
-    alt="Icon &Uuml;berweisung" />&nbsp;=&nbsp;&Uuml;berweisung vom Login-Konto vornehmen</p>
-</div>        <br />
-
-
-
-
-
-  
-  <!-- Gesamtanzahl Umsaetze: 11 -->
-
-
-
-
-<div class="Linkleiste">
-  <div class="LinkLinks">&nbsp;</div>
-  <div class="LinkMitte">
-  
-  </div>
-  <br />
-</div>
-
-<div class="Linkleiste">
-  <div class="LinkLinks" style="width:30%">&nbsp;</div>
-    <div style="width:40%" class="LinkMitte">
-      <a href="/iob3/kontoumsatz.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?method=kontoumsatz&action=download&cache=true&konto=9999999999&zeitraum=tage&tage=10&tag=01&monat=11&jahr=2004&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="20" class="aLinkleiste">Download Kontoums&auml;tze<img
-        class="linkleisteRightIcon" src="common/images/ic_linkpfeil.gif" width="13" height="13" alt="" /></a>
-    </div>
-    <div style="width:29%;margin-right:-3px" class="LinkRechts">
-      <a accesskey="2" title="[Alt+2] Weiter" id="enterSubmit" href="/iob3/kontoumsatz.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2?method=kontoumsatz&action=print&cache=true&csr=0&csr_step=25&csr_page=0&konto=9999999999&zeitraum=tage&tage=10&tag=01&monat=11&jahr=2004&amp;org.apache.struts.taglib.html.TOKEN=be57a78af44e8f5c9397f9116f36cb76" tabindex="20" class="aLinkleiste">Kontoums&auml;tze drucken<img class="linkleisteRightIcon"
-        src="common/images/drucken.gif" width="13" height="13" alt="" /></a>
-    </div>
-    <br />
-  </div>
-
-</div>
-
-
 </div> 
 
 </div> 
 
 
 
-  <script language="JavaScript" type="text/javascript">
-// document.forms[0].konto.focus();
-  </script>
+<div class="Linkleiste">
+  <div class="LinkLinks"></div>
+    <div class="LinkRechts">
+      <a accesskey="2" title="[Alt+2] Weiter" id="enterSubmit" href="/app/finanzstatus.erweitert.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="20" class="aLinkleiste">Alle Konten anzeigen</a><a href="/app/finanzstatus.erweitert.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="20" class="aLinkleiste" title="Alle Konten anzeigen"><img 
+        width="13" height="13" class="linkleisteRightIcon" 
+        src="/app/static/images/ic_linkpfeil.gif" 
+        alt="Icon: Alle Konten anzeigen" /></a>
+    </div><br />
+</div>
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>&nbsp;</p>
-<div class="satellit">
-  <h2 class="h2SatellitSmall">Hinweis</h2>
-  <p class="pSatellitSmall">Es werden immer die Ums&auml;tze bis einschlie&szlig;lich heute angezeigt. Der maximale Zeitraum ist 100 Tage.</p>
-   <p class="pSatellitSmall">Es kann vorkommen, dass das Buchungsdatum in der Zukunft liegt, falls das urspr&uuml;nglich gew&uuml;nschte Datum au&szlig;erhalb der
-      Gesch&auml;ftszeiten liegt (z.B. Wochenende). Ihre Buchung wurde aber in jedem Falle durchgef&uuml;hrt.</p>
-   <p class="pSatellitSmall">Zu Ihrer Information im Auslandsgesch&auml;ft: Die <acronym title="International Bank Account Number">IBAN</acronym> dieses Kontos ist: DE31200100209999999999.
-      Die <acronym title="Bank Identifier Code">BIC</acronym> dieses Kontos lautet: PBNKDEFF.</p>
-
+<div class="Legende">
+  <p class="pLegende"><img class="legendeIcon" src="/app/static/images/ueberweisung.gif" width="13" height="13" alt="Icon &Uuml;berweisung" />&nbsp;=&nbsp;&Uuml;berweisung vornehmen</p>
+  <p class="pLegende"><img class="legendeIcon" src="/app/static/images/dauerauftrag.gif" width="13" height="13" alt="Icon Dauerauftrag" />&nbsp;=&nbsp;Dauerauftrag erstellen</p>
+  <p class="pLegende"><img class="legendeIcon" src="/app/static/images/auslandsauftrag.gif" width="13" height="13" alt="Icon Auslandsauftrag" />&nbsp;=&nbsp;Auslandsauftrag vornehmen</p>
   
+  <p class="pLegende">* EK=Einzelkonto; GK=Gemeinschaftskonto</p>
+</div>
+
+<div class="footerTabelle">
+  <p class="pFootertabelleRight">
+    <a href="/app/finanzstatus.reduziert.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1?action=print&cache=true" tabindex="20">Finanzstatus drucken</a><a href="/app/finanzstatus.reduziert.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1?action=print&cache=true" tabindex="20" title="Finanzstatus drucken"><img 
+      class="rightIcon" src="/app/static/images/ic_drucken.gif" 
+      width="13" height="13" alt="Icon: Finanzstatus drucken" /></a>
+
+  </p>
+</div>
+
+
+</div> 
+
+
+
+
+
+
+
 </div>
 
 
@@ -861,13 +479,26 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
+
+
+
+<div class="rgtBar">
+  <div class="satellit">
+    <h2 class="h2Satellit">Hinweis</h2>
+    <p class="satellitText">Hier finden Sie Ihre Konten und Geldanlagen auf einen Blick.</p>
+
+    <p class="satellitText">&Uuml;ber die Aktions-Icons k&ouml;nnen Sie &Uuml;berweisungen, 
+      Dauerauftr&auml;ge oder Auslandsauftr&auml;ge f&uuml;r das 
+      <span lang="en">Login</span>-Konto vornehmen.</p>
+  </div>
 </div>
 
 
-  
+
+
+
   
 
-		
 
 </div> 
 
@@ -880,6 +511,19 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
+
+
+
+
+  
+    
+  
+  
+
+
+
+
+
 <div class="fusszeile">
 
 
@@ -888,29 +532,41 @@ var EXTERN_URL_PREISINFORMATION_AZV = 'http://www.postbank.de/iob_azv_preise';
 
 
 
-<p class="pFusszeile">
-  <a href="/iob3/sitemap.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" tabindex="250" class="aFusszeile"><span lang="en">Sitemap</span></a> |
-  <a href="/iob3/bedienungshilfe.do;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" tabindex="251" class="aFusszeile">Bedienungshilfen</a> |
+
+
+
+
+
+
+
   
-  <script language="JavaScript">
+  <script language="JavaScript" type="text/javascript">
   <!--
-  var s = '<a href="javascript:;" onclick="openNewProcess(EXTERN_URL_KONTAKT_IPVK)"'
-        + ' title="&Ouml;ffnet ein neues Fenster" tabindex="252" class="aFusszeile">Kontakt</a>';
+  var s = '<p class="pFusszeile"><a href="/app/sitemap.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="250" class="aFusszeile"><span lang="en">Sitemap</span></a> | '
+        + '<a href="/app/bedienungshilfe.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="251" class="aFusszeile">Bedienungshilfen</a> | '
+        + '<a href="javascript:;" onclick="openNewProcess(EXTERN_URL_KONTAKT_IPVK)" title="&Ouml;ffnet ein neues Fenster" tabindex="252" class="aFusszeile">Kontakt</a>'
+        + ''
+        + '</p>';
   // alert('s=[' + s + ']');
   document.write(s);
   //-->
   </script>
   <noscript>
-  <a href="https://produktabschluss.postbank.de/ipvk/kontakte/welcome.jsp?ipvk_aufruf=iob&amp;url=https://banking.postbank.de/iob3/private/servlet.callback;jsessionid=33701F443D192A93C5A1BC292648AF0F.B3_2" target="_blank" title="&Ouml;ffnet ein neues Fenster" 
+  <p class="pFusszeile">
+  <a href="/app/sitemap.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="250" class="aFusszeile"><span lang="en">Sitemap</span></a> |&nbsp;
+  <a href="/app/bedienungshilfe.init.do;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" tabindex="251" class="aFusszeile">Bedienungshilfen</a> |&nbsp;
+
+  <a href="https://produktabschluss.postbank.de/ipvk/kontakte/welcome.jsp?ipvk_aufruf=iob&amp;amp;url=https://banking.postbank.de/app/private/servlet.callback;jsessionid=8F71A4CD4F2DC70F74FBC422F74BCE2F.F1_1" target="_blank" title="&Ouml;ffnet ein neues Fenster"
     tabindex="252" class="aFusszeile">Kontakt</a>
-  </noscript>
   
-</p>
+</p></noscript>
+
+
+
 
 
 </div>
 <br />
-
 
 
 

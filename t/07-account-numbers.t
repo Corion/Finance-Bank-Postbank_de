@@ -100,7 +100,8 @@ SKIP: {
   no warnings 'once';
   local *Finance::Bank::Postbank_de::select_function = sub {};
   my $agent = Test::MockObject->new()
-              ->set_always('current_form',HTML::Form->parse($content,'https://banking.postbank.de'));
+              ->set_always('current_form',HTML::Form->parse($content,'https://banking.postbank.de'))
+              ->set_always('content' => $content);
   $agent->set_always( form => 1 );
   $account->agent($agent);
   is_deeply([$account->account_numbers],["999999999"],"Single account number works");

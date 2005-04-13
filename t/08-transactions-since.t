@@ -10,7 +10,7 @@ my %days = (
   20041110 => [{
             'tradedate' => '20041110',
             'receiver' => 'Stadtwerke Musterstadt',
-            'comment' => 'Stromkosten Kd.Nr.1462347 Jahresabrechnung',
+            'comment' => 'STROMKOSTEN KD.NR.1462347 JAHRESABRECHNUNG',
             'running_total' => '2.427,76',
             'amount' => '-580.06',
             'type' => 'Lastschrift',
@@ -20,7 +20,7 @@ my %days = (
           {
             'tradedate' => '20041110',
             'receiver' => 'PETRA PFIFFIG',
-            'comment' => 'Kindergeld Kindergeld-Nr. 1462347',
+            'comment' => 'KINDERGELD KINDERGELD-NR. 1462347',
             'running_total' => '3.007,82',
             'amount' => '154.00',
             'type' => 'Gutschrift',
@@ -32,7 +32,7 @@ my %days = (
           {
             'tradedate' => '20041112',
             'receiver' => 'Telefon AG Köln',
-            'comment' => 'Rechnung 03121999',
+            'comment' => 'RECHNUNG 03121999',
             'running_total' => '2.301,96',
             'amount' => '-125.80',
             'type' => 'Lastschrift',
@@ -44,7 +44,7 @@ my %days = (
           {
             'tradedate' => '20041114',
             'receiver' => 'GEZ',
-            'comment' => 'Teilnehmernr 1234567 Rundfunk 0103-1203',
+            'comment' => 'TEILNEHMERNR 1234567 RUNDFUNK 0103-1203',
             'running_total' => '2.217,21',
             'amount' => '-84.75',
             'type' => 'Lastschrift',
@@ -56,7 +56,7 @@ my %days = (
           {
             'tradedate' => '20041116',
             'receiver' => 'Eigenheim KG',
-            'comment' => 'Miete 600+250 EUR Obj22/328 Schulstr.7, 12345 Meinheim',
+            'comment' => 'MIETE 600+250 EUR OBJ22/328 SCHULSTR.7, 12345 MEINHEIM',
             'running_total' => '1.292,21',
             'amount' => '-850.00',
             'type' => 'Lastschrift',
@@ -78,7 +78,7 @@ my %days = (
           {
             'tradedate' => '20041117',
             'receiver' => 'Finanzkasse Köln-Süd',
-            'comment' => '111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434',
+            'comment' => '111111/1000000000/37050198 FINANZKASSE 3991234 STEUERNUMMER 00703434',
             'running_total' => '5.314,05',
             'amount' => '-328.75',
             'type' => 'Überweisung',
@@ -88,7 +88,7 @@ my %days = (
           {
             'tradedate' => '20041117',
             'receiver' => 'Petra Pfiffig',
-            'comment' => '111111/3299999999/20010020 Übertrag auf SparCard 3299999999',
+            'comment' => '111111/3299999999/20010020 ÜBERTRAG AUF SPARCARD 3299999999',
             'running_total' => '5.642,80',
             'amount' => '-228.61',
             'type' => 'Überweisung',
@@ -98,7 +98,7 @@ my %days = (
           {
             'tradedate' => '20041117',
             'receiver' => 'PETRA PFIFFIG',
-            'comment' => 'Bezüge Pers.Nr. 70600170/01 Arbeitgeber u. Co',
+            'comment' => 'BEZÜGE PERS.NR. 70600170/01 ARBEITGEBER U. CO',
             'running_total' => '5.871,41',
             'amount' => '2780.70',
             'type' => 'Gutschrift',
@@ -118,7 +118,7 @@ my %days = (
           {
             'tradedate' => '20041117',
             'receiver' => 'PETRA PFIFFIG',
-            'comment' => 'Eingang vorbehalten Gutbuchung 12345',
+            'comment' => 'EINGANG VORBEHALTEN GUTBUCHUNG 12345',
             'running_total' => '3.122,21',
             'amount' => '1830.00',
             'type' => 'Scheckeinreichung',
