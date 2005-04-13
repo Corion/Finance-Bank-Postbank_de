@@ -44,7 +44,7 @@ SKIP: {
     $account->agent->form('loginForm');
 
     # Check that the expected form fields are available :
-    my @fields = qw(accountNumber PNINumber action);
+    my @fields = qw(accountNumber pinNumber action);
     my $field;
     for $field (@fields) {
       diag $account->agent->current_form->dump

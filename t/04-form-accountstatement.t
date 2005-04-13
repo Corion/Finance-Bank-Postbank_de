@@ -48,7 +48,7 @@ SKIP: {
       skip "Couldn't get to account statement (LWP: $status)",5;
     };
 
-    form_ok( $account->agent, kontoumsatzForm => @fields );
+    form_ok( $account->agent, kontoumsatzUmsatzForm => @fields );
     ok($account->close_session(),"Closed session");
     is($account->agent(),undef,"agent was discarded");
 

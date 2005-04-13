@@ -165,7 +165,9 @@ sub close_session {
   if (not ($self->access_denied or $self->maintenance)) {
     $self->log("Closing session");
     $self->select_function('quit');
-    $result = $self->agent->res->as_string =~ m!<p class="pHeadlineLeft"><span lang="en">Online-Banking</span> beendet</p>!sm;
+    #$result = $self->agent->res->as_string =~ m!<p class="pHeadlineLeft"><span lang="en">Online-Banking</span> beendet</p>!sm;
+    $result = $self->agent->res->as_string =~ m!<legend class="legend"><span lang="en">Online-Banking</span> beendet</legend>!sm;
+    #warn $self->agent->res->as_string;
   } else {
     $result = 'Never logged in';
   };
