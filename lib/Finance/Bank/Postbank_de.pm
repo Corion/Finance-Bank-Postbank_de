@@ -125,8 +125,8 @@ sub access_denied {
     my $message = $self->error_message;
 
     return (
-        $message =~ m!^\s*Die Kontonummer ist nicht f.r das Internet Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Internet Online-Banking freischalten".<br />\s*$!sm
-     or $message =~ m!^\s*Sie haben zu viele Zeichen in das Feld eingegeben.<br />\s*$!sm
+        $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.ktonr-n-vorh.error\)<br />\s*$!sm
+     or $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.checkMaxLen.error\)<br />\s*$!sm
     )
   } else {
     return;
@@ -209,7 +209,7 @@ sub get_account_statement {
 
   my $agent = $self->agent();
 
-  $self->agent->form("kontoUmsatzForm");
+  $self->agent->form("kontoumsatzUmsatzForm");
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
     $agent->current_form->param( konto => [ delete $args{account_number}]);
