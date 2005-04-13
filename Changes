@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.21 20050413
+  - Markus Preis informed me of two changes to the Postbank
+    layout even before I noticed them! Thanks Markus!
+
 0.20 20041113
   - Moved to the new web interface and hopefully didn't break anything
   ! The account accessor C<name> is now different from C<number> !!!

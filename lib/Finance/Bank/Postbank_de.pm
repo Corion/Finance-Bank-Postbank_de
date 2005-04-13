@@ -10,7 +10,7 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.20';
+$VERSION = '0.21';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password ));
@@ -68,7 +68,8 @@ sub new_session {
     $agent->form("loginForm");
     eval {
       $agent->current_form->value( accountNumber => $self->login );
-      $agent->current_form->value( PNINumber => $self->password );
+      #$agent->current_form->value( PNINumber => $self->password );
+      $agent->current_form->value( pinNumber => $self->password );
     };
     if ($@) {
       warn $agent->content;
@@ -208,7 +209,7 @@ sub get_account_statement {
 
   my $agent = $self->agent();
 
-  $self->agent->form("kontoumsatzForm");
+  $self->agent->form("kontoUmsatzForm");
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
     $agent->current_form->param( konto => [ delete $args{account_number}]);
