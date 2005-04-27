@@ -10,15 +10,13 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.21';
+$VERSION = '0.22';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password ));
 };
 
-use constant LOGIN => 'https://banking.postbank.de/';
-#use constant LOGIN => 'https://banking.postbank.de/iob3/welcome.do';
-#use constant LOGIN => 'https://banking-classic.postbank.de/anfang.jsp';
+use constant LOGIN => 'https://banking.postbank.de/app/welcome.do?prevNote=1';
 use vars qw(%functions);
 BEGIN {
   %functions = (
