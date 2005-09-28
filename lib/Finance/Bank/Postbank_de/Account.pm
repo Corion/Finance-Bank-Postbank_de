@@ -9,7 +9,7 @@ use base 'Class::Accessor';
 
 use vars qw[ $VERSION %tags %totals %columns %safety_check ];
 
-$VERSION = '0.21';
+$VERSION = '0.22';
 
 BEGIN {
   Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev transactions_future iban blz account_type name));
@@ -24,7 +24,7 @@ sub new {
     if $args{kontonummer} and $args{kontonummer} ne $num;
 
   $self->number($num) if (defined $num);
-    
+
   $self->name($args{name})
     if (exists $args{name});
 
@@ -136,7 +136,7 @@ sub parse_statement {
   $lines[0] =~ m!^\s*$!
     or croak "Expected an empty line after the information, got '$lines[0]'";
   shift @lines;
-  
+
   for my $total (@{ $totals{ $self->account_type }||[] }) {
     my ($re,$method) = @$total;
     $lines[0] =~ /^$re:\s*(.*) Euro$/

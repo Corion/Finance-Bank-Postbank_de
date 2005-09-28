@@ -3,7 +3,7 @@ use strict;
 use FindBin;
 use WWW::Mechanize;
 
-use Test::More tests => 3;
+use Test::More tests => 2;
 
 BEGIN { use_ok("Finance::Bank::Postbank_de"); };
 
@@ -19,8 +19,6 @@ SKIP: {
                             },
                 );
   $account->agent( WWW::Mechanize->new());
-  $account->agent->get( 'file:t/02-maintenance.html' );
-  ok( $account->error_page, 'Error page gets detected');
-  ok( $account->maintenance, 'Maintenance mode gets detected')
-    or diag $account->agent->content;
+  $account->agent->get( 'file:t/03-skip-advice.html' );
+  ok( $account->is_security_advice, 'Security advice page gets detected');
 };

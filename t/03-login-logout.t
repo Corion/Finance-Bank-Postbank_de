@@ -6,6 +6,19 @@ use Test::More tests => 3;
 
 use_ok("Finance::Bank::Postbank_de");
 
+sub save_content {
+  my ($account,$name) = @_;
+  local *F;
+  my $filename = "$0-$name.html";
+  open F, "> $filename"
+    or diag "Couldn't dump current page to '$filename': $!";
+  binmode F;
+  print F $account->agent->content;
+  close F;
+  diag "Current page saved to '$filename'";
+};
+
+
 # Check that we have SSL installed :
 SKIP: {
   skip "Need SSL capability to access the website",2
@@ -40,7 +53,8 @@ SKIP: {
       skip "Couldn't get to account statement (LWP: $status)", 2;
     };
 
-    ok($account->close_session(),"Closed session");
+    ok($account->close_session(),"Closed session")
+      or save_content($account,"error-login-logout-close-session");
     is($account->agent(),undef,"agent was discarded");
   };
 };

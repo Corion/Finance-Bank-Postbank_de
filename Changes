@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.22 20050928
+  - Postbank changed their layout again and added yet another
+    advisory page that must be skipped.
+
 0.21 20050413
   - Markus Preis informed me of two changes to the Postbank
     layout even before I noticed them! Thanks Markus!

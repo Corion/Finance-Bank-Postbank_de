@@ -16,7 +16,9 @@ BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password ));
 };
 
-use constant LOGIN => 'https://banking.postbank.de/app/welcome.do?prevNote=1';
+#use constant LOGIN => 'https://banking.postbank.de/app/welcome.do?prevNote=1';
+use constant LOGIN => 'https://banking.postbank.de/app/welcome.do';
+
 use vars qw(%functions);
 BEGIN {
   %functions = (
@@ -55,7 +57,7 @@ sub new_session {
   # Reset our user agent
   $self->close_session()
     if ($self->agent);
-    
+
   my $result = $self->get_login_page(LOGIN);
   if($result == 200) {
     if ($self->maintenance) {
@@ -76,6 +78,11 @@ sub new_session {
     $agent->submit;
     $self->log_httpresult();
     $result = $agent->status;
+
+    if ($self->is_security_advice) {
+      $self->skip_security_advice;
+    };
+
   };
   $result;
 };
@@ -92,6 +99,18 @@ sub get_login_page {
   $self->log_httpresult();
   #warn $agent->res->header('Client-SSL-Cert-Subject');
   $agent->status;
+};
+
+sub is_security_advice {
+  my ($self) = @_;
+  $self->agent->content() =~ /\bZum\s+Finanzstatus\b/;
+};
+
+sub skip_security_advice {
+  my ($self) = @_;
+  $self->log('Skipping security advice page');
+  $self->agent->follow(qr/\bZum\s+Finanzstatus\b/);
+  # $self->agent->content() =~ /Sicherheitshinweis/;
 };
 
 sub error_page {
@@ -123,8 +142,10 @@ sub access_denied {
     my $message = $self->error_message;
 
     return (
-        $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.ktonr-n-vorh.error\)<br />\s*$!sm
-     or $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.checkMaxLen.error\)<br />\s*$!sm
+         $message =~ m!^Die Kontonummer ist nicht für das Internet Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Online-Banking freischalten"\.<br />\s*$!sm
+      or $message =~ m!^Sie haben zu viele Zeichen in das Feld eingegeben.<br />\s*$!sm
+     #   $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.ktonr-n-vorh.error\)<br />\s*$!sm
+     #or $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.checkMaxLen.error\)<br />\s*$!sm
     )
   } else {
     return;
@@ -163,9 +184,8 @@ sub close_session {
   if (not ($self->access_denied or $self->maintenance)) {
     $self->log("Closing session");
     $self->select_function('quit');
-    #$result = $self->agent->res->as_string =~ m!<p class="pHeadlineLeft"><span lang="en">Online-Banking</span> beendet</p>!sm;
-    $result = $self->agent->res->as_string =~ m!<legend class="legend"><span lang="en">Online-Banking</span> beendet</legend>!sm;
-    #warn $self->agent->res->as_string;
+    $result = $self->agent->res->as_string =~ m!<p class="pHeadlineLeft"><span lang="en">Online-Banking</span> beendet</p>!sm
+      #or warn $self->agent->content;
   } else {
     $result = 'Never logged in';
   };
@@ -309,9 +329,10 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
   isa_ok($account,"Finance::Bank::Postbank_de");
   isa_ok($retrieved_statement,"Finance::Bank::Postbank_de::Account");
   $::_STDOUT_ =~ s!^Statement date : \d{8}\n!!m;
+  $::_STDOUT_ =~ s!^Skipping security advice page\n!!m;
   my $expected = <<EOX;
 New Finance::Bank::Postbank_de created
-Connecting to https://banking.postbank.de/
+Connecting to https://banking.postbank.de/app/welcome.do
 Activating (?-xism:^Kontoums.*?tze\$)
 Getting account statement via default (9999999999)
 Downloading text version
