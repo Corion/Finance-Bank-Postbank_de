@@ -260,6 +260,7 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
 =for example begin
 
   use strict;
+  require Crypt::SSLeay; # It's a prerequisite
   use Finance::Bank::Postbank_de::Account;
   my $statement = Finance::Bank::Postbank_de::Account->parse_statement(
                 number => '9999999999',

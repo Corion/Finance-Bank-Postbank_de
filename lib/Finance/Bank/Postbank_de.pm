@@ -297,6 +297,7 @@ Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl
 =for example begin
 
   use strict;
+  require Crypt::SSLeay; # It's a prerequisite
   use Finance::Bank::Postbank_de;
   my $account = Finance::Bank::Postbank_de->new(
                 login => '9999999999',
