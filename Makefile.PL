@@ -48,6 +48,7 @@ BEGIN {
 };
 
 if ($have_test_inline) {
+    print "Generating embedded test files\n";
     require Test::Inline;
     my $Tests = Test::Inline->new(
           verbose  => 1,
