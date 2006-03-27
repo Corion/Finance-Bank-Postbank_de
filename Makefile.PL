@@ -33,12 +33,12 @@ use vars qw($have_test_inline);
 use vars qw($have_test_inline);
 BEGIN {
   eval { require Test::Inline;
-         $have_test_inline = $Test::Inline::VERSION ge '0.15_001'; };
+         $have_test_inline = $Test::Inline::VERSION ge '2.0'; };
   undef $@;
   if ($have_test_inline) {
-    print "Good - you have a patched Test::Inline\n";
+    print "Good - you have Test::Inline\n";
   } else {
-    print "Test::Inline 0.15_001 is nice for testing the examples, but not necessary\n"
+    print "Test::Inline is nice for testing the examples, but not necessary\n"
   };
 };
 BEGIN {
@@ -47,35 +47,13 @@ BEGIN {
    if $@;
 };
 
-# Autocreate the synopsis test from the pod of every module
-# (if we have Test::Inline)
-{
-    package MY;
-    use strict;
-    sub top_targets {
+if ($have_test_inline) {
+    require Test::Inline;
+    my $Tests = Test::Inline->new(
+          verbose  => 1,
+          output   => 't',
+    );
+    $Tests->add_class('Finance::Bank::Postbank_de', recursive => 1 );
+    $Tests->save();
+};
 
-        my($self) = @_;
-        my $out = "POD2TEST_EXE = pod2test\n";
-
-        $out .= $self->SUPER::top_targets(@_);
-        return $out unless $main::have_test_inline;
-
-        $out =~ s/^(pure_all\b.*)/$1 testifypods/m;
-
-        $out .= "\n\ntestifypods : \n";
-
-        foreach my $pod (keys %{$self->{MAN1PODS}},
-                         keys %{$self->{MAN3PODS}})
-        {
-            (my $test = $pod) =~ s/\.(pm|pod)$//;
-            $test =~ s|/|-|g;
-            $test =~ s/^lib\W//;
-            $test =~ s/\W/-/;
-            $test = "embedded-$test.t";
-            $out .= "\t$self->{NOECHO}\$(POD2TEST_EXE) ".
-                    "$pod t/$test\n";
-        }
-
-        return $out;
-    }
-}
