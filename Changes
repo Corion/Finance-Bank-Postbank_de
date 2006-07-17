@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.24
+  - Another small HTML change, thankfully reported by
+    Reto Heygel
+
 0.23 20060327
   - Moved to Test::Inline 2.x
   - Cleaned up MANIFEST

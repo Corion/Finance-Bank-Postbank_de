@@ -44,19 +44,19 @@ eval { $account->parse_statement( content => '' ) };
 like($@,"/^Don't know what to do with empty content/","Passing no parameter");
 eval { $account->parse_statement( content => 'foo' ) };
 like($@,"/^No valid account statement: 'foo'/","Passing bogus content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\nfoo" ) };
+eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\nfoo" ) };
 like($@,"/^Expected an empty line/","Passing other bogus content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n\nfoo" )};
+eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n\nfoo" )};
 like($@,"/^Field 'Name' not found in account statement/","Passing no Name in content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nfoo" )};
+eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nfoo" )};
 like($@,"/^Field 'BLZ' not found in account statement/","Passing no BLZ in content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nfoo" )};
+eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nfoo" )};
 like($@,"/^Field 'Kontonummer' not found in account statement/","Passing no Kontonummer in content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nfoo" )};
+eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nfoo" )};
 like($@,"/^Field 'IBAN' not found in account statement/","Passing no IBAN in content");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\nfoo" )};
+eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\nfoo" )};
 like($@,"/^Expected an empty line after the information, got 'foo' at /","Passing no empty line after summary");
-eval { $account->parse_statement( content => "Postbank Kontoauszug Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\n\nfoo" )};
+eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\n\nfoo" )};
 like($@,"/^No summary found in account statement \\(foo\\) for balance at /","Passing no summary in content");
 
 my @expected_statements = ({ name => "PETRA PFIFFIG",

@@ -8,6 +8,7 @@ BEGIN {
   @related_accounts = qw( 
                           3299999998
                           3299999999
+                          9999999995
                           9999999998
                           9999999999
                           );
@@ -60,7 +61,9 @@ SKIP: {
     $account->agent(undef);
 
     my @fetched_accounts = sort $account->account_numbers;
-    is_deeply(\@fetched_accounts,\@related_accounts,"Retrieve account numbers");
+    if (! is_deeply(\@fetched_accounts,\@related_accounts,"Retrieve account numbers")) {
+	diag "Found $_" for @fetched_accounts;
+    };
 
     for (reverse @fetched_accounts) {
       isa_ok($account->get_account_statement(account_number => $_),'Finance::Bank::Postbank_de::Account', "Account $_");

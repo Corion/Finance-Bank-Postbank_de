@@ -1,4 +1,4 @@
-Postbank Kontoauszug Girokonto
+Kontoumsätze Postbank Girokonto
 
 Name: PETRA PFIFFIG
 BLZ: 20010020

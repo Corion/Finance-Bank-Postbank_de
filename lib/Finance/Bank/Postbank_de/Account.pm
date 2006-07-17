@@ -9,7 +9,7 @@ use base 'Class::Accessor';
 
 use vars qw[ $VERSION %tags %totals %columns %safety_check ];
 
-$VERSION = '0.23';
+$VERSION = '0.24';
 
 BEGIN {
   Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev transactions_future iban blz account_type name));
@@ -40,13 +40,17 @@ sub new {
 
 %tags = (
   Girokonto => [qw(Name BLZ Kontonummer IBAN)],
+  Tagesgeldkonto => [qw(Name BLZ Kontonummer)],
   Sparcard => [qw(Name BLZ Kontonummer )],
+  Sparkonto => [qw(Name BLZ Kontonummer )],
   Kreditkarte => [qw(Name BLZ Kontonummer IBAN)],
 );
 
 %totals = (
   Girokonto => [[qr'Aktueller Kontostand' => 'balance'],[qr'Summe vorgemerkter Ums.tze' => 'transactions_future']],
   Sparcard => [[qr'Aktueller Kontostand' => 'balance'],],
+  Sparkonto => [[qr'Aktueller Kontostand' => 'balance'],],
+  Tagesgeldkonto => [[qr'Aktueller Kontostand' => 'balance'],],
 );
 
 %columns = (
@@ -111,9 +115,13 @@ sub parse_statement {
 
   my @lines = split /\r?\n/, $raw_statement;
   croak "No valid account statement: '$lines[0]'"
-    unless $lines[0] =~ /^Postbank Kontoauszug (.*)$/;
+    unless $lines[0] =~ /^Kontoumsätze Postbank (.*)$/;
   shift @lines;
-  $self->account_type($1);
+
+  my $account_type = $1;
+  croak "Unknown account type '$account_type'"
+    unless exists $tags{$account_type};
+  $self->account_type($account_type);
 
   $lines[0] =~ m!^\s*$!
     or croak "Expected an empty line as the second line, got '$lines[0]'";
@@ -124,17 +132,20 @@ sub parse_statement {
     $lines[0] =~ /^\Q$tag\E: (.*)$/
       or croak "Field '$tag' not found in account statement ($lines[0])";
     my $method = lc($tag);
+    my $value = $1;
 
     # special check for special fields:
-    croak "Wrong/mixed account $method: Got '$1', expected '" . $self->$method . "'"
-      if (exists $safety_check{$method} and defined $self->$method and $self->$method ne $1);
+    croak "Wrong/mixed account $method: Got '$value', expected '" . $self->$method . "'"
+      if (exists $safety_check{$method} and defined $self->$method and $self->$method ne $value);
 
-    $self->$method($1);
+    $self->$method($value);
     shift @lines;
   };
 
-  $lines[0] =~ m!^\s*$!
-    or croak "Expected an empty line after the information, got '$lines[0]'";
+  if ($lines[0] !~ m!^\s*$!) {
+    local $" = "|";
+    croak "Expected an empty line after the information, got '$lines[0]'";
+  };
   shift @lines;
 
   for my $total (@{ $totals{ $self->account_type }||[] }) {
