@@ -57,7 +57,7 @@ like($@,"/^Field 'IBAN' not found in account statement/","Passing no IBAN in con
 eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\nfoo" )};
 like($@,"/^Expected an empty line after the information, got 'foo' at /","Passing no empty line after summary");
 eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\n\nfoo" )};
-like($@,"/^No summary found in account statement \\(foo\\) for balance at /","Passing no summary in content");
+like($@,"/^No summary found in account statement \\(foo\\)/","Passing no summary in content");
 
 my @expected_statements = ({ name => "PETRA PFIFFIG",
                        blz => "20010020",
@@ -65,6 +65,8 @@ my @expected_statements = ({ name => "PETRA PFIFFIG",
                        iban => "DE31200100209999999999",
 		       account_type => 'Girokonto',
                        balance => ["????????","5314.05"],
+                       #balance_unavailable => undef,
+                       balance_unavailable => ['????????','150.00'],
                        transactions_future => ['????????',-11.33],
                        transactions => [
                          { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
@@ -72,7 +74,7 @@ my @expected_statements = ({ name => "PETRA PFIFFIG",
                            receiver => "Finanzkasse K\xf6ln-S\xfcd", sender => 'PETRA PFIFFIG', amount => "-328.75",
 			   running_total => '5.314,05' },
                          { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
-                           comment => "111111/3299999999/20010020 ÜBERTRAG AUF SPARCARD 3299999999",
+                           comment => "111111/3299999999/20010020 ÜBERTRAG AUF SPARCARD ÜBERSCHUSS WAS ICH DIESMAL GESPART HAB",
                            receiver => "Petra Pfiffig", sender => 'PETRA PFIFFIG', amount => "-228.61",
 			   running_total => '5.642,80' },
                          { tradedate => "20041117", valuedate => "20041117", type => "Gutschrift",
@@ -119,6 +121,7 @@ my @expected_statements = ({ name => "PETRA PFIFFIG",
                        iban => "DE31200100209999999999",
 		       account_type => 'Girokonto',
                        balance => ["????????","5314.05"],
+                       balance_unavailable => ['????????',"150.00"],
                        transactions_future => ['????????',-11.33],
                        transactions => [
                          { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",

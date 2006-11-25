@@ -6,7 +6,6 @@ use FindBin;
 use vars qw(@related_accounts);
 BEGIN {
   @related_accounts = qw( 
-                          3299999998
                           3299999999
                           9999999995
                           9999999998
@@ -63,6 +62,7 @@ SKIP: {
     my @fetched_accounts = sort $account->account_numbers;
     if (! is_deeply(\@fetched_accounts,\@related_accounts,"Retrieve account numbers")) {
 	diag "Found $_" for @fetched_accounts;
+	save_content($account,'accounts');
     };
 
     for (reverse @fetched_accounts) {

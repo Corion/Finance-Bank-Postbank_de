@@ -61,7 +61,7 @@ SKIP: {
 
     eval { require File::Temp; File::Temp->import(); };
     SKIP: {
-      skip "Need File::Temp to test download capabilities",1
+      skip "Need File::Temp to test download capabilities",4
         if $@;
       my ($fh,$tempname) = File::Temp::tempfile();
       close $fh;
@@ -81,13 +81,12 @@ SKIP: {
         s/^\d{2}\.\d{2}\.\d{4}\s+\d{2}\.\d{2}\.\d{4}\s+//gm;
         s/^\d{2}\.\d{2}\.\d{4}//gm;
       };
-      # is($downloaded_statement,$canned_statement,"Download to file works");
       is_deeply([ split /\n/, $downloaded_statement ],[ split /\n/, $canned_statement ],"Download to file works");
       ok($account->close_session(),"Closed session");
       is($account->agent(),undef,"agent was discarded");
 
       unlink $tempname
-        or diag "Couldn't remove tempfile $tempname : $!";
+       or diag "Couldn't remove tempfile $tempname : $!";
     };
   };
 };

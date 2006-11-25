@@ -30,7 +30,6 @@ WriteMakefile(
 
 # Now check whether we can create the synopsis inline tests
 use vars qw($have_test_inline);
-use vars qw($have_test_inline);
 BEGIN {
   eval { require Test::Inline;
          $have_test_inline = $Test::Inline::VERSION ge '2.0'; };

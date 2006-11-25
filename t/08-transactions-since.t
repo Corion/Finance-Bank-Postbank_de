@@ -88,7 +88,7 @@ my %days = (
           {
             'tradedate' => '20041117',
             'receiver' => 'Petra Pfiffig',
-            'comment' => '111111/3299999999/20010020 ÜBERTRAG AUF SPARCARD 3299999999',
+            'comment' => '111111/3299999999/20010020 ÜBERTRAG AUF SPARCARD ÜBERSCHUSS WAS ICH DIESMAL GESPART HAB',
             'running_total' => '5.642,80',
             'amount' => '-228.61',
             'type' => 'Überweisung',

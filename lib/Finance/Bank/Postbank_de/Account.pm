@@ -9,10 +9,10 @@ use base 'Class::Accessor';
 
 use vars qw[ $VERSION %tags %totals %columns %safety_check ];
 
-$VERSION = '0.24';
+$VERSION = '0.25';
 
 BEGIN {
-  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_prev transactions_future iban blz account_type name));
+  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_unavailable balance_prev transactions_future iban blz account_type name));
 };
 
 sub new {
@@ -47,22 +47,26 @@ sub new {
 );
 
 %totals = (
-  Girokonto => [[qr'Aktueller Kontostand' => 'balance'],[qr'Summe vorgemerkter Ums.tze' => 'transactions_future']],
+  Girokonto => [
+      [qr'^Aktueller Kontostand' => 'balance'],
+      [qr'^Summe vorgemerkter Ums.tze' => 'transactions_future'],
+      [qr'^Davon noch nicht verf.gbar' => 'balance_unavailable'],
+  ],
   Sparcard => [[qr'Aktueller Kontostand' => 'balance'],],
   Sparkonto => [[qr'Aktueller Kontostand' => 'balance'],],
   Tagesgeldkonto => [[qr'Aktueller Kontostand' => 'balance'],],
 );
 
 %columns = (
-  qr'Datum'		=> 'tradedate',
-  qr'Wertstellung'	=> 'valuedate',
-  qr'Art'		=> 'type',
-  qr'Buchungshinweis'	=> 'comment',
-  qr'Verwendungszweck'	=> 'comment',
-  qr'Auftraggeber'	=> 'sender',
-  qr'Empf.nger'		=> 'receiver',
-  qr'Betrag Euro'	=> 'amount',
-  qr'Saldo Euro'	=> 'running_total',
+  qr'Datum'			=> 'tradedate',
+  qr'Wertstellung'		=> 'valuedate',
+  qr'Art'			=> 'type',
+  qr'Buchungshinweis'		=> 'comment',
+  qr'Verwendungszweck'		=> 'comment',
+  qr'Auftraggeber'		=> 'sender',
+  qr'Empf.nger'			=> 'receiver',
+  qr'Betrag Euro'		=> 'amount',
+  qr'Saldo Euro'		=> 'running_total',
 );
 
 sub parse_date {
@@ -148,17 +152,23 @@ sub parse_statement {
   };
   shift @lines;
 
-  for my $total (@{ $totals{ $self->account_type }||[] }) {
-    my ($re,$method) = @$total;
-    $lines[0] =~ /^$re:\s*(.*) Euro$/
-      or croak "No summary found in account statement ($lines[0]) for $method";
-    shift @lines;
-
-    my ($balance) = $1;
-    if ($balance =~ /^(-?[0-9.,]+)$/) {
-      $self->$method( ['????????',$self->parse_amount($balance)]);
-    } else {
-      die "Invalid number '$_' found for $total";
+  while ($lines[0] !~ /^\s*$/) {
+    my $line = shift @lines;
+    my ($method,$balance);
+    for my $total (@{ $totals{ $self->account_type }||[] }) {
+      my ($re,$possible_method) = @$total;
+      if ($line =~ /^$re:\s*(.*) Euro$/) {
+        $method = $possible_method;
+        $balance = $1;
+        if ($balance =~ /^(-?[0-9.,]+)$/) {
+          $self->$method( ['????????',$self->parse_amount($balance)]);
+        } else {
+          die "Invalid number '$_' found for $total";
+        };
+      };
+    };
+    if (! $method) {
+        croak "No summary found in account statement ($line)";
     };
   };
 
@@ -170,6 +180,9 @@ sub parse_statement {
   $lines[0] =~ /^Datum\tWertstellung\tArt/
     or croak "Couldn't find start of transactions ($lines[0])";
 
+  # Ugly hack for "Art Buchungshinweis" (without a tab :-( )
+  $lines[0] =~ s/Art Buchungshinweis/Art\tBuchungshinweis/;
+
   my (@fields);
   COLUMN:
   for my $col (split /\t/, $lines[0]) {
@@ -179,7 +192,7 @@ sub parse_statement {
         next COLUMN;
       };
     };
-    die "Unknown column '$col'";
+    die "Unknown column '$col' in '$lines[0]'";
   };
   shift @lines;
 
