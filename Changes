@@ -1,5 +1,10 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.25 20061125
+  - Postbank changed the format of the account statement
+    thankfully reported again by Reto Heygel
+  - adapted tests to match the new format
+
 0.24
   - Another small HTML change, thankfully reported by
     Reto Heygel
