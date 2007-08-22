@@ -119,7 +119,7 @@ sub error_page {
   # Check if an error page is shown (a page with much red on it)
   my ($self) = @_;
   return unless $self->agent;
-  return $self->agent->content =~ m!<h3 class="h3Error">Es ist ein Fehler aufgetreten</h3>!sm
+  $self->agent->content =~ m!<h3 class="h3Error">Es ist ein Fehler aufgetreten</h3>!sm
       or $self->maintenance;
 };
 
