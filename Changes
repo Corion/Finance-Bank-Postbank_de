@@ -5,6 +5,10 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
   - The Postbank site is buggy and caches statements based on only the referencing URL,
     not the referencing URL and the query parameters. The stupid workaround currently
     is to only query one account per session. The test suite does just that.
+
+        $account->agent(undef);
+
+    is the magic incantation. This will force a fresh login on the next request.
   - HTML updates
 
 0.25 20061125
