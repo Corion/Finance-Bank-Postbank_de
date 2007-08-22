@@ -1,5 +1,12 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.26 20070821
+  - The Postbank certificate changed, reported by Reto Heygel
+  - The Postbank site is buggy and caches statements based on only the referencing URL,
+    not the referencing URL and the query parameters. The stupid workaround currently
+    is to only query one account per session. The test suite does just that.
+  - HTML updates
+
 0.25 20061125
   - Postbank changed the format of the account statement
     thankfully reported again by Reto Heygel

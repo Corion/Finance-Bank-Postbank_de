@@ -18,6 +18,19 @@ use Test::MockObject;
 
 BEGIN { use_ok("Finance::Bank::Postbank_de"); };
 
+sub login {
+  Finance::Bank::Postbank_de->new(
+                  login => '9999999999',
+                  password => '11111',
+                  status => sub {
+                              shift;
+                              diag join " ",@_
+                                if ($_[0] eq "HTTP Code") and ($_[1] != 200)
+                                #or $_[0] ne "HTTP Code";
+                            },
+                );
+};
+
 sub save_content {
   my ($account,$name) = @_;
   local *F;
@@ -35,16 +48,7 @@ SKIP: {
   skip "Need SSL capability to access the website",3 + + scalar @related_accounts *2
     unless LWP::Protocol::implementor('https');
 
-  my $account = Finance::Bank::Postbank_de->new(
-                  login => '9999999999',
-                  password => '11111',
-                  status => sub {
-                              shift;
-                              diag join " ",@_
-                                if ($_[0] eq "HTTP Code") and ($_[1] != 200)
-                                #or $_[0] ne "HTTP Code";
-                            },
-                );
+  my $account = login;
 
   # Get the login page:
   my $status = $account->get_login_page(&Finance::Bank::Postbank_de::LOGIN);
@@ -66,10 +70,14 @@ SKIP: {
     };
 
     for (reverse @fetched_accounts) {
-      isa_ok($account->get_account_statement(account_number => $_),'Finance::Bank::Postbank_de::Account', "Account $_");
+      isa_ok($account->get_account_statement(account_number => $_),'Finance::Bank::Postbank_de::Account', "Account $_")
+          or save_content($account,'account-'.$_);
+      $account->agent(undef); # workaround for buggy Postbank site
     };
     for (sort @fetched_accounts) {
-      isa_ok($account->get_account_statement(account_number => $_),'Finance::Bank::Postbank_de::Account', "Account $_");
+      isa_ok($account->get_account_statement(account_number => $_),'Finance::Bank::Postbank_de::Account', "Account $_")
+          or save_content($account,'account-'.$_);
+      $account->agent(undef); # workaround for buggy Postbank site
     };
 
     ok($account->close_session(),"Close session");
@@ -102,10 +110,11 @@ SKIP: {
 
   no warnings 'once';
   local *Finance::Bank::Postbank_de::select_function = sub {};
+  my $f = HTML::Form->parse($content,'https://banking.postbank.de');
   my $agent = Test::MockObject->new()
-              ->set_always('current_form',HTML::Form->parse($content,'https://banking.postbank.de'))
-              ->set_always('content' => $content);
-  $agent->set_always( form => 1 );
+              ->set_always(current_form => $f)
+              ->set_always(form_name    => $f)
+              ->set_always(content      => $content);
   $account->agent($agent);
   is_deeply([$account->account_numbers],["999999999"],"Single account number works");
 };

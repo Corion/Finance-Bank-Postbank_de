@@ -4,26 +4,26 @@ use strict;
 use warnings;
 use Carp;
 use base 'Class::Accessor';
+#use LWP::Debug qw(+);
 
 use WWW::Mechanize;
 use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.25';
+$VERSION = '0.26';
 
 BEGIN {
-  Finance::Bank::Postbank_de->mk_accessors(qw( agent login password ));
+  Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
 };
 
-#use constant LOGIN => 'https://banking.postbank.de/app/welcome.do?prevNote=1';
 use constant LOGIN => 'https://banking.postbank.de/app/welcome.do';
 
 use vars qw(%functions);
 BEGIN {
   %functions = (
     quit		=> qr'^Banking beenden$',
-    accountstatement	=> qr'^Kontoums.*?tze$',
+    accountstatement	=> qr'^Kontoums.*?tze$|^Konto<.*?>u</.*?>ms.*?tze$',
   );
 };
 
@@ -41,6 +41,7 @@ sub new {
     login => $args{login},
     password => $args{password},
     logger => $logger,
+    urls => {},
   };
   bless $self, $class;
 
@@ -65,10 +66,9 @@ sub new_session {
       die "Banking unavailable due to maintenance";
     };
     my $agent = $self->agent();
-    $agent->form("loginForm");
+    $agent->form_name("loginForm");
     eval {
       $agent->current_form->value( accountNumber => $self->login );
-      #$agent->current_form->value( PNINumber => $self->password );
       $agent->current_form->value( pinNumber => $self->password );
     };
     if ($@) {
@@ -83,6 +83,8 @@ sub new_session {
       $self->skip_security_advice;
     };
 
+    $self->init_session_urls()
+        if not $self->access_denied();
   };
   $result;
 };
@@ -93,7 +95,7 @@ sub get_login_page {
   $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
 
   my $agent = $self->agent();
-  $agent->add_header("If-SSL-Cert-Subject" => qr'/C=DE/ST=NRW/L=Bonn/O=Deutsche Postbank AG/OU=Postbank Systems AG/OU=Terms of use at www\.verisign\.com/rpa \(c\)00');
+  $agent->add_header("If-SSL-Cert-Subject" => qr{\Q/1.3.6.1.4.1.311.60.2.1.3=DE/2.5.4.15=V1.0, Clause 5.(b)/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/streetAddress=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Systems AG/CN=banking.postbank.de});
 
   $agent->get(LOGIN);
   $self->log_httpresult();
@@ -116,12 +118,14 @@ sub skip_security_advice {
 sub error_page {
   # Check if an error page is shown (a page with much red on it)
   my ($self) = @_;
-     $self->agent->content =~ m!<h3 class="h3Error">Es ist ein Fehler aufgetreten</h3>!sm
-  or $self->maintenance;
+  return unless $self->agent;
+  return $self->agent->content =~ m!<h3 class="h3Error">Es ist ein Fehler aufgetreten</h3>!sm
+      or $self->maintenance;
 };
 
 sub error_message {
   my ($self) = @_;
+  return unless $self->agent;
   die "No error condition detected in:\n" . $self->agent->content
     unless $self->error_page;
   $self->agent->content =~ m!<p class="errorText">(.*?)</p>!sm
@@ -131,6 +135,7 @@ sub error_message {
 
 sub maintenance {
   my ($self) = @_;
+  return unless $self->agent;
   #$self->error_page and
   $self->agent->content =~ m!Sehr geehrter <span lang="en">Online-Banking</span>\s+Nutzer,\s+wegen einer hohen Auslastung kommt es derzeit im Online-Banking zu\s*l&auml;ngeren Wartezeiten.!sm
   or $self->agent->content =~ m!&nbsp;Wartung\b!;
@@ -144,6 +149,7 @@ sub access_denied {
     return (
          $message =~ m!^Die Kontonummer ist nicht für das Internet Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Online-Banking freischalten"\.<br />\s*$!sm
       or $message =~ m!^Sie haben zu viele Zeichen in das Feld eingegeben.<br />\s*$!sm
+      or $message =~ m!^Die Anmeldung ist fehlgeschlagen. Bitte vergewissern Sie sich über die Richtigkeit Ihrer Eingaben und führen Sie den Anmeldevorgang erneut durch.<br />\s*$!sm
      #   $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.ktonr-n-vorh.error\)<br />\s*$!sm
      #or $message =~ m!^\s*.*?\(anmeldung.login.accountNumber.checkMaxLen.error\)<br />\s*$!sm
     )
@@ -157,25 +163,26 @@ sub session_timed_out {
   $self->agent->content =~ /Die Sitzungsdaten sind ung&uuml;ltig, bitte f&uuml;hren Sie einen erneuten Login durch.\s+\(27000\)/;
 };
 
-sub select_function {
-  my ($self,$function) = @_;
-  carp "Unknown account function '$function'"
-    unless exists $functions{$function};
+sub init_session_urls {
+    my ($self) = @_;
+    my $agent = $self->agent;
 
-  $self->new_session unless $self->agent;
-
-  $self->log( "Activating $functions{$function}" );
-  $self->agent->follow_link( text_regex => $functions{$function})
-    or do {
+    for (keys %functions) {
+        $self->log( "init_functions: $_ : " . $agent->find_link(text_regex => $functions{ $_ })->url_abs );
+        $self->urls->{$_} = $agent->find_link(text_regex => $functions{ $_ })->url_abs;
     };
-  if ($self->session_timed_out) {
-    $self->log("Session timed out");
-    $self->agent(undef);
-    $self->new_session();
-    $self->agent->follow_link( text => $functions{$function});
-  };
-  $self->log_httpresult();
-  $self->agent->status;
+};
+
+sub select_function {
+    my ($self,$function) = @_;
+    if (! $self->agent) {
+        $self->new_session;
+    };
+    carp "Unknown account function '$function'"
+        unless exists $self->urls->{$function};
+    $self->agent->get( $self->urls->{$function} )
+        or die "Couldn't get ".$self->urls->{$function};
+    $self->agent->status
 };
 
 sub close_session {
@@ -200,10 +207,9 @@ sub account_numbers {
 
     $self->log("Getting related account numbers");
     $self->select_function("accountstatement");
-    $self->agent->form("kontoumsatzUmsatzForm");
-    my $f = $self->agent->current_form;
 
     my $giro_input;
+    my $f = $self->agent->form_name("kontoumsatzUmsatzForm");
     if ($f) {
       $giro_input = $f->find_input('konto');
     };
@@ -237,11 +243,26 @@ sub account_numbers {
 sub get_account_statement {
   my ($self,%args) = @_;
 
-  $self->select_function("accountstatement");
+  #warn "*** Entry: $args{account_number}";
+  #for my $l ($self->agent->links) {
+      #next unless $l->text =~ /konto/i;
+      #warn "ACCT: " . $l->text. "\t" . $l->url;
+  #};
+  #Umsatzauskunft aktualisieren
+  if (! $self->select_function("accountstatement")) {
+      $self->log("Error selecting accountstatement");
+      $self->log_httpresult();
+      #die;
+      return;
+  };
 
   my $agent = $self->agent();
 
-  $self->agent->form("kontoumsatzUmsatzForm");
+  my $f;
+  if (! ($f = $self->agent->form_name("kontoumsatzUmsatzForm"))) {
+      $self->log_httpresult();
+      return;
+  };
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
     $agent->current_form->param( konto => [ delete $args{account_number}]);
@@ -250,13 +271,19 @@ sub get_account_statement {
     $self->log("Getting account statement via default (@accounts)");
   };
 
-  $agent->current_form->value('zeitraum','tage');
-  $agent->current_form->param('tage',['90']);
+  $f->value('zeitraum','tage');
+  $f->param('tage',['90']);
+
   $self->log("Downloading text version");
   $agent->click('action');
 
-  if ($agent->find_link(text_regex => qr'Download Kontoums.*?tze')) {
-    $agent->follow_link(text_regex => qr'Download Kontoums.*?tze');
+  my $l = $agent->find_link(text_regex => qr'Download Kontoums.*?tze');
+  #my $u = $l->url_abs;
+  #$u =~ s/cache=true\&//i;
+  #$l->[0] = $u;
+  #warn $l->url_abs;
+  if ($l) {
+    $agent->get($l);
     $self->log_httpresult();
   } else {
     # keine Umsaetze
@@ -277,10 +304,10 @@ sub get_account_statement {
 
   if ($agent->status == 200) {
     my $result = $agent->content;
-    #warn $result;
-    $agent->back;
     return Finance::Bank::Postbank_de::Account->parse_statement(content => $result);
   } else {
+    $self->log("Got status ".$agent->status);
+    #warn $agent->status;
     return wantarray ? () : undef;
   };
 };

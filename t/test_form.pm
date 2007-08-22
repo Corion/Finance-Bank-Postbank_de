@@ -10,7 +10,7 @@ sub form_ok {
     diag $_->dump for @forms;
     return ok(0,$testname);
   };
-  $mech->form($name);
+  $mech->form_name($name);
 
   # Check that the expected form fields are available :
   my $field;

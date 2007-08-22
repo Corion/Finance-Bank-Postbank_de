@@ -35,6 +35,7 @@ SKIP: {
   SKIP: {
     unless ($status == 200) {
       diag $account->agent->res->as_string;
+      diag $account->agent->title;
       skip "Didn't get a connection to ".&Finance::Bank::Postbank_de::LOGIN."(LWP: $status)", 7;
     };
     skip "Banking is unavailable due to maintenance", 9
