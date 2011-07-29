@@ -11,7 +11,7 @@ use Finance::Bank::Postbank_de::Account;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.26';
+$VERSION = '0.28';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
@@ -95,7 +95,8 @@ sub get_login_page {
   $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
 
   my $agent = $self->agent();
-  $agent->add_header("If-SSL-Cert-Subject" => qr{\Q/1.3.6.1.4.1.311.60.2.1.3=DE/2.5.4.15=V1.0, Clause 5.(b)/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/streetAddress=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Systems AG/CN=banking.postbank.de});
+  $agent->add_header("If-SSL-Cert-Subject" => qr'/1\.3\.6\.1\.4\.1\.311\.60\.2\.1\.3=DE/1\.3\.6\.1\.4\.1\.311\.60\.2\.1\.1=Bonn/2\.5\.4\.15=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/streetAddress=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Systems AG/CN=banking\.postbank\.de'); 
+  #$agent->add_header("If-SSL-Cert-Subject" => qr{\Q/1.3.6.1.4.1.311.60.2.1.3=DE/2.5.4.15=V1.0, Clause 5.(b)/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/streetAddress=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Systems AG/CN=banking.postbank.de});
 
   $agent->get(LOGIN);
   $self->log_httpresult();
@@ -111,7 +112,7 @@ sub is_security_advice {
 sub skip_security_advice {
   my ($self) = @_;
   $self->log('Skipping security advice page');
-  $self->agent->follow(qr/\bZum\s+Finanzstatus\b/);
+  $self->agent->follow_link(text_regex => qr/\bZum\s+Finanzstatus\b/);
   # $self->agent->content() =~ /Sicherheitshinweis/;
 };
 
