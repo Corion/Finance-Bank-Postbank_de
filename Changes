@@ -1,5 +1,14 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.27 20110728
+  - Adjusted to the new Postbank.de certificate/SSL-Cert-Subject
+    /1.3.6.1.4.1.311.60.2.1.3=DE/1.3.6.1.4.1.311.60.2.1.1=Bonn/2.5.4.15=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/streetAddress=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Systems AG/CN=banking.postbank.de
+   Reported and code fix by Pablo Schlaepfer
+
+  - Bumped WWW::Mechanize prerequisite to 1.30
+
+  - Changed one call from ->follow() to ->follow_link().
+
 0.26 20070821
   - The Postbank certificate changed, reported by Reto Heygel
   - The Postbank site is buggy and caches statements based on only the referencing URL,
