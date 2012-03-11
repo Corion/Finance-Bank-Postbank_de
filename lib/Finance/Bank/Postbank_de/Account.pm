@@ -41,9 +41,9 @@ sub new {
 %tags = (
   #Girokonto => [qw(Name BLZ Kontonummer IBAN)],
   "gebuchte Ums\N{U+00E4}tze" => [qw(Name BLZ Kontonummer IBAN)],
-  Tagesgeldkonto => [qw(Name BLZ Kontonummer)],
-  Sparcard => [qw(Name BLZ Kontonummer )],
-  Sparkonto => [qw(Name BLZ Kontonummer )],
+  Tagesgeldkonto => [qw(Name BLZ Kontonummer IBAN)],
+  Sparcard => [qw(Name BLZ Kontonummer  IBAN)],
+  Sparkonto => [qw(Name BLZ Kontonummer  IBAN)],
   Kreditkarte => [qw(Name BLZ Kontonummer IBAN)],
 );
 
