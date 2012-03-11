@@ -9,7 +9,7 @@ use base 'Class::Accessor';
 
 use vars qw[ $VERSION %tags %totals %columns %safety_check ];
 
-$VERSION = '0.27';
+$VERSION = '0.28';
 
 BEGIN {
   Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_unavailable balance_prev transactions_future iban blz account_type name));
@@ -39,7 +39,8 @@ sub new {
 );
 
 %tags = (
-  Girokonto => [qw(Name BLZ Kontonummer IBAN)],
+  #Girokonto => [qw(Name BLZ Kontonummer IBAN)],
+  "gebuchte Ums\N{U+00E4}tze" => [qw(Name BLZ Kontonummer IBAN)],
   Tagesgeldkonto => [qw(Name BLZ Kontonummer)],
   Sparcard => [qw(Name BLZ Kontonummer )],
   Sparkonto => [qw(Name BLZ Kontonummer )],
@@ -47,7 +48,7 @@ sub new {
 );
 
 %totals = (
-  Girokonto => [
+  "gebuchte Ums\N{U+00E4}tze" => [
       [qr'^Aktueller Kontostand' => 'balance'],
       [qr'^Summe vorgemerkter Ums.tze' => 'transactions_future'],
       [qr'^Davon noch nicht verf.gbar' => 'balance_unavailable'],
@@ -58,15 +59,14 @@ sub new {
 );
 
 %columns = (
-  qr'Datum'			=> 'tradedate',
+  qr'Buchungstag'			=> 'tradedate',
   qr'Wertstellung'		=> 'valuedate',
-  qr'Art'			=> 'type',
-  qr'Buchungshinweis'		=> 'comment',
-  qr'Verwendungszweck'		=> 'comment',
+  qr'Umsatzart'			=> 'type',
+  qr'Buchungsdetails'		=> 'comment',
   qr'Auftraggeber'		=> 'sender',
   qr'Empf.nger'			=> 'receiver',
-  qr'Betrag Euro'		=> 'amount',
-  qr'Saldo Euro'		=> 'running_total',
+  qr"Betrag \(\N{U+20AC}\)"		=> 'amount',
+  qr"Saldo \(\N{U+20AC}\)"		=> 'running_total',
 );
 
 sub parse_date {
@@ -79,7 +79,7 @@ sub parse_date {
 sub parse_amount {
   my ($self,$amount) = @_;
   die "String '$amount' does not look like a number"
-    unless $amount =~ /^-?[0-9]{1,3}(?:\.\d{3})*,\d{2}$/;
+    unless $amount =~ /^-?[0-9]{1,3}(?:\.\d{3})*,\d{2}(?:\s*\N{U+20AC})?$/;
   $amount =~ tr/.//d;
   $amount =~ s/,/./;
   $amount;
@@ -91,6 +91,7 @@ sub slurp_file {
   local *F;
   open F, "< $filename"
     or croak "Couldn't read from file '$filename' : $!";
+  binmode F, ':encoding(UTF-8)';
   <F>;
 };
 
@@ -119,21 +120,20 @@ sub parse_statement {
 
   my @lines = split /\r?\n/, $raw_statement;
   croak "No valid account statement: '$lines[0]'"
-    unless $lines[0] =~ /^Kontoumsätze Postbank (.*)$/;
+    unless $lines[0] =~ /^Umsatzauskunft - (.*)$/;
   shift @lines;
 
   my $account_type = $1;
-  croak "Unknown account type '$account_type'"
-    unless exists $tags{$account_type};
+  if( ! exists $tags{ $account_type }) {
+    $account_type =~ s!([^\x00-\x7f])!sprintf '%08x', ord($1)!ge;
+    croak "Unknown account type '$account_type' (" . (join ",",keys %tags) . ")"
+      unless exists $tags{$account_type};
+  };
   $self->account_type($account_type);
-
-  $lines[0] =~ m!^\s*$!
-    or croak "Expected an empty line as the second line, got '$lines[0]'";
-  shift @lines;
 
   # Name: PETRA PFIFFIG
   for my $tag (@{ $tags{ $self->account_type }||[] }) {
-    $lines[0] =~ /^\Q$tag\E: (.*)$/
+    $lines[0] =~ /^\Q$tag\E;(.*)$/
       or croak "Field '$tag' not found in account statement ($lines[0])";
     my $method = lc($tag);
     my $value = $1;
@@ -146,18 +146,12 @@ sub parse_statement {
     shift @lines;
   };
 
-  if ($lines[0] !~ m!^\s*$!) {
-    local $" = "|";
-    croak "Expected an empty line after the information, got '$lines[0]'";
-  };
-  shift @lines;
-
   while ($lines[0] !~ /^\s*$/) {
     my $line = shift @lines;
     my ($method,$balance);
     for my $total (@{ $totals{ $self->account_type }||[] }) {
       my ($re,$possible_method) = @$total;
-      if ($line =~ /^$re:\s*(.*) Euro$/) {
+      if ($line =~ /^$re;\s*(.*) \N{U+20AC}$/) {
         $method = $possible_method;
         $balance = $1;
         if ($balance =~ /^(-?[0-9.,]+)$/) {
@@ -176,18 +170,23 @@ sub parse_statement {
     or croak "Expected an empty line after the account balances, got '$lines[0]'";
   shift @lines;
 
+  my $sep = ";";
+  if( $lines[0] =~ /([\t])/) {
+    $sep = $1;
+  };
+
   # Now parse the lines for each cashflow :
-  $lines[0] =~ /^Datum\tWertstellung\tArt/
+  $lines[0] =~ /^"Buchungstag"${sep}"Wertstellung"${sep}"Umsatzart"/
     or croak "Couldn't find start of transactions ($lines[0])";
 
   # Ugly hack for "Art Buchungshinweis" (without a tab :-( )
-  $lines[0] =~ s/Art Buchungshinweis/Art\tBuchungshinweis/;
+  #$lines[0] =~ s/Art Buchungshinweis/Art\tBuchungshinweis/;
 
   my (@fields);
   COLUMN:
-  for my $col (split /\t/, $lines[0]) {
+  for my $col (split /$sep/, $lines[0]) {
     for my $target (keys %columns) {
-      if ($col =~ m!^$target$!) {
+      if ($col =~ m!^["']?$target["']?$!) {
         push @fields, $columns{$target};
         next COLUMN;
       };
@@ -206,12 +205,13 @@ sub parse_statement {
   my $line;
   for $line (@lines) {
     next if $line =~ /^\s*$/;
-    my (@row) = split /\t/, $line;
+    my (@row) = split /$sep/, $line;
     scalar @row == scalar @fields
       or die "Malformed cashflow ($line): Expected ".scalar(@fields)." entries, got ".scalar(@row);
 
     for (@row) {
-      s!^\s+!!; s!\s+$!!;
+      $_ = $1
+          if /^\s*["']\s*(.*)\s*["']\s*$/;
     };
 
     my (%rec);

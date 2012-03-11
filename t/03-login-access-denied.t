@@ -67,6 +67,7 @@ SKIP: {
       };
       skip "Test $name: Banking is unavailable due to maintenance", 4
         if $account->maintenance;
+
       $account->agent(undef);
       $account->new_session();
       ok($account->error_page(),"We got an error page (Test $name)")

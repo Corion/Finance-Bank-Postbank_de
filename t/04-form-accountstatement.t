@@ -6,7 +6,7 @@ require 't/test_form.pm';
 
 use vars qw(@fields);
 BEGIN {
-  @fields = qw(konto zeitraum tage action);
+  @fields = ('selectForm:kontoauswahl', 'selectForm:kontoauswahlButton');
 };
 use Test::More tests => 8;
 
@@ -49,16 +49,16 @@ SKIP: {
       skip "Couldn't get to account statement (LWP: $status)",5;
     };
 
-    form_ok( $account->agent, kontoumsatzUmsatzForm => @fields );
+    form_ok( $account->agent, '' => @fields );
     ok($account->close_session(),"Closed session");
     is($account->agent(),undef,"agent was discarded");
 
     my $canned_statement = do {local $/ = undef;
-                               local *F;
                                my $acctname = "$FindBin::Bin/accountstatement.txt";
-                               open F, "< $acctname"
+                               open my $fh, "< $acctname"
                                  or die "Couldn't read $acctname : $!";
-                               <F>};
+                               binmode $fh, ':encoding(CP-1252)';
+                               <$fh>};
 
     eval { require File::Temp; File::Temp->import(); };
     SKIP: {
@@ -70,10 +70,10 @@ SKIP: {
       is($statement->iban, 'DE31200100209999999999', "Got the correct IBAN");
 
       my $downloaded_statement = do {local $/ = undef;
-                                     local *F;
-                                     open F, "< $tempname"
+                                     open my $fh, "< $tempname"
                                        or die "Couldn't read $tempname : $!";
-                                     <F>};
+                                     binmode $fh, ':encoding(CP-1252)';
+                                     <$fh>};
       for ($downloaded_statement,$canned_statement) {
         s/\r\n/\n/g;
         s/\t/        /g;

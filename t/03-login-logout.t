@@ -43,9 +43,16 @@ SKIP: {
       diag $account->agent->res->as_string;
       skip "Didn't get a connection to ".&Finance::Bank::Postbank_de::LOGIN."(LWP: $status)",2;
     };
-    skip "Banking is unavailable due to maintenance", 2
+    skip "Banking is unavailable due to maintenance", 4
       if $account->maintenance;
     $account->agent(undef);
+
+    # Check that all functions are available
+    for (keys %Finance::Banking::Postbank_de::functions) {
+        isn't undef,
+            $account->agent->find_link(text_regex => $Finance::Banking::Postbank_de::functions{ $_ }),
+            "Function '$_' available";
+    };
 
     $status = $account->select_function("accountstatement");
     unless ($status == 200) {
