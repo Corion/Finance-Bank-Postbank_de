@@ -1,5 +1,5 @@
 package Finance::Bank::Postbank_de::Account;
-
+use 5.006;
 use strict;
 use warnings;
 use Carp qw(croak);
@@ -88,11 +88,10 @@ sub parse_amount {
 sub slurp_file {
   my ($self,$filename) = @_;
   local $/ = undef;
-  local *F;
-  open F, "< $filename"
+  open my $fh, "< $filename"
     or croak "Couldn't read from file '$filename' : $!";
-  binmode F, ':encoding(UTF-8)';
-  <F>;
+  binmode $fh, ':encoding(CP-1252)';
+  <$fh>;
 };
 
 sub parse_statement {

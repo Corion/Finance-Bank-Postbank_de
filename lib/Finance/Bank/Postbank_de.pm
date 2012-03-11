@@ -1,5 +1,6 @@
 package Finance::Bank::Postbank_de;
 
+use 5.006; # we use lexical filehandles now
 use strict;
 use warnings;
 use Carp;

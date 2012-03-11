@@ -22,6 +22,7 @@ WriteMakefile(
                         'List::Sliding::Changes' => 0.02,
                         'Encode' => 0, # for decoding the content and dealing with umlauts
                       }, # e.g., Module::Name => 1.1
+    MIN_PERL_VERSION => 5.8, # 5.8 for Encode, 5.6 for the syntax
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'lib/Finance/Bank/Postbank_de.pm', # retrieve abstract from module
        AUTHOR     => 'Max Maischein <corion@cpan.org>') : ()),
