@@ -35,16 +35,16 @@ SKIP: {
       if $account->maintenance;
 
     my @forms = $account->agent->forms();
-    is( scalar(grep({ ($_->attr('name')||"") eq 'loginForm' } @forms)), 1, "Found 'loginForm'")
+    is( scalar(grep({ ($_->attr('id')||"") eq 'id3' } @forms)), 1, "Found form 'id3'")
       or do {
         diag $account->agent->content;
         diag "Found forms:";
-        diag sprintf "'%s'", $_->attr('name') for @forms;
+        diag sprintf "'%s'", $_->attr('id') for @forms;
       };
-    $account->agent->form_name('loginForm');
+    $account->agent->form_name('id3');
 
     # Check that the expected form fields are available :
-    my @fields = qw(accountNumber pinNumber action);
+    my @fields = qw(login_loginForm_hf_0 nutzername kennwort);
     my $field;
     for $field (@fields) {
       diag $account->agent->current_form->dump
