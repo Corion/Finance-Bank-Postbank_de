@@ -20,6 +20,7 @@ WriteMakefile(
                         'Class::Accessor' => 0,
                         'MIME::Lite' => 3.00,
                         'List::Sliding::Changes' => 0.02,
+                        'Encode' => 0, # for decoding the content and dealing with umlauts
                       }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'lib/Finance/Bank/Postbank_de.pm', # retrieve abstract from module
