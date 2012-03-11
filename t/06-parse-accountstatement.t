@@ -17,10 +17,10 @@ my $account_3 = Finance::Bank::Postbank_de::Account->new(
 
 my @acctnames = ("$FindBin::Bin/accountstatement.txt","$FindBin::Bin/accountstatement-negative.txt");
 my $canned_statement = do {local $/ = undef;
-                           local *F;
-                           open F, "< $acctnames[0]"
+                           open my $fh, "< $acctnames[0]"
                              or die "Couldn't read $acctnames[0] : $!";
-                           <F>};
+                           binmode $fh, ':encoding(CP-1252)';
+                           <$fh>};
 
 # Check that the parameter passing works :
 {
@@ -44,20 +44,14 @@ eval { $account->parse_statement( content => '' ) };
 like($@,"/^Don't know what to do with empty content/","Passing no parameter");
 eval { $account->parse_statement( content => 'foo' ) };
 like($@,"/^No valid account statement: 'foo'/","Passing bogus content");
-eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\nfoo" ) };
-like($@,"/^Expected an empty line/","Passing other bogus content");
-eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nFOO, BAR BLZ: 66666666 Kontonummer: 9999999999\n\nfoo" )};
+eval { $account->parse_statement( content => "Umsatzauskunft - gebuchte Ums\N{U+00E4}tze\n\nFOO, BAR BLZ;66666666 Kontonummer: 9999999999\n\nfoo" )};
 like($@,"/^Field 'Name' not found in account statement/","Passing no Name in content");
-eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nfoo" )};
+eval { $account->parse_statement( content => "Umsatzauskunft - gebuchte Ums\N{U+00E4}tze\nName;Test User\nfoo" )};
 like($@,"/^Field 'BLZ' not found in account statement/","Passing no BLZ in content");
-eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nfoo" )};
+eval { $account->parse_statement( content => "Umsatzauskunft - gebuchte Ums\N{U+00E4}tze\nName;Test User\nBLZ;666\nfoo" )};
 like($@,"/^Field 'Kontonummer' not found in account statement/","Passing no Kontonummer in content");
-eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nfoo" )};
+eval { $account->parse_statement( content => "Umsatzauskunft - gebuchte Ums\N{U+00E4}tze\nName;Test User\nBLZ;666\nKontonummer;9999999999\nfoo" )};
 like($@,"/^Field 'IBAN' not found in account statement/","Passing no IBAN in content");
-eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\nfoo" )};
-like($@,"/^Expected an empty line after the information, got 'foo' at /","Passing no empty line after summary");
-eval { $account->parse_statement( content => "Kontoumsätze Postbank Girokonto\n\nName: Test User\nBLZ: 666\nKontonummer: 9999999999\nIBAN: IBAN DE31 2001 0020 9999 9999 99\n\nfoo" )};
-like($@,"/^No summary found in account statement \\(foo\\)/","Passing no summary in content");
 
 my @expected_statements = ({ name => "PETRA PFIFFIG",
                        blz => "20010020",
@@ -65,30 +59,29 @@ my @expected_statements = ({ name => "PETRA PFIFFIG",
                        iban => "DE31200100209999999999",
 		       account_type => 'Girokonto',
                        balance => ["????????","5314.05"],
-                       #balance_unavailable => undef,
-                       balance_unavailable => ['????????','150.00'],
+                       #balance_unavailable => ['????????','150.00'],
                        transactions_future => ['????????',-11.33],
                        transactions => [
                          { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
-                           comment => "111111/1000000000/37050198 FINANZKASSE 3991234 STEUERNUMMER 00703434",
+                           comment => "111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434",
                            receiver => "Finanzkasse K\xf6ln-S\xfcd", sender => 'PETRA PFIFFIG', amount => "-328.75",
-			   running_total => '5.314,05' },
+			   running_total => '5314.05' },
                          { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
                            comment => "111111/3299999999/20010020 ÜBERTRAG AUF SPARCARD ÜBERSCHUSS WAS ICH DIESMAL GESPART HAB",
                            receiver => "Petra Pfiffig", sender => 'PETRA PFIFFIG', amount => "-228.61",
-			   running_total => '5.642,80' },
+			   running_total => '5642.80' },
                          { tradedate => "20041117", valuedate => "20041117", type => "Gutschrift",
                            comment => "BEZÜGE PERS.NR. 70600170/01 ARBEITGEBER U. CO",
                            receiver => "PETRA PFIFFIG", sender => 'Petra Pfiffig', amount => "2780.70", 
-			   running_total => '5.871,41' },
+			   running_total => '5871.41' },
                          { tradedate => "20041117", valuedate => "20041117", type => "\xdcberweisung",
                            comment => "DA 1000001",
                            receiver => "Verlagshaus Scribere GmbH", sender => 'PETRA PFIFFIG', amount => "-31.50",
-			   running_total => '3.090,71' },
+			   running_total => '3090.71' },
                          { tradedate => "20041117", valuedate => "20041117", type => "Scheckeinreichung",
                            comment => "EINGANG VORBEHALTEN GUTBUCHUNG 12345",
                            receiver => "PETRA PFIFFIG", sender => 'Ein Fremder', amount => "1830.00",
-			   running_total => '3.122,21' },
+			   running_total => '3122.21' },
                          { tradedate => "20041116", valuedate => "20041116", type => "Lastschrift",
                            comment => "MIETE 600+250 EUR OBJ22/328 SCHULSTR.7, 12345 MEINHEIM",
                            receiver => "Eigenheim KG", sender => 'PETRA PFIFFIG', amount => "-850.00", 
