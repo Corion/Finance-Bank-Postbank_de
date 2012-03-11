@@ -217,41 +217,62 @@ sub close_session {
 sub account_numbers {
   my ($self,%args) = @_;
   $self->{account_numbers} ||= do {
-    my @numbers;
+    my %numbers;
 
     $self->log("Getting related account numbers");
     $self->select_function("accountstatement");
 
     my $giro_input;
-    my $f = $self->agent->form_name("kontoumsatzUmsatzForm");
+    my $f = $self->agent->form_with_fields("selectForm:kontoauswahl");
     if ($f) {
-      $giro_input = $f->find_input('konto');
+      $giro_input = $f->find_input('selectForm:kontoauswahl');
     };
 
     if (defined $giro_input) {
       if ($giro_input->type eq 'hidden') {
-        @numbers = $giro_input->value();
-        $self->log("Only one related account number found: @numbers");
+        %numbers = { $giro_input->value() => 0 };
+        warn "Account with only one account number found. Please show me the HTML :-(";
+        $self->log("Only one related account number found: %numbers");
       } else {
-        @numbers = $giro_input->possible_values();
+        # Unfortunately, the input only lists the account numbers
+        # in the text and not as HTML values...
+        my @check_numbers = $giro_input->possible_values();
+        my @numbers = $self->agent->content =~ /<option[^>]*?value="(\d+)"[^>]*>\s*(\d+)\s+/gi;
+        if( 0+@numbers != 2*(0+@check_numbers)) {
+            warn "Inconsistent number of accounts found. Maybe the website has changed.";
+            warn sprintf "Found %d (%s), expected %d numbers.", 
+                 0+@numbers,
+                 join( ",", @numbers),
+                 0+@check_numbers;
+            #warn $self->agent->content,"\n";
+        };
+        while (@numbers) {
+            my ($v,$k) = splice @numbers, 0, 2;
+            $numbers{ $k } = $v;
+        };
         $self->log( scalar(@numbers) . " related account numbers found: @numbers");
       }
     } else {
       # Find the single account number
+      warn "No account number found - guessing. Maybe the website has changed.";
       my $c = $self->agent->content;
-      @numbers = ($c =~ /\?konto=(\d+)/g);
+      my @numbers = ($c =~ /\?konto=(\d+)/g);
       if (! @numbers) {
         warn "No account number found!";
         warn $_ for ($c =~ /(konto)/imsg);
         $self->log("No related account numbers found");
+      } else {
+        %numbers = (@numbers, 0);
       };
     };
 
     # Discard credit card numbers:
-    @numbers = grep { /^\d{9,10}$/ } @numbers;
-    \@numbers
+    for (keys %numbers) {
+        delete $numbers{ $_ } if $_ !~ /^\d{9,10}$/;
+    };
+    \%numbers
   };
-  @{ $self->{account_numbers} };
+  keys %{ $self->{account_numbers} };
 };
 
 sub get_account_statement {
@@ -271,9 +292,16 @@ sub get_account_statement {
       $self->log_httpresult();
       return;
   };
+  $agent->form_with_fields( 'selectForm:kontoauswahl' );
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
-    $agent->current_form->param( konto => [ delete $args{account_number}]);
+    # Load the account numbers if not already loaded
+    $self->account_numbers;
+    if(! exists $self->{account_numbers}->{$args{account_number}}) {
+        croak "Unknown account number '$args{account_number}'";
+    };
+    my $index = $self->{account_numbers}->{$args{account_number}};
+    $agent->current_form->param( 'selectForm:kontoauswahl' => $index );
   } else {
     my @accounts = $agent->current_form->value('selectForm:kontoauswahl');
     $self->log("Getting account statement via default (@accounts)");
