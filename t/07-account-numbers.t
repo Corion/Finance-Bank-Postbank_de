@@ -7,6 +7,7 @@ use vars qw(@related_accounts);
 BEGIN {
   @related_accounts = qw( 
                           3299999999
+                           799999919
                           9999999995
                           9999999998
                           9999999999
@@ -112,9 +113,10 @@ SKIP: {
   local *Finance::Bank::Postbank_de::select_function = sub {};
   my $f = HTML::Form->parse($content,'https://banking.postbank.de');
   my $agent = Test::MockObject->new()
-              ->set_always(current_form => $f)
-              ->set_always(form_name    => $f)
-              ->set_always(content      => $content);
+              ->set_always(current_form     => $f)
+              ->set_always(form_name        => $f)
+              ->set_always(form_with_fields => $f)
+              ->set_always(content          => $content);
   $account->agent($agent);
   is_deeply([$account->account_numbers],["999999999"],"Single account number works");
 };
