@@ -79,7 +79,8 @@ sub parse_date {
 sub parse_amount {
   my ($self,$amount) = @_;
   die "String '$amount' does not look like a number"
-    unless $amount =~ /^-?[0-9]{1,3}(?:\.\d{3})*,\d{2}(?:\s*\N{U+20AC})?$/;
+    unless $amount =~ /^(-?[0-9]{1,3}(?:\.\d{3})*,\d{2})(?:\s*\N{U+20AC})?$/;
+  $amount = $1;
   $amount =~ tr/.//d;
   $amount =~ s/,/./;
   $amount;
@@ -178,9 +179,6 @@ sub parse_statement {
   $lines[0] =~ /^"Buchungstag"${sep}"Wertstellung"${sep}"Umsatzart"/
     or croak "Couldn't find start of transactions ($lines[0])";
 
-  # Ugly hack for "Art Buchungshinweis" (without a tab :-( )
-  #$lines[0] =~ s/Art Buchungshinweis/Art\tBuchungshinweis/;
-
   my (@fields);
   COLUMN:
   for my $col (split /$sep/, $lines[0]) {
@@ -198,6 +196,7 @@ sub parse_statement {
     tradedate => \&parse_date,
     valuedate => \&parse_date,
     amount => \&parse_amount,
+    running_total => \&parse_amount,
   );
 
   my @transactions;
@@ -210,7 +209,7 @@ sub parse_statement {
 
     for (@row) {
       $_ = $1
-          if /^\s*["']\s*(.*)\s*["']\s*$/;
+          if /^\s*["']\s*(.*?)\s*["']\s*$/;
     };
 
     my (%rec);

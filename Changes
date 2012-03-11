@@ -5,6 +5,7 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
   ! Perl 5.8 is needed for the Encode handling
   ! Major changes to new interface of Postbank.de
   ! We now decode all strings to UTF-8
+  ! running_total is now formatted as a Perl number, not as a string anymore
   . Files still get stored as CP-1252, Postbank claims these are encoded as UTF-8 :)
   . Do not upgrade without a working fallback strategy!
 
