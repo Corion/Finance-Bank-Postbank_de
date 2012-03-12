@@ -79,8 +79,8 @@ SKIP: {
         s/\t/        /g;
         s/\s*$//mg;
         # Strip out all date references ...
-        s/^\d{2}\.\d{2}\.\d{4}\s+\d{2}\.\d{2}\.\d{4}\s+//gm;
-        s/^\d{2}\.\d{2}\.\d{4}//gm;
+        s/^"\d{2}\.\d{2}\.\d{4}";"\d{2}\.\d{2}\.\d{4}";//gm;
+        s/^"\d{2}\.\d{2}\.\d{4}"//gm;
       };
       is_deeply([ split /\n/, $downloaded_statement ],[ split /\n/, $canned_statement ],"Download to file works");
       ok($account->close_session(),"Closed session");
