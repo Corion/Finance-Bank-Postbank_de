@@ -40,7 +40,7 @@ sub new {
 
 %tags = (
   #Girokonto => [qw(Name BLZ Kontonummer IBAN)],
-  "gebuchte Ums\N{U+00E4}tze" => [qw(Name BLZ Kontonummer IBAN)],
+  "gebuchte Ums\x{00E4}tze" => [qw(Name BLZ Kontonummer IBAN)],
   Tagesgeldkonto => [qw(Name BLZ Kontonummer IBAN)],
   Sparcard => [qw(Name BLZ Kontonummer  IBAN)],
   Sparkonto => [qw(Name BLZ Kontonummer  IBAN)],
@@ -48,7 +48,7 @@ sub new {
 );
 
 %totals = (
-  "gebuchte Ums\N{U+00E4}tze" => [
+  "gebuchte Ums\x{00E4}tze" => [
       [qr'^Aktueller Kontostand' => 'balance'],
       [qr'^Summe vorgemerkter Ums.tze' => 'transactions_future'],
       [qr'^Davon noch nicht verf.gbar' => 'balance_unavailable'],
@@ -65,8 +65,8 @@ sub new {
   qr'Buchungsdetails'		=> 'comment',
   qr'Auftraggeber'		=> 'sender',
   qr'Empf.nger'			=> 'receiver',
-  qr"Betrag \(\N{U+20AC}\)"		=> 'amount',
-  qr"Saldo \(\N{U+20AC}\)"		=> 'running_total',
+  qr"Betrag \(\x{20AC}\)"		=> 'amount',
+  qr"Saldo \(\x{20AC}\)"		=> 'running_total',
 );
 
 sub parse_date {
@@ -79,7 +79,7 @@ sub parse_date {
 sub parse_amount {
   my ($self,$amount) = @_;
   die "String '$amount' does not look like a number"
-    unless $amount =~ /^(-?[0-9]{1,3}(?:\.\d{3})*,\d{2})(?:\s*\N{U+20AC})?$/;
+    unless $amount =~ /^(-?[0-9]{1,3}(?:\.\d{3})*,\d{2})(?:\s*\x{20AC})?$/;
   $amount = $1;
   $amount =~ tr/.//d;
   $amount =~ s/,/./;
@@ -151,10 +151,10 @@ sub parse_statement {
     my ($method,$balance);
     for my $total (@{ $totals{ $self->account_type }||[] }) {
       my ($re,$possible_method) = @$total;
-      if ($line =~ /^$re;\s*(.*) \N{U+20AC}$/) {
+      if ($line =~ /$re;\s*(\S+)\s*\x{20AC}$/) {
         $method = $possible_method;
         $balance = $1;
-        if ($balance =~ /^(-?[0-9.,]+)$/) {
+        if ($balance =~ /^(-?[0-9.,]+)\s*$/) {
           $self->$method( ['????????',$self->parse_amount($balance)]);
         } else {
           die "Invalid number '$_' found for $total";
