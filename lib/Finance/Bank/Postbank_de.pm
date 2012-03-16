@@ -68,7 +68,7 @@ sub new_session {
       die "Banking unavailable due to maintenance";
     };
     my $agent = $self->agent();
-    $agent->form_name("id3");
+    $agent->form_id("id3");
     eval {
       $agent->current_form->value( nutzername => $self->login );
       $agent->current_form->value( kennwort => $self->password );

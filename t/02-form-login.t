@@ -41,7 +41,7 @@ SKIP: {
         diag "Found forms:";
         diag sprintf "'%s'", $_->attr('id') for @forms;
       };
-    $account->agent->form_name('id3');
+    $account->agent->form_id('id3');
 
     # Check that the expected form fields are available :
     my @fields = qw(login_loginForm_hf_0 nutzername kennwort);
