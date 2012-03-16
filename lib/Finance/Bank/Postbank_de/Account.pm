@@ -162,7 +162,7 @@ sub parse_statement {
         if ($balance =~ /^(-?[0-9.,]+)\s*$/) {
           $self->$method( ['????????',$self->parse_amount($balance)]);
         } else {
-          die "Invalid number '$_' found for $total";
+          die "Invalid number '$balance' found for $method";
         };
       };
     };
