@@ -146,6 +146,11 @@ sub parse_statement {
     shift @lines;
   };
 
+  my $sep = ";";
+  if( $lines[0] =~ /([\t])/) {
+    $sep = $1;
+  };
+
   while ($lines[0] !~ /^\s*$/) {
     my $line = shift @lines;
     my ($method,$balance);
@@ -169,11 +174,6 @@ sub parse_statement {
   $lines[0] =~ m!^\s*$!
     or croak "Expected an empty line after the account balances, got '$lines[0]'";
   shift @lines;
-
-  my $sep = ";";
-  if( $lines[0] =~ /([\t])/) {
-    $sep = $1;
-  };
 
   # Now parse the lines for each cashflow :
   $lines[0] =~ /^"Buchungstag"${sep}"Wertstellung"${sep}"Umsatzart"/
