@@ -157,7 +157,7 @@ sub access_denied {
          $message =~ m!^Die Kontonummer ist nicht für das Internet Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Online-Banking freischalten"\.<br />\s*$!sm
       or $message =~ m!^Sie haben zu viele Zeichen in das Feld eingegeben.<br />\s*$!sm
       or $message =~ m!^Die eingegebene Postbank Girokontonummer ist zu lang. Bitte überprüfen Sie Ihre Eingabe.$!sm
-      or $message =~ m!^Die Anmeldung ist fehlgeschlagen. Bitte vergewissern Sie sich über die Richtigkeit Ihrer Eingaben und führen Sie den Anmeldevorgang erneut durch.\s*$!sm
+      or $message =~ m!^Die Anmeldung ist fehlgeschlagen. Bitte vergewissern Sie sich der Richtigkeit Ihrer Eingaben und f.hren Sie den Anmeldevorgang erneut durch.\s*$!sm
     )
   } else {
     return;
