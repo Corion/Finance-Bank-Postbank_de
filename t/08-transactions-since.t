@@ -15,11 +15,11 @@ my %days = (
             'amount' => '-580.06',
             'type' => 'Lastschrift',
             'valuedate' => '20120304',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
           {
             'tradedate' => '20120304',
-            'receiver' => 'PETRA PFIFFIG',
+            'receiver' => 'Petra Pfiffig',
             'comment' => 'Kindergeld Kindergeld-Nr. 1462347',
             'running_total' => '3007.82',
             'amount' => '154.00',
@@ -37,7 +37,7 @@ my %days = (
             'amount' => '-125.80',
             'type' => 'Lastschrift',
             'valuedate' => '20120306',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
   ],
   20120308 => [
@@ -49,7 +49,7 @@ my %days = (
             'amount' => '-84.75',
             'type' => 'Lastschrift',
             'valuedate' => '20120308',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
   ],
   20120310 => [
@@ -61,7 +61,7 @@ my %days = (
             'amount' => '-850.00',
             'type' => 'Lastschrift',
             'valuedate' => '20120310',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
           {
             'tradedate' => '20120310',
@@ -71,7 +71,7 @@ my %days = (
             'amount' => '-75.00',
             'type' => 'Inh. Scheck',
             'valuedate' => '20120310',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
   ],
   20120311 => [
@@ -83,7 +83,7 @@ my %days = (
             'amount' => '-328.75',
             'type' => 'Überweisung',
             'valuedate' => '20120311',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
           {
             'tradedate' => '20120311',
@@ -93,11 +93,11 @@ my %days = (
             'amount' => '-228.61',
             'type' => 'Überweisung',
             'valuedate' => '20120311',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
           {
             'tradedate' => '20120311',
-            'receiver' => 'PETRA PFIFFIG',
+            'receiver' => 'Petra Pfiffig',
             'comment' => "Bez\N{U+00FC}ge Pers.Nr. 70600170/01 Arbeitgeber u. Co",
             'running_total' => '5871.41',
             'amount' => '2780.70',
@@ -113,11 +113,11 @@ my %days = (
             'amount' => '-31.50',
             'type' => 'Überweisung',
             'valuedate' => '20120311',
-            'sender' => 'PETRA PFIFFIG'
+            'sender' => 'Petra Pfiffig'
           },
           {
             'tradedate' => '20120311',
-            'receiver' => 'PETRA PFIFFIG',
+            'receiver' => 'Petra Pfiffig',
             'comment' => 'Eingang vorbehalten Gutbuchung 12345',
             'running_total' => '3122.21',
             'amount' => '1830.00',

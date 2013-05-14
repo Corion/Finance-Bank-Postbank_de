@@ -1,6 +1,7 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
   ! We now explicitly require LWP::Protocol::https as a prerequisite to ensure HTTPS support
+  . Test fixes
 0.28 2012xxxx
   ! Perl 5.6 is now the minimum version, needed for syntax
   ! Perl 5.8 is needed for the Encode handling
