@@ -110,6 +110,7 @@ SKIP: {
                 );
 
   no warnings 'once';
+  no warnings 'redefine';
   local *Finance::Bank::Postbank_de::select_function = sub {};
   my $f = HTML::Form->parse($content,'https://banking.postbank.de');
   my $agent = Test::MockObject->new()
