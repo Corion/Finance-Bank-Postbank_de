@@ -15,6 +15,7 @@ WriteMakefile(
     'NAME'    => 'Finance::Bank::Postbank_de',
     'VERSION_FROM'  => 'lib/Finance/Bank/Postbank_de.pm', # finds $VERSION
     'PREREQ_PM'    => { 'WWW::Mechanize' => 1.52,
+                        'LWP::Protocol::https' => 0,
                         'Test::More' => 0,
                         'Test::MockObject' => 0,
                         'Class::Accessor' => 0,
