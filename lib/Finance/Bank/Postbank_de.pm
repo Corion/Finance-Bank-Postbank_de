@@ -354,6 +354,8 @@ sub get_account_statement {
 1;
 __END__
 
+=encoding ISO8859-1
+
 =head1 NAME
 
 Finance::Bank::Postbank_de - Check your Postbank.de bank account from Perl

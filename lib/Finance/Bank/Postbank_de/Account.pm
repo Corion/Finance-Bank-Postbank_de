@@ -275,6 +275,9 @@ sub trade_dates {
 
 1;
 __END__
+
+=encoding ISO8859-1
+
 =head1 NAME
 
 Finance::Bank::Postbank_de::Account - Postbank bank account class
