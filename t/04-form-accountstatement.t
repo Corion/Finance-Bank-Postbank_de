@@ -15,7 +15,7 @@ use_ok("Finance::Bank::Postbank_de");
 # Check that we have SSL installed :
 SKIP: {
 
-  skip "Need SSL capability to access the website", 3 + scalar @fields
+  skip "Need SSL capability to access the website", 5 + scalar @fields
     unless LWP::Protocol::implementor('https');
 
   my $account = Finance::Bank::Postbank_de->new(
