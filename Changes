@@ -1,5 +1,6 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+  + Adjusted to the new postbank.de certificate/subject
   ! We now explicitly require LWP::Protocol::https as a prerequisite to ensure HTTPS support
   . Test fixes
 0.28 2012xxxx

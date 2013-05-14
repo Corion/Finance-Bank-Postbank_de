@@ -97,7 +97,7 @@ sub get_login_page {
   $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
 
   my $agent = $self->agent();
-  $agent->add_header("If-SSL-Cert-Subject" => qr'/1\.3\.6\.1\.4\.1\.311\.60\.2\.1\.3=DE/1\.3\.6\.1\.4\.1\.311\.60\.2\.1\.1=Bonn/2\.5\.4\.15=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/streetAddress=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Systems AG/CN=banking\.postbank\.de'); 
+  $agent->add_header("If-SSL-Cert-Subject" => qr{\Q/1.3.6.1.4.1.311.60.2.1.3=DE/1.3.6.1.4.1.311.60.2.1.1=Bonn/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Systems AG/CN=banking.postbank.de}); 
 
   $agent->get(LOGIN);
   $self->log_httpresult();
