@@ -156,11 +156,13 @@ sub parse_statement {
     my ($method,$balance);
     for my $total (@{ $totals{ $self->account_type }||[] }) {
       my ($re,$possible_method) = @$total;
-      if ($line =~ /$re;\s*(\S+)\s*\x{20AC}$/) {
+      if ($line =~ /$re;\s*(?:(\S+)\s*\x{20AC}|(null))$/) {
         $method = $possible_method;
-        $balance = $1;
+        $balance = $1 || $2;
         if ($balance =~ /^(-?[0-9.,]+)\s*$/) {
           $self->$method( ['????????',$self->parse_amount($balance)]);
+        } elsif ('null' eq $balance) {
+          $self->$method( ['????????',$self->parse_amount("0,00")]);
         } else {
           die "Invalid number '$balance' found for $method";
         };
