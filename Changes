@@ -1,5 +1,8 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.30 20130729
+  + Adjusted to the new postbank.de certificate/subject
+
 0.29 20130514
   + Adjusted to the new postbank.de certificate/subject
   + Test fixes for slight changes in the website

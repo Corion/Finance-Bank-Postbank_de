@@ -12,7 +12,7 @@ use Encode qw(decode);
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.29';
+$VERSION = '0.30';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
