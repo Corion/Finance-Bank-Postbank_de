@@ -27,7 +27,11 @@ WriteMakefile(
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'lib/Finance/Bank/Postbank_de.pm', # retrieve abstract from module
        AUTHOR     => 'Max Maischein <corion@cpan.org>') : ()),
-
+    META_MERGE => {
+      resources => {
+        repository =>  'https://github.com/Corion/Finance-Bank-Postbank_de',
+      },
+    },
     clean => { FILES => 'Finance-Bank-Postbank_de-*' },
 );
 
