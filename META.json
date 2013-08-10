@@ -1,0 +1,54 @@
+{
+   "abstract" : "Check your Postbank.de bank account from Perl",
+   "author" : [
+      "Max Maischein <corion@cpan.org>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "ExtUtils::MakeMaker version 6.6302, CPAN::Meta::Converter version 2.131560",
+   "license" : [
+      "unknown"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Finance-Bank-Postbank_de",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Class::Accessor" : "0",
+            "Encode" : "0",
+            "LWP::Protocol::https" : "0",
+            "List::Sliding::Changes" : "0.02",
+            "MIME::Lite" : "3",
+            "Test::MockObject" : "0",
+            "Test::More" : "0",
+            "WWW::Mechanize" : "1.52",
+            "perl" : "5.008"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "url" : "https://github.com/Corion/Finance-Bank-Postbank_de"
+      }
+   },
+   "version" : "0.31"
+}
