@@ -24,8 +24,8 @@ use constant LOGIN => 'https://banking.postbank.de/rai/login';
 use vars qw(%functions);
 BEGIN {
   %functions = (
-    quit		=> qr':navLogout:',
-    accountstatement	=> qr'umsatzauskunft\.UmsatzauskunftPage',
+    quit		=> [ text_regex => qr'Banking beenden' ],
+    accountstatement	=> [ text_regex => qr'Ums.tze' ],
   );
 };
 
@@ -174,7 +174,7 @@ sub init_session_urls {
     my $agent = $self->agent;
 
     for my $function (keys %functions) {
-        my $url = $agent->find_link(url_regex => $functions{ $function });
+        my $url = $agent->find_link(@{$functions{ $function }});
         if( $url ) {
             $url = $url->url_abs;
             $self->log( "init_functions: $function : " . $url );
