@@ -539,6 +539,7 @@ Returns true if the banking interface is currently unavailable due to maintenanc
 
   * Add even more runtime tests to validate the HTML
   * Streamline the site access to use even less bandwidth
+  * Use a proper HTML parser, like HTML::TreeBuilder
 
 =head1 AUTHOR
 
