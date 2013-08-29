@@ -1,12 +1,12 @@
+.gitignore
 Changes
-cvstest
 lib/Finance/Bank/Postbank_de.pm
 lib/Finance/Bank/Postbank_de/Account.pm
 Makefile.PL
-MANIFEST
-MANIFEST.skip
+MANIFEST			This list of files
+MANIFEST.SKIP
 META.json
-META.yml			Module meta-data (added by MakeMaker)
+META.yml
 README
 t/01-api-account.t
 t/01-api-postbank.t
