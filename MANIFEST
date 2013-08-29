@@ -23,6 +23,7 @@ t/06-parse-accountstatement.t
 t/07-account-numbers.t
 t/08-transactions-since.t
 t/09-retrieve-accountstatement.t
+t/10-unread-messages.t
 t/99-manifest.t
 t/99-Pod.t
 t/99-todo.t

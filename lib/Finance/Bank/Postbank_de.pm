@@ -351,6 +351,13 @@ sub get_account_statement {
   };
 };
 
+sub unread_messages {
+    my( $self )= @_;
+    if(  $self->agent->content() =~ m!\bclass="messageboxCounterId">\s*(\d+)\s*</b>!s) {
+        return "$1";
+    }
+}
+
 1;
 __END__
 
@@ -514,6 +521,11 @@ Navigates to the print version of the account statement. The content can current
 be retrieved from the agent, but this will most likely change, as the print version
 of the account statement is not a navigable page. The result of the function
 is either undef or a Finance::Bank::Postbank_de::Account object.
+
+=head2 $account->unread_messages
+
+Returns the number of unread messages. There is no way
+to retrieve the messages themselves yet.
 
 =head2 session_timed_out
 

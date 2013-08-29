@@ -5,6 +5,7 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
     The parser now uses the link titles. This means tht if the website
     ever uses a different language than German, this module will not
     work with that setting.
+  + Add method to fetch the count of unread messages.
 
 0.31 20130810
   + Added link to repository, thanks to D. Steinbrunner
