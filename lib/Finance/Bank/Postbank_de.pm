@@ -9,6 +9,7 @@ use base 'Class::Accessor';
 use WWW::Mechanize;
 use Finance::Bank::Postbank_de::Account;
 use Encode qw(decode);
+use Mozilla::CA;
 
 use vars qw[ $VERSION ];
 
@@ -95,6 +96,7 @@ sub get_login_page {
   my ($self,$url) = @_;
   $self->log("Connecting to $url");
   $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
+  $self->agent->ssl_opts( SSL_ca_file => Mozilla::CA::SSL_ca_file() );
 
   my $agent = $self->agent();
   $agent->add_header("If-SSL-Cert-Subject" => qr{\Q/1.3.6.1.4.1.311.60.2.1.3=DE/1.3.6.1.4.1.311.60.2.1.1=Bonn/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=NRW/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=PB Systems AG/CN=banking.postbank.de}); 
