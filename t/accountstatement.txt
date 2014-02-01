@@ -7,8 +7,8 @@ Aktueller Kontostand;5.314,05 €
 Summe vorgemerkter Umsätze;-11,33 €
 
 "Buchungstag";"Wertstellung";"Umsatzart";"Buchungsdetails";"Auftraggeber";"Empfänger";"Betrag (€)";"Saldo (€)"
-"11.03.2012";"11.03.2012";"Überweisung";"111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434 ";"Petra Pfiffig";"Finanzkasse Köln-Süd";"-328,75 €";"5.314,05 €"
-"11.03.2012";"11.03.2012";"Überweisung";"111111/3299999999/20010020 Übertrag auf SparCard Überschuss was ich diesmal gespart hab ";"Petra Pfiffig";"Petra Pfiffig";"-228,61 €";"5.642,80 €"
+"11.03.2012";"11.03.2012";"Überweisung";"111111/DE05370501981000000000 Finanzkasse 3991234 Steuernummer 00703434 ";"Petra Pfiffig";"Finanzkasse Köln-Süd";"-328,75 €";"5.314,05 €"
+"11.03.2012";"11.03.2012";"Überweisung";"111111/DE90200100203299999999 Übertrag auf SparCard Überschuss was ich diesmal gespart hab ";"Petra Pfiffig";"Petra Pfiffig";"-228,61 €";"5.642,80 €"
 "11.03.2012";"11.03.2012";"Gutschrift";"Bezüge Pers.Nr. 70600170/01 Arbeitgeber u. Co ";"Petra Pfiffig";"Petra Pfiffig";"2.780,70 €";"5.871,41 €"
 "11.03.2012";"11.03.2012";"Überweisung";"DA 1000001 ";"Petra Pfiffig";"Verlagshaus Scribere GmbH";"-31,50 €";"3.090,71 €"
 "11.03.2012";"11.03.2012";"Scheckeinreichung";"Eingang vorbehalten Gutbuchung 12345 ";"Ein Fremder";"Petra Pfiffig";"1.830,00 €";"3.122,21 €"

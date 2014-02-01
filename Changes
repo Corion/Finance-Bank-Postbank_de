@@ -4,6 +4,7 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
   + Use Mozilla::CA to get a maintained certificate chain
     Contributed by Sven Nierlein
   . No other code changes, no need to upgrade
+  . Test updates to IBANs now being returned in some places instead of account numbers
 
 0.32 20130829
   + Adjust parser for the new website.

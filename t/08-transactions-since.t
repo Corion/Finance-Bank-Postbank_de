@@ -78,7 +78,7 @@ my %days = (
           {
             'tradedate' => '20120311',
             'receiver' => 'Finanzkasse Köln-Süd',
-            'comment' => '111111/1000000000/37050198 Finanzkasse 3991234 Steuernummer 00703434',
+            'comment' => '111111/DE05370501981000000000 Finanzkasse 3991234 Steuernummer 00703434',
             'running_total' => '5314.05',
             'amount' => '-328.75',
             'type' => 'Überweisung',
@@ -88,7 +88,7 @@ my %days = (
           {
             'tradedate' => '20120311',
             'receiver' => 'Petra Pfiffig',
-            'comment' => "111111/3299999999/20010020 \N{U+00DC}bertrag auf SparCard \N{U+00DC}berschuss was ich diesmal gespart hab",
+            'comment' => "111111/DE90200100203299999999 \N{U+00DC}bertrag auf SparCard \N{U+00DC}berschuss was ich diesmal gespart hab",
             'running_total' => '5642.80',
             'amount' => '-228.61',
             'type' => 'Überweisung',
