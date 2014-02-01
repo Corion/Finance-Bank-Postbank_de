@@ -1,5 +1,10 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.33 20140201
+  + Use Mozilla::CA to get a maintained certificate chain
+    Contributed by Sven Nierlein
+  . No other code changes, no need to upgrade
+
 0.32 20130829
   + Adjust parser for the new website.
     The parser now uses the link titles. This means tht if the website

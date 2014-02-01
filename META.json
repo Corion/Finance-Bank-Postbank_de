@@ -4,7 +4,7 @@
       "Max Maischein <corion@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.6302, CPAN::Meta::Converter version 2.131560",
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "unknown"
    ],
@@ -37,6 +37,7 @@
             "LWP::Protocol::https" : "0",
             "List::Sliding::Changes" : "0.02",
             "MIME::Lite" : "3",
+            "Mozilla::CA" : "0",
             "Test::MockObject" : "0",
             "Test::More" : "0",
             "WWW::Mechanize" : "1.52",
@@ -50,5 +51,5 @@
          "url" : "https://github.com/Corion/Finance-Bank-Postbank_de"
       }
    },
-   "version" : "0.31"
+   "version" : "0.33"
 }
