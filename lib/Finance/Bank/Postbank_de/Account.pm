@@ -65,8 +65,8 @@ sub new {
   qr'Buchungsdetails'		=> 'comment',
   qr'Auftraggeber'		=> 'sender',
   qr'Empf.nger'			=> 'receiver',
-  qr"Betrag \(\x{20AC}\)"		=> 'amount',
-  qr"Saldo \(\x{20AC}\)"		=> 'running_total',
+  qr"Betrag \((?:\x{20AC}|\x{80})\)"		=> 'amount',
+  qr"Saldo \((?:\x{20AC}|\x{80})\)"		=> 'running_total',
 );
 
 sub parse_date {
@@ -79,7 +79,7 @@ sub parse_date {
 sub parse_amount {
   my ($self,$amount) = @_;
   die "String '$amount' does not look like a number"
-    unless $amount =~ /^(-?[0-9]{1,3}(?:\.\d{3})*,\d{2})(?:\s*\x{20AC})?$/;
+    unless $amount =~ /^(-?[0-9]{1,3}(?:\.\d{3})*,\d{2})(?:\s*\x{20AC}|\s*\x{80})?$/;
   $amount = $1;
   $amount =~ tr/.//d;
   $amount =~ s/,/./;
@@ -156,7 +156,7 @@ sub parse_statement {
     my ($method,$balance);
     for my $total (@{ $totals{ $self->account_type }||[] }) {
       my ($re,$possible_method) = @$total;
-      if ($line =~ /$re;\s*(?:(\S+)\s*\x{20AC}|(null))$/) {
+      if ($line =~ /$re;\s*(?:(?:(\S+)\s*(?:\x{20AC}|\x{80}))|(null))$/) {
         $method = $possible_method;
         $balance = $1 || $2;
         if ($balance =~ /^(-?[0-9.,]+)\s*$/) {
@@ -164,12 +164,14 @@ sub parse_statement {
         } elsif ('null' eq $balance) {
           $self->$method( ['????????',$self->parse_amount("0,00")]);
         } else {
-          die "Invalid number '$balance' found for $method";
+          die "Invalid number '$balance' found for $method in '$line'";
         };
       };
     };
     if (! $method) {
-        croak "No summary found in account statement ($line)";
+        $account_type =~ s!([^\x00-\x7f])!sprintf '%08x', ord($1)!ge;
+        $line =~ s!([^\x00-\x7f])!sprintf '%08x', ord($1)!ge;
+        croak "No summary found in account '$account_type' statement ($line)";
     };
   };
 

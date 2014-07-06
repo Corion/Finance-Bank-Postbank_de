@@ -44,7 +44,7 @@ SKIP: {
     $account->agent->form_id('id3');
 
     # Check that the expected form fields are available :
-    my @fields = qw(login_loginForm_hf_0 nutzername kennwort);
+    my @fields = qw(id3_hf_0 nutzername kennwort);
     my $field;
     for $field (@fields) {
       diag $account->agent->current_form->dump
