@@ -1,5 +1,13 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.35 20140922
+  + Adapt to the website changes
+    Session function URLs now change with each page
+
+0.34 20140706
+  + Adapt to the website changes
+  . (Forgot to include this in the release)
+
 0.33 20140201
   + Use Mozilla::CA to get a maintained certificate chain
     Contributed by Sven Nierlein

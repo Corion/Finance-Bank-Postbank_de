@@ -196,8 +196,14 @@ sub select_function {
     };
     carp "Unknown account function '$function'"
         unless exists $self->urls->{$function};
-    $self->agent->get( $self->urls->{$function} )
-        or die "Couldn't get ".$self->urls->{$function};
+    my $func= $self->urls->{$function};
+    $self->agent->get( $func )
+        or die "Couldn't get $func";
+    # Reload all function URLs for this page
+    if( 'quit' ne $function ) {
+        $self->init_session_urls()
+            if not $self->access_denied();
+    };
     $self->agent->status
 };
 
@@ -313,6 +319,8 @@ sub get_account_statement {
 
   $self->log("Downloading text version");
   $agent->click('selectForm:kontoauswahlButton');
+  # Neue Seite, neue URLs
+  $self->init_session_urls();
 
   my $response;
   my $l = $agent->find_link(text_regex => qr'CSV herunterladen');
