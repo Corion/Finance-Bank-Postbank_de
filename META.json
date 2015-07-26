@@ -6,7 +6,7 @@
    "dynamic_config" : 1,
    "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921",
    "license" : [
-      "unknown"
+      "perl"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -51,5 +51,5 @@
          "url" : "https://github.com/Corion/Finance-Bank-Postbank_de"
       }
    },
-   "version" : "0.35"
+   "version" : "0.36"
 }
