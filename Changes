@@ -1,5 +1,19 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.37 20150731
+  + New certificate text
+  + Use ->decoded_content when downloading an account statement, in case
+    it gets gzipped
+  . Allow OIDs and names in certificate
+    Some SSL libraries know about the names for the OIDs, but older
+    versions of OpenSSL don't.
+
+    The real fix would be to teach OpenSSL the new(er) OIDs
+    L<http://fm4dd.com/openssl/add_oids_to_openssl.htm>
+
+0.36 201507xx
+  + New certificate text
+
 0.35 20140922
   + Adapt to the website changes
     Session function URLs now change with each page

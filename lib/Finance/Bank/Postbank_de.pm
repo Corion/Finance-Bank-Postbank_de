@@ -100,7 +100,7 @@ sub get_login_page {
   $self->agent->ssl_opts( SSL_ca_file => Mozilla::CA::SSL_ca_file() );
 
   my $agent = $self->agent();
-  $agent->add_header("If-SSL-Cert-Subject" => qr{\Q/1.3.6.1.4.1.311.60.2.1.3=DE/1.3.6.1.4.1.311.60.2.1.1=Bonn/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Postbank Systems AG/CN=banking.postbank.de}); 
+  $agent->add_header("If-SSL-Cert-Subject" => qr{(/jurisdictionC=DE/jurisdictionL=Bonn|\Q1.3.6.1.4.1.311.60.2.1.3=DE/1.3.6.1.4.1.311.60.2.1.1=Bonn\E)\Q/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Postbank Systems AG/CN=banking.postbank.de}); 
 
   $agent->get(LOGIN);
   $self->log_httpresult();
@@ -336,7 +336,7 @@ sub get_account_statement {
   my $encoding = $response->header('Content-Type');
 
   # We save the raw response
-  my $content = $response->content;
+  my $content = $response->decoded_content;
 
   if ($args{file} and $agent->status == 200) {
     $self->log("Saving to $args{file}");
