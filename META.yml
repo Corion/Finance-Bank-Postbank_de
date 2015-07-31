@@ -30,5 +30,6 @@ requires:
   perl: 5.008
 resources:
   repository: https://github.com/Corion/Finance-Bank-Postbank_de
-version: 0.36
+version: 0.37
+
 
