@@ -2,18 +2,10 @@ use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 
-eval {
-  require 'LWP';
-  # If we don't have LWP, it will be in the prerequisites of WWW::Mechanize anyway ...
-
-  die "You don't seem to have SSL capability built into LWP.
-Edit Makefile.PL if you want to install the module anyway"
-    unless LWP::Protocol::implementor('https');
-};
-
 WriteMakefile(
     'NAME'    => 'Finance::Bank::Postbank_de',
     'VERSION_FROM'  => 'lib/Finance/Bank/Postbank_de.pm', # finds $VERSION
+    'LICENSE'       => 'perl',
     'PREREQ_PM'    => { 'WWW::Mechanize' => 1.52,
                         'LWP::Protocol::https' => 0,
                         'Test::More' => 0,

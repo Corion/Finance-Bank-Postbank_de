@@ -1,5 +1,8 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.39 to be released
+  . Add license (Artistic license)
+
 0.38 20151115
   + Adapt to the website changes (new form field names)
 
