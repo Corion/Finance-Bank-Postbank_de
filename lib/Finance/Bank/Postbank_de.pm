@@ -69,10 +69,10 @@ sub new_session {
       die "Banking unavailable due to maintenance";
     };
     my $agent = $self->agent();
-    $agent->form_id("id3");
+    $agent->form_id("id4");
     eval {
-      $agent->current_form->value( nutzername => $self->login );
-      $agent->current_form->value( kennwort => $self->password );
+      $agent->current_form->value( 'nutzernameStateEnclosure:nutzername' => $self->login );
+      $agent->current_form->value( 'kennwortStateEnclosure:kennwort' => $self->password );
     };
     if ($@) {
       warn $agent->content;
@@ -136,7 +136,7 @@ sub error_message {
   return unless $self->agent;
   die "No error condition detected in:\n" . $self->agent->content
     unless $self->error_page;
-  $self->agent->content =~ m!<p\s+class="form-error">\s*<strong>(.*?)</strong>\s*</p>!sm
+  $self->agent->content =~ m!<p\s+class="form-error">\s*<strong>\s*(.*?)\s*</strong>\s*</p>!sm
     or
   $self->agent->content =~ m!<p\s+class="field-error">\s*(.*?)\s*</p>!sm
     or die "No error message found in:\n" . $self->agent->content;
@@ -160,7 +160,7 @@ sub access_denied {
          $message =~ m!^Die Kontonummer ist nicht für das Internet Online-Banking freigeschaltet. Bitte verwenden Sie zur Freischaltung den Link "Online-Banking freischalten"\.<br />\s*$!sm
       or $message =~ m!^Sie haben zu viele Zeichen in das Feld eingegeben.<br />\s*$!sm
       or $message =~ m!^Die eingegebene Postbank Girokontonummer ist zu lang. Bitte überprüfen Sie Ihre Eingabe.$!sm
-      or $message =~ m!^Die Anmeldung ist fehlgeschlagen. Bitte vergewissern Sie sich der Richtigkeit Ihrer Eingaben und f.hren Sie den Anmeldevorgang erneut durch.\s*$!sm
+      or $message =~ m!^Die Anmeldung ist fehlgeschlagen. Bitte vergewissern Sie sich der Richtigkeit Ihrer Eingaben und f.*?hren Sie den Anmeldevorgang erneut durch.\s*$!sm
     )
   } else {
     return;

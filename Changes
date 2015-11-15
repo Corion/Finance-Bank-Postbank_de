@@ -1,5 +1,8 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.38 20151115
+  + Adapt to the website changes (new form field names)
+
 0.37 20150731
   + New certificate text
   + Use ->decoded_content when downloading an account statement, in case
