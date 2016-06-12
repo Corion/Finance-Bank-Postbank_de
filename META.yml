@@ -3,34 +3,32 @@ abstract: 'Check your Postbank.de bank account from Perl'
 author:
   - 'Max Maischein <corion@cpan.org>'
 build_requires:
-  ExtUtils::MakeMaker: 0
+  ExtUtils::MakeMaker: '0'
 configure_requires:
-  ExtUtils::MakeMaker: 0
+  ExtUtils::MakeMaker: '0'
 dynamic_config: 1
-generated_by: 'ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921'
+generated_by: 'ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.150005'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Finance-Bank-Postbank_de
 no_index:
   directory:
     - t
     - inc
 requires:
-  Class::Accessor: 0
-  Encode: 0
-  LWP::Protocol::https: 0
-  List::Sliding::Changes: 0.02
-  MIME::Lite: 3
-  Mozilla::CA: 0
-  Test::MockObject: 0
-  Test::More: 0
-  WWW::Mechanize: 1.52
-  perl: 5.008
+  Class::Accessor: '0'
+  Encode: '0'
+  LWP::Protocol::https: '0'
+  List::Sliding::Changes: '0.02'
+  MIME::Lite: '3'
+  Mozilla::CA: '0'
+  Test::MockObject: '0'
+  Test::More: '0'
+  WWW::Mechanize: '1.52'
+  perl: '5.008'
 resources:
   repository: https://github.com/Corion/Finance-Bank-Postbank_de
-version: 0.38
-
-
-
+version: '0.39'
+x_serialization_backend: 'CPAN::Meta::YAML version 0.018'
