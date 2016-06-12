@@ -13,7 +13,7 @@ use Mozilla::CA;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.38';
+$VERSION = '0.39';
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
