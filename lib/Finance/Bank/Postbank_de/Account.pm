@@ -78,9 +78,10 @@ sub parse_date {
 
 sub parse_amount {
   my ($self,$amount) = @_;
+  # '¿ 5.314,05'
   die "String '$amount' does not look like a number"
-    unless $amount =~ /^(-?[0-9]{1,3}(?:\.\d{3})*,\d{2})(?:\s*\x{20AC}|\s*\x{80})?$/;
-  $amount = $1;
+    unless $amount =~ /^(-?)(?:\s*\x{20AC}\s*|\s*\x{80}\s*|\s*\x{A4}\s*)?([0-9]{1,3}(?:\.\d{3})*,\d{2})(?:\s*\x{20AC}|\s*\x{80})?$/;
+  $amount = ($1||'') . $2;
   $amount =~ tr/.//d;
   $amount =~ s/,/./;
   $amount;
