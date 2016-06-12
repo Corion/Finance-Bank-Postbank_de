@@ -1,6 +1,6 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
-0.39 to be released
+0.39 20160612
   . Add license (Artistic license)
   . Adapt to new number/currency format in the statement output
 
