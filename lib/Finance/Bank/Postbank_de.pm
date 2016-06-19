@@ -19,7 +19,6 @@ BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
 };
 
-#use constant LOGIN => 'https://banking.postbank.de/app/welcome.do';
 use constant LOGIN => 'https://banking.postbank.de/rai/login';
 
 use vars qw(%functions);
@@ -100,7 +99,7 @@ sub get_login_page {
   $self->agent->ssl_opts( SSL_ca_file => Mozilla::CA::SSL_ca_file() );
 
   my $agent = $self->agent();
-  $agent->add_header("If-SSL-Cert-Subject" => qr{(/jurisdictionC=DE/jurisdictionL=Bonn|\Q1.3.6.1.4.1.311.60.2.1.3=DE/1.3.6.1.4.1.311.60.2.1.1=Bonn\E)\Q/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Postbank Systems AG/CN=banking.postbank.de}); 
+  $agent->add_header("If-SSL-Cert-Subject" => qr{/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL)=Bonn/(?:\Q2.5.4.15\E|businessCategory)=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Postbank Systems AG/CN=banking.postbank.de$});
 
   $agent->get(LOGIN);
   $self->log_httpresult();
