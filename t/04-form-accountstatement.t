@@ -66,7 +66,7 @@ SKIP: {
         if $@;
       my ($fh,$tempname) = File::Temp::tempfile();
       close $fh;
-      my $statement = $account->get_account_statement(file => $tempname);
+      my $statement = $account->get_account_statement(file => $tempname, past_days => 100);
       is($statement->iban, 'DE31200100209999999999', "Got the correct IBAN");
 
       my $downloaded_statement = do {local $/ = undef;
@@ -81,6 +81,9 @@ SKIP: {
         # Strip out all date references ...
         s/^"\d{2}\.\d{2}\.\d{4}";"\d{2}\.\d{2}\.\d{4}";//gm;
         s/^"\d{2}\.\d{2}\.\d{4}"//gm;
+
+        # Clean out the EURO SIGN that might appear before or after the sign, or the amount
+        s!\x{20AC}!!g;
       };
       is_deeply([ split /\n/, $downloaded_statement ],[ split /\n/, $canned_statement ],"Download to file works");
       ok($account->close_session(),"Closed session");
