@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.41 20160902
+  + Allow to specify the days to request the statement for
+  + Better resiliency against where the EURO sign appears
+
 0.40 20160619
   + Allow more numerical entities in certificate. Yay ASN
 

@@ -16,7 +16,7 @@ use Mozilla::CA;
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.40';
+$VERSION = '0.41';
 
 
 BEGIN {
