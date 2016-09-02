@@ -6,6 +6,9 @@ use warnings;
 use Carp;
 use base 'Class::Accessor';
 
+use Time::Local;
+use POSIX 'strftime';
+
 use WWW::Mechanize;
 use Finance::Bank::Postbank_de::Account;
 use Encode qw(decode);
@@ -14,6 +17,7 @@ use Mozilla::CA;
 use vars qw[ $VERSION ];
 
 $VERSION = '0.40';
+
 
 BEGIN {
   Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
@@ -302,6 +306,14 @@ sub get_account_statement {
       return;
   };
   $agent->form_with_fields( 'selectForm:kontoauswahl' );
+  
+  if(my $past_days = $args{past_days}) {
+    my ($day, $month, $year) = split/\./, $agent->current_form->value('umsatzanzeigeGiro:salesForm:umsatzFilterOptionenAufklappbarSuchfeldPanel:accordion:vonBisDatum:datumForm:bisGruppe:bisDatum');
+    my $end_epoch = timegm(0, 0, 0, $day, $month-1, $year);
+    my $from_date = strftime '%d.%m.%Y', localtime($end_epoch-($past_days-1)*60*60*24);
+    $agent->current_form->value('umsatzanzeigeGiro:salesForm:umsatzFilterOptionenAufklappbarSuchfeldPanel:accordion:vonBisDatum:datumForm:vonGruppe:vonDatum' => $from_date);
+  };
+
   if (exists $args{account_number}) {
     $self->log("Getting account statement for $args{account_number}");
     # Load the account numbers if not already loaded
@@ -532,6 +544,9 @@ Navigates to the print version of the account statement. The content can current
 be retrieved from the agent, but this will most likely change, as the print version
 of the account statement is not a navigable page. The result of the function
 is either undef or a Finance::Bank::Postbank_de::Account object.
+
+C<past_days> - Number of days in the past to request the statement for
+The default is 10.
 
 =head2 $account->unread_messages
 
