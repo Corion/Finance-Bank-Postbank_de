@@ -14,9 +14,11 @@ use Finance::Bank::Postbank_de::Account;
 use Encode qw(decode);
 use Mozilla::CA;
 
+use IO::Socket::SSL qw(SSL_OCSP_NO_STAPLE SSL_VERIFY_PEER SSL_VERIFY_NONE);
+
 use vars qw[ $VERSION ];
 
-$VERSION = '0.41';
+$VERSION = '0.42';
 
 
 BEGIN {
@@ -100,14 +102,25 @@ sub get_login_page {
   my ($self,$url) = @_;
   $self->log("Connecting to $url");
   $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
-  $self->agent->ssl_opts( SSL_ca_file => Mozilla::CA::SSL_ca_file() );
+  $self->agent->ssl_opts(
+    # Unfortunately, Mozilla::CA 20160104 removed the Symantec G3 certificate that is
+    # used in the Postbank certificate chain.
+    SSL_ca_file => Mozilla::CA::SSL_ca_file(),
+    SSL_ocsp_mode => SSL_OCSP_NO_STAPLE(),
+    SSL_verify_mode => SSL_VERIFY_PEER(),
+    SSL_fingerprint => 'sha256$C0F407E7D1562B52D8896B4A00DFF538CBC84407E95D8E0A7E5BFC6647B98967',
+    #SSL_verify_callback => sub {
+    #    use Data::Dumper;
+    #    warn Dumper \@_;
+    #    return 1;
+    #},
+  );
 
   my $agent = $self->agent();
   $agent->add_header("If-SSL-Cert-Subject" => qr{/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL)=Bonn/(?:\Q2.5.4.15\E|businessCategory)=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=Postbank Systems AG/CN=banking.postbank.de$});
 
   $agent->get(LOGIN);
   $self->log_httpresult();
-  #warn $agent->res->header('Client-SSL-Cert-Subject');
   $agent->status;
 };
 
