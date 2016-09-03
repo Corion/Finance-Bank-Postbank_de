@@ -14,7 +14,7 @@ use Finance::Bank::Postbank_de::Account;
 use Encode qw(decode);
 use Mozilla::CA;
 
-use IO::Socket::SSL qw(SSL_OCSP_NO_STAPLE SSL_VERIFY_PEER SSL_VERIFY_NONE);
+use IO::Socket::SSL qw(SSL_OCSP_NO_STAPLE SSL_OCSP_FULL_CHAIN SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
 use vars qw[ $VERSION ];
 
@@ -102,17 +102,33 @@ sub get_login_page {
   my ($self,$url) = @_;
   $self->log("Connecting to $url");
   $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
+  
+  my @verify;
+
+  # OpenSSL 1.0.1 doesn't properly scan the certificate chain as supplied
+  # by Mozilla::CA, so we only verify the certificate directly there:
+  if( Net::SSLeay::SSLeay() <= 0x100010bf ) { # 1.0.1k
+    @verify = (
+    SSL_fingerprint => 'sha256$C0F407E7D1562B52D8896B4A00DFF538CBC84407E95D8E0A7E5BFC6647B98967',
+    SSL_ocsp_mode => SSL_OCSP_NO_STAPLE(),
+    );
+  } else {
+    # We need no special additional options to verify the certificate chain
+    @verify = (
+    SSL_ocsp_mode => SSL_OCSP_FULL_CHAIN(),
+    );
+  };
+
   $self->agent->ssl_opts(
     # Unfortunately, Mozilla::CA 20160104 removed the Symantec G3 certificate that is
     # used in the Postbank certificate chain.
     SSL_ca_file => Mozilla::CA::SSL_ca_file(),
-    SSL_ocsp_mode => SSL_OCSP_NO_STAPLE(),
     SSL_verify_mode => SSL_VERIFY_PEER(),
-    SSL_fingerprint => 'sha256$C0F407E7D1562B52D8896B4A00DFF538CBC84407E95D8E0A7E5BFC6647B98967',
+    @verify,
     #SSL_verify_callback => sub {
-    #    use Data::Dumper;
-    #    warn Dumper \@_;
-    #    return 1;
+        #use Data::Dumper;
+        #warn Dumper \@_;
+        #return 1;
     #},
   );
 
