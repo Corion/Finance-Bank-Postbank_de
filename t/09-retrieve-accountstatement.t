@@ -30,7 +30,7 @@ my $account = Finance::Bank::Postbank_de::Account->parse_statement(
                 number => '9999999999',
                 password => '11111',
               );
-is_deeply(\@new_args, [ 'Finance::Bank::Postbank_de', login => '9999999999', password => '11111' ], "Check for number => login conversion");
+is_deeply(\@new_args, [ 'Finance::Bank::Postbank_de', login => '9999999999', password => '11111', past_days => undef ], "Check for number => login conversion");
 my ($func,$args) = $postbank->next_call();
 is_deeply([$func,$args], [ "get_account_statement",[$postbank]], "get_account_statement() was called");
 $postbank->clear;
@@ -40,7 +40,7 @@ $account = Finance::Bank::Postbank_de::Account->parse_statement(
                 login => '9999999999',
                 password => '11111',
               );
-is_deeply(\@new_args, [ 'Finance::Bank::Postbank_de', login => '9999999999', password => '11111' ], "Check for login parameter");
+is_deeply(\@new_args, [ 'Finance::Bank::Postbank_de', login => '9999999999', password => '11111', past_days => undef ], "Check for login parameter");
 ($func,$args) = $postbank->next_call();
 is_deeply([$func,$args], [ "get_account_statement",[$postbank]], "get_account_statement() was called");
 $postbank->clear;
