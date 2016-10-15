@@ -14,11 +14,11 @@ use Finance::Bank::Postbank_de::Account;
 use Encode qw(decode);
 use Mozilla::CA;
 
-use IO::Socket::SSL qw(SSL_OCSP_NO_STAPLE SSL_OCSP_FULL_CHAIN SSL_VERIFY_PEER SSL_VERIFY_NONE);
+use IO::Socket::SSL qw(SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.42';
+$VERSION = '0.43';
 
 
 BEGIN {
@@ -110,12 +110,12 @@ sub get_login_page {
   if( Net::SSLeay::SSLeay() <= 0x100010bf ) { # 1.0.1k
     @verify = (
     SSL_fingerprint => 'sha256$C0F407E7D1562B52D8896B4A00DFF538CBC84407E95D8E0A7E5BFC6647B98967',
-    SSL_ocsp_mode => SSL_OCSP_NO_STAPLE(),
+    SSL_ocsp_mode => IO::Socket::SSL::SSL_OCSP_NO_STAPLE(),
     );
   } else {
     # We need no special additional options to verify the certificate chain
     @verify = (
-    SSL_ocsp_mode => SSL_OCSP_FULL_CHAIN(),
+    SSL_ocsp_mode => IO::Socket::SSL::SSL_OCSP_FULL_CHAIN(),
     );
   };
 
