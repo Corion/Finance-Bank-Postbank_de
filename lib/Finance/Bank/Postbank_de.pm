@@ -50,6 +50,7 @@ sub new {
     password => $args{password},
     logger => $logger,
     urls => {},
+    past_days => $args{past_days},
   };
   bless $self, $class;
 
@@ -336,7 +337,8 @@ sub get_account_statement {
   };
   $agent->form_with_fields( 'selectForm:kontoauswahl' );
   
-  if(my $past_days = $args{past_days}) {
+  my $past_days = $args{past_days} || $self->{past_days};
+  if($past_days) {
     my ($day, $month, $year) = split/\./, $agent->current_form->value('umsatzanzeigeGiro:salesForm:umsatzFilterOptionenAufklappbarSuchfeldPanel:accordion:vonBisDatum:datumForm:bisGruppe:bisDatum');
     my $end_epoch = timegm(0, 0, 0, $day, $month-1, $year);
     my $from_date = strftime '%d.%m.%Y', localtime($end_epoch-($past_days-1)*60*60*24);

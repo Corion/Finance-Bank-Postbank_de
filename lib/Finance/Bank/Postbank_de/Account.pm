@@ -113,7 +113,8 @@ sub parse_statement {
       unless exists $args{password};
     my $login = $args{login} || $args{number};
 
-    return Finance::Bank::Postbank_de->new( login => $login, password => $args{password} )->get_account_statement;
+    require Finance::Bank::Postbank_de;
+    return Finance::Bank::Postbank_de->new( login => $login, password => $args{password}, past_days => $args{past_days} )->get_account_statement;
   };
 
   croak "Don't know what to do with empty content"
