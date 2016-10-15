@@ -4,12 +4,11 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use POSIX qw(strftime);
-use Finance::Bank::Postbank_de;
 use base 'Class::Accessor';
 
 use vars qw[ $VERSION %tags %totals %columns %safety_check ];
 
-$VERSION = '0.42';
+$VERSION = '0.43';
 
 BEGIN {
   Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_unavailable balance_prev transactions_future iban blz account_type name));
@@ -31,7 +30,9 @@ sub new {
   $self;
 };
 
+{ no warnings 'once';
 *kontonummer = *number;
+}
 
 %safety_check = (
   name		=> 1,

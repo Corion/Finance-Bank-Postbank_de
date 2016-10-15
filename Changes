@@ -1,10 +1,13 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
-0.43 2016xxxx
+0.43 20161015
   ! We only enable fingerprint verification for OpenSSL versions
     below 1.0.2. For 1.0.2 and higher, we rely on OpenSSL to do
     The Right Thing.
     Note that Debian Jessie will stay on 1.0.1
+  + Make past_days work better (provided by Harald Becker)
+  + Reorder module loading so that Finance::Bank::Postbank_de doesn't
+    get loaded twice.
 
 0.42 20160903
   ! Mozilla::CA 20160104 does not support the G3 certificate from Symantec, but postbank.de
