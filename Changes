@@ -1,5 +1,10 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.44 20161122
+  . Remove the EURO sign from the canned account statement
+    This should address RT #117204, again; reported by
+    Slaven Rezic, thanks!
+
 0.43 20161015
   ! We only enable fingerprint verification for OpenSSL versions
     below 1.0.2. For 1.0.2 and higher, we rely on OpenSSL to do
