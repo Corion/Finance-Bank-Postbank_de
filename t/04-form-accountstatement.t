@@ -83,7 +83,7 @@ SKIP: {
         s/^"\d{2}\.\d{2}\.\d{4}"//gm;
 
         # Clean out the EURO SIGN that might appear before or after the sign, or the amount
-        s!\x{20AC}!!g;
+        s!\s*\x{20AC}\s*!!g;
       };
       is_deeply([ split /\n/, $downloaded_statement ],[ split /\n/, $canned_statement ],"Download to file works");
       ok($account->close_session(),"Closed session");
