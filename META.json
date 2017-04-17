@@ -3,7 +3,7 @@
    "author" : [
       "Max Maischein <corion@cpan.org>"
    ],
-   "dynamic_config" : 1,
+   "dynamic_config" : 0,
    "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.150005",
    "license" : [
       "perl_5"
@@ -19,38 +19,15 @@
          "inc"
       ]
    },
-   "prereqs" : {
-      "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
-      },
-      "configure" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
-      },
-      "runtime" : {
-         "requires" : {
-            "Class::Accessor" : "0",
-            "Encode" : "0",
-            "LWP::Protocol::https" : "0",
-            "List::Sliding::Changes" : "0.02",
-            "MIME::Lite" : "3",
-            "Mozilla::CA" : "0",
-            "Test::MockObject" : "0",
-            "Test::More" : "0",
-            "WWW::Mechanize" : "1.52",
-            "perl" : "5.008"
-         }
-      }
-   },
    "release_status" : "stable",
    "resources" : {
       "repository" : {
-         "url" : "https://github.com/Corion/Finance-Bank-Postbank_de"
+         "type" : "git",
+         "url" : "git://github.com/Corion/Finance-Bank-Postbank_de.git",
+         "web" : "https://github.com/Corion/Finance-Bank-Postbank_de"
       }
    },
-   "version" : "0.44",
-   "x_serialization_backend" : "JSON::PP version 2.27202"
+   "version" : "0.45",
+   "x_serialization_backend" : "JSON::PP version 2.27202",
+   "x_static_install" : 1
 }

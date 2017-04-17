@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.45 20170417
+  . Fix test suite that broke due to . (dot) not being in
+    @INC anymore, thanks to Ryan Voots
+
 0.44 20161122
   . Remove the EURO sign from the canned account statement
     This should address RT #117204, again; reported by
