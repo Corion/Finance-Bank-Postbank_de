@@ -2,7 +2,7 @@
 use strict;
 use FindBin;
 
-require 't/test_form.pm';
+require './t/test_form.pm';
 
 use vars qw(@fields);
 BEGIN {
