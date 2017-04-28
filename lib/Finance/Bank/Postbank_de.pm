@@ -108,7 +108,10 @@ sub get_login_page {
 
   # OpenSSL 1.0.1 doesn't properly scan the certificate chain as supplied
   # by Mozilla::CA, so we only verify the certificate directly there:
-  if( Net::SSLeay::SSLeay() <= 0x100010bf ) { # 1.0.1k
+  if( IO::Socket::SSL->VERSION <= 1.990 ) {
+      # No OCSP support
+      @verify = ();
+  } elsif(     Net::SSLeay::SSLeay() <= 0x100010bf ) { # 1.0.1k
     @verify = (
     SSL_fingerprint => 'sha256$C0F407E7D1562B52D8896B4A00DFF538CBC84407E95D8E0A7E5BFC6647B98967',
     SSL_ocsp_mode => IO::Socket::SSL::SSL_OCSP_NO_STAPLE(),
