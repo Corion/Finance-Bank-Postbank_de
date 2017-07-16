@@ -5,6 +5,7 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
     which don't have OCSP support
     This was reported by the CPAN testers with at least IO::Socket::SSL
     version 1.967
+  + Update certificate
 
 0.45 20170417
   . Fix test suite that broke due to . (dot) not being in
