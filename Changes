@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.47 20170716
+  + Add one more numeric identifier for certificates
+    This fixes RT #122506, reported by Slaven Rezic
+
 0.46 20170716
   + Make module more resilient against old versions of IO::Socket::SSL
     which don't have OCSP support
