@@ -1,6 +1,6 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
-0.46 to be released
+0.46 20170716
   + Make module more resilient against old versions of IO::Socket::SSL
     which don't have OCSP support
     This was reported by the CPAN testers with at least IO::Socket::SSL
