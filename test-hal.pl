@@ -14,18 +14,28 @@ my $ua = WWW::Mechanize->new(
 #$logger->dump_content(0);
 #$logger->dump_text(0);
 
-$ua->add_header( 'api-key' => '494f423500225fd9',
+#$ua->agent('Mozilla/5.0 (Windows NT 6.1; W…) Gecko/20100101 Firefox/61.0');
+
+# Do an initial fetch to set up cookies
+$ua->get('https://meine.postbank.de');
+#print $ua->cookie_jar->as_string;
+
+$ua->get('https://meine.postbank.de/configuration.json');
+my $config = decode_json( $ua->content );
+
+my $loginUrl = $config->{loginUrl};
+$loginUrl =~ s!%(\w+)%!$config->{$1}!ge;
+
+$ua->add_header(
+    'api-key' => $config->{apiKey},
     #'device-signature' => '494f423500225fd9',
     accept => 'application/hal+json',
     keep_alive => 1,
-    
-    );
-#$ua->agent('Mozilla/5.0 (Windows NT 6.1; W…) Gecko/20100101 Firefox/61.0');
+);
 
-$ua->get('https://meine.postbank.de');
-#print $ua->cookie_jar->as_string;
+
 $ua->post(
-    'https://bankapi-public.postbank.de/bankapi-public/prod/v1/authentication/login',
+    $loginUrl,
     content => 'dummy=value&password=11111&username=Petra.Pfiffig'
 );
 #print $ua->status;
