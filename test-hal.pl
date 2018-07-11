@@ -2,13 +2,12 @@
 use strict;
 use WWW::Mechanize;
 use LWP::Protocol::https;
-use LWP::ConsoleLogger::Easy qw( debug_ua );
+#use LWP::ConsoleLogger::Easy qw( debug_ua );
 use HTTP::CookieJar::LWP;
 use JSON 'decode_json';
-use HAL::Tiny;
 
 my $ua = WWW::Mechanize->new(
-    #cookie_jar => HTTP::CookieJar::LWP->new(),
+    cookie_jar => HTTP::CookieJar::LWP->new(),
 );
 
 #my $logger = debug_ua($ua);
@@ -24,7 +23,7 @@ $ua->add_header( 'api-key' => '494f423500225fd9',
 #$ua->agent('Mozilla/5.0 (Windows NT 6.1; W…) Gecko/20100101 Firefox/61.0');
 
 $ua->get('https://meine.postbank.de');
-print $ua->cookie_jar->as_string;
+#print $ua->cookie_jar->as_string;
 $ua->post(
     'https://bankapi-public.postbank.de/bankapi-public/prod/v1/authentication/login',
     content => 'dummy=value&password=11111&username=Petra.Pfiffig'
@@ -33,7 +32,6 @@ $ua->post(
 #print $ua->content;
 
 my $resource = decode_json($ua->content);
-#my $resource = HAL::Tiny->new( %$info );
 use Data::Dumper;
 #warn Dumper $resource->{_links};
 # https://bankapi-public.postbank.de/bankapi-public/prod/v1/banking/accounts/giro/DE81100100101987654321/transactions?page=1&size=30
