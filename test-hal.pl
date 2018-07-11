@@ -5,6 +5,7 @@ use LWP::Protocol::https;
 #use LWP::ConsoleLogger::Easy qw( debug_ua );
 use HTTP::CookieJar::LWP;
 use JSON 'decode_json';
+use Data::Dumper;
 
 my $ua = WWW::Mechanize->new(
     cookie_jar => HTTP::CookieJar::LWP->new(),
@@ -14,11 +15,8 @@ my $ua = WWW::Mechanize->new(
 #$logger->dump_content(0);
 #$logger->dump_text(0);
 
-#$ua->agent('Mozilla/5.0 (Windows NT 6.1; W…) Gecko/20100101 Firefox/61.0');
-
 # Do an initial fetch to set up cookies
 $ua->get('https://meine.postbank.de');
-#print $ua->cookie_jar->as_string;
 
 $ua->get('https://meine.postbank.de/configuration.json');
 my $config = decode_json( $ua->content );
@@ -33,7 +31,6 @@ $ua->add_header(
     keep_alive => 1,
 );
 
-
 $ua->post(
     $loginUrl,
     content => 'dummy=value&password=11111&username=Petra.Pfiffig'
@@ -42,11 +39,16 @@ $ua->post(
 #print $ua->content;
 
 my $resource = decode_json($ua->content);
-use Data::Dumper;
-#warn Dumper $resource->{_links};
-# https://bankapi-public.postbank.de/bankapi-public/prod/v1/banking/accounts/giro/DE81100100101987654321/transactions?page=1&size=30
 
 my $finanzstatus = nav_hal( $ua, 'banking_v1' => 'financialstatus' );
+
+my $messages = get_hal( $ua, $finanzstatus, 'messagebox' ); # messagebox->count
+#warn Dumper $messages;
+warn Dumper $messages->{_embedded}->{notificationDTOList};
+
+# if( exists $finanzstatus->{splash_page} ) {
+#     show / retrieve splash page text
+# }
 
 for my $account (@{ $finanzstatus->{accountsPrivate} }) {
     print $account->{name} || '',"\n";
