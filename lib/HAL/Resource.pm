@@ -6,7 +6,7 @@ no warnings 'experimental::signatures';
 use feature 'signatures';
 use Future;
 
-our $VERSION = '0.01';
+our $VERSION = '0.50';
 
 =head1 NAME
 

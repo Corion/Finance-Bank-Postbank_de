@@ -5,7 +5,7 @@ no warnings 'experimental::signatures';
 use feature 'signatures';
 extends 'HAL::Resource';
 
-our $VERSION = '0.01';
+our $VERSION = '0.50';
 
 =head1 NAME
 
@@ -23,7 +23,11 @@ has [ 'accountHolder', 'name', 'iban', 'currency', 'amount',
     ] => ( is => 'ro' );
 
 sub transactions_future( $self ) {
-    $self->fetch_resource_future( 'transactions' )
+    $self->fetch_resource_future( 'transactions' )->then(sub( $r ) {
+    my $tx = $account->fetch_resource( 'transactions' );
+        Future->done( map { Finance::Bank::Postbank_de::APIv1::Transaction->new }
+            @{ $r->_embedded->{transactionDTOList} })
+    );
 }
     
 sub transactions( $self ) {

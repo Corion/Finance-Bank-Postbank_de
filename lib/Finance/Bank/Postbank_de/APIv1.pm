@@ -10,7 +10,7 @@ use Finance::Bank::Postbank_de::APIv1::Finanzstatus;
 use Finance::Bank::Postbank_de::APIv1::Message;
 use Finance::Bank::Postbank_de::APIv1::Account;
 
-our $VERSION = '0.01';
+our $VERSION = '0.50';
 
 =head1 NAME
 
