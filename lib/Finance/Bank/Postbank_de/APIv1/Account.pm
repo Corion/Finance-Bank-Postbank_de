@@ -9,7 +9,7 @@ our $VERSION = '0.50';
 
 =head1 NAME
 
-Finance::Bank::Postbank_de::APIv1::Finanzstatus - Postbank Finanzstatus
+Finance::Bank::Postbank_de::APIv1::Account - Postbank Account
 
 =head1 SYNOPSIS
 
