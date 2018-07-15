@@ -18,9 +18,13 @@ Finance::Bank::Postbank_de::APIv1 - Postbank connection
 
 =head1 SYNOPSIS
 
+    my $api = Finance::Bank::Postbank_de::APIv1->new();
+    $api->configure_ua();
+    my $postbank = $api->login( 'Petra.Pfiffig', '11111' );
+
 =cut
 
-my $logger;
+#my $logger;
 has ua => (
     is => 'ro',
     default => sub( $class ) {
@@ -52,7 +56,6 @@ sub fetch_config( $self ) {
 
 sub configure_ua( $self, $config = $self->fetch_config ) {
     # XXX add certificate validation headers here too
-    # ::APIv1
     my $ua = $self->ua;
     $ua->add_header(
         'api-key' => $config->{apiKey},
@@ -88,3 +91,16 @@ sub login( $self, $username, $password ) {
 };
 
 1;
+
+=head1 RESOURCE HIERARCHY
+
+This is the hierarchy of the resources in the API:
+
+    APIv1
+        Finanzstatus
+            Account
+                Transaction
+                Message
+                    Attachment
+
+=cut
