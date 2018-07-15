@@ -40,6 +40,17 @@ for my $account ($finanzstatus->get_accountsPrivate ) {
     print $account->amount, " ", $account->currency,"\n";
 
     if( $account->productType eq 'depot' ) {
+        my $depot = $account->fetch_resource('depot', class => 'Finance::Bank::Postbank_de::APIv1::Depot');
+
+        print join " ", $depot->date, $depot->depotValue, $depot->depotCurrency;
+        print "\n";
+        for my $pos ($depot->positions) {
+            print join " ", $pos->amount, $pos->isin, $pos->depotCurrQuote, $pos->quoteCurrency,
+                            $pos->depotCurrValue, $pos->winOrLoss, $pos->winOrLossCurrency,
+                            ;
+            print "\n";
+        };
+
         next;
     };
 

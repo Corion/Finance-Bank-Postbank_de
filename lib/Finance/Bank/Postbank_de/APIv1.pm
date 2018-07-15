@@ -8,7 +8,10 @@ use feature 'signatures';
 use HAL::Resource;
 use Finance::Bank::Postbank_de::APIv1::Finanzstatus;
 use Finance::Bank::Postbank_de::APIv1::Message;
+use Finance::Bank::Postbank_de::APIv1::Transaction;
 use Finance::Bank::Postbank_de::APIv1::Account;
+use Finance::Bank::Postbank_de::APIv1::Depot;
+use Finance::Bank::Postbank_de::APIv1::Position;
 
 our $VERSION = '0.50';
 
@@ -102,5 +105,5 @@ This is the hierarchy of the resources in the API:
                 Transaction
                 Message
                     Attachment
-
+                Depot
 =cut

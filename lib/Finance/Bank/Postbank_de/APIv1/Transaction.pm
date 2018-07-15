@@ -20,20 +20,9 @@ has [ 'accountHolder', 'name', 'iban', 'currency', 'amount',
       'bookingDate', 'balance', 'usedTan', 'messages', 'transactionId',
       'transactionType', 'purpose', 'transactionDetail',
       'referenceInitials', 'reference', 'valutaDate'
-    ] => ( is => 'ro' );
+] => (
+    is => 'ro',
+);
 
-sub transactions_future( $self ) {
-    $self->fetch_resource_future( 'transactions' )->then(sub( $r ) {
-    my $tx = $account->fetch_resource( 'transactions' );
-    Future->done(
-        $self->inflate_list( 'Finance::Bank::Postbank_de::APIv1::Transaction',
-            $r->_embedded->{transactionDTOList}));
-    });
-}
-    
-sub transactions( $self ) {
-    $self->transactions_future->get
-}
-    
 1;
 
