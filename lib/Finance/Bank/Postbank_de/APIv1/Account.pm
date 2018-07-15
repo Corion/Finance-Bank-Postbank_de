@@ -17,9 +17,6 @@ Finance::Bank::Postbank_de::APIv1::Account - Postbank Account
 
 has [ 'accountHolder', 'name', 'iban', 'currency', 'amount',
       'productType',
-      'bookingDate', 'balance', 'usedTan', 'messages', 'transactionId',
-      'transactionType', 'purpose', 'transactionDetail',
-      'referenceInitials', 'reference', 'valutaDate'
     ] => ( is => 'ro' );
 
 sub transactions_future( $self ) {
