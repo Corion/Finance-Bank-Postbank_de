@@ -24,10 +24,11 @@ has [ 'accountHolder', 'name', 'iban', 'currency', 'amount',
 
 sub transactions_future( $self ) {
     $self->fetch_resource_future( 'transactions' )->then(sub( $r ) {
-    my $tx = $account->fetch_resource( 'transactions' );
-        Future->done( map { Finance::Bank::Postbank_de::APIv1::Transaction->new }
-            @{ $r->_embedded->{transactionDTOList} })
-    );
+        $self->inflate_list(
+            'Finance::Bank::Postbank_de::APIv1::Transaction',
+            $r->_embedded->{transactionDTOList}
+        )
+    });
 }
     
 sub transactions( $self ) {

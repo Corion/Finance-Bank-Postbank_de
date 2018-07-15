@@ -82,4 +82,11 @@ sub navigate( $self, %options ) {
     $self->navigate_future( %options )->get
 }
 
+sub inflate_list( $self, $class, $list ) {
+    my $ua = $self->ua;
+    map {
+        $class->new( ua => $ua, %$_ )
+    } @{ $list };
+}
+
 1;

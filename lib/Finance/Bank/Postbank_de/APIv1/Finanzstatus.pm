@@ -37,10 +37,17 @@ has [ 'accountsPrivate', 'accountsBusiness',
 
 sub available_messages( $self ) {
     my $mb = $self->fetch_resource( 'messagebox' );
-    my $ua = $self->ua;
-    map {
-        Finance::Bank::Postbank_de::APIv1::Message->new( ua => $ua, %$_ )
-    } @{ $mb->_embedded->{notificationDTOList} };
+    $self->inflate_list(
+        'Finance::Bank::Postbank_de::APIv1::Message',
+        $mb->_embedded->{notificationDTOList}
+    );
+}
+
+sub get_accountsPrivate( $self ) {
+    $self->inflate_list(
+        'Finance::Bank::Postbank_de::APIv1::Account',
+        $self->accountsPrivate
+    );
 }
 
 1;

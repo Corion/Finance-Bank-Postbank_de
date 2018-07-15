@@ -32,8 +32,7 @@ warn $_->notificationId, $_->subject for $finanzstatus->available_messages;
 #     show / retrieve splash page text
 # }
 
-for my $acc (@{ $finanzstatus->accountsPrivate }) {
-    my $account = Finance::Bank::Postbank_de::APIv1::Account->new( ua => $api->ua, %$acc );
+for my $account ($finanzstatus->get_accountsPrivate ) {
 
     print $account->name || '',"\n";
     print $account->accountHolder || '',"\n";
