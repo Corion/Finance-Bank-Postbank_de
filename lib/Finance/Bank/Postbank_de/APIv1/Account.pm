@@ -27,10 +27,34 @@ sub transactions_future( $self ) {
         )
     });
 }
-    
+
 sub transactions( $self ) {
     $self->transactions_future->get
 }
-    
+
+sub transactions_csv_future( $self ) {
+    $self->fetch_resource_future( 'transactions' )->then(sub( $r ) {
+        my $tr = HAL::Resource->new( %$r );
+        $self->ua->get( $tr->resource_url('transactions_csv' ));
+        Future->done( $self->ua->content );
+    });
+}
+
+sub transactions_csv( $self ) {
+    $self->transactions_csv_future->get
+}
+
+sub transactions_xml_future( $self ) {
+    $self->fetch_resource_future( 'transactions' )->then(sub( $r ) {
+        my $tr = HAL::Resource->new( %$r );
+        $self->ua->get( $tr->resource_url('transactions_xml' ));
+        Future->done( $self->ua->content );
+    });
+}
+
+sub transactions_xml( $self ) {
+    $self->transactions_xml_future->get
+}
+
 1;
 
