@@ -38,12 +38,13 @@ for my $account ($finanzstatus->get_accountsPrivate ) {
     print $account->accountHolder || '',"\n";
     print $account->iban || '',"\n";
     print $account->amount, " ", $account->currency,"\n";
- 
+
     if( $account->productType eq 'depot' ) {
         next;
     };
- 
-    my $tx = $account->fetch_resource( 'transactions' );
-    print Dumper $tx->{_embedded}->{'transactionDTOList'};
+
+    print Dumper $_ for $account->transactions_csv;
+
+    print Dumper $account->_links;
 };
 
