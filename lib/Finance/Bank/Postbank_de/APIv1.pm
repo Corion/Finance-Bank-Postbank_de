@@ -60,7 +60,7 @@ sub configure_ua( $self, $config = $self->fetch_config ) {
     $ua->add_header(
         'api-key' => $config->{apiKey},
         #'device-signature' => '494f423500225fd9',
-        accept => 'application/hal+json',
+        accept => ['application/hal+json', '*/*'],
         keep_alive => 1,
     );
 };
