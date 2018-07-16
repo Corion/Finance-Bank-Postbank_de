@@ -107,7 +107,7 @@ sub get_login_page {
   my ($self,$url) = @_;
   $self->log("Connecting to $url");
   $self->agent(WWW::Mechanize->new( autocheck => 1, keep_alive => 1 ));
-  
+
   my @verify;
 
   # OpenSSL 1.0.1 doesn't properly scan the certificate chain as supplied
@@ -189,7 +189,7 @@ sub error_message {
   return unless $self->agent;
   die "No error condition detected in:\n" . $self->agent->content
     unless $self->error_page;
-  if( 
+  if(
   $self->agent->content =~ m!<p\s+class="form-error">\s*<strong>\s*(.*?)\s*</strong>\s*</p>!sm
     or
   $self->agent->content =~ m!<p\s+class="field-error">\s*(.*?)\s*</p>!sm
@@ -262,26 +262,31 @@ sub select_function {
 };
 
 sub close_session {
-  my ($self) = @_;
-  my $result;
-  if (not ($self->access_denied or $self->maintenance)) {
-    $self->log("Closing session");
-    if(     not $self->maintenance
-        and not $self->agent->content =~ m!<p class="important">\s*<strong>\s*Diese Funktion steht auf Grund einer technischen St.*?rung derzeit leider nicht zur Verf.*?gung.*?</strong>\s*</p>!sm # Testumgebung...
-     ) {
-    $self->select_function('quit');
+    my ($self) = @_;
+    my $result;
+
+    if( $self->agent ) {
+        if (not ($self->access_denied or $self->maintenance)) {
+            $self->log("Closing session");
+            if(     not $self->maintenance
+                and not $self->agent->content =~ m!<p class="important">\s*<strong>\s*Diese Funktion steht auf Grund einer technischen St.*?rung derzeit leider nicht zur Verf.*?gung.*?</strong>\s*</p>!sm # Testumgebung...
+             ) {
+              $self->select_function('quit');
+            };
+            my $content = ($self->agent->content =~ m!<p class="important">(.*?)</p>!);
+            #$result = $self->agent->res->as_string =~ m!<p class="important">\s*<strong>Sie haben sich beim Postbank Online-Banking abgemeldet.</strong>\s*</p>!sm
+            $result = $self->agent->content =~ m!<p class="important">\s*<strong>Sie haben sich beim Postbank Online-Banking abgemeldet.</strong>\s*</p>!sm
+              or $result = $self->agent->content =~ m!<p class="important">\s*<strong>\s*Diese Funktion steht auf Grund einer technischen St.*?rung derzeit leider nicht zur Verf.*?gung.*?</strong>\s*</p>!sm # Testumgebung...
+              or $result = $self->agent->content =~ m!<p class="important">\s*<strong>Sie haben eine Browser-Funktion genutzt, die das Postbanks\s+Online-Banking nicht unterst.*?tzt. Aus Sicherheitsgr.*?nden haben wir einige\s+Funktionen, die Ihr Browser normalerweise bietet, unterbunden.\s*</strong>\s*</p>!sm # Testumgebung...
+              or warn $self->agent->content;
+        } else {
+            $result = 'Never logged in';
+        };
+        $self->agent(undef);
+    } else {
+        $result = 'Agent already discarded';
     };
-my $content = ($self->agent->content =~ m!<p class="important">(.*?)</p>!);
-    #$result = $self->agent->res->as_string =~ m!<p class="important">\s*<strong>Sie haben sich beim Postbank Online-Banking abgemeldet.</strong>\s*</p>!sm
-    $result = $self->agent->content =~ m!<p class="important">\s*<strong>Sie haben sich beim Postbank Online-Banking abgemeldet.</strong>\s*</p>!sm
-      or $result = $self->agent->content =~ m!<p class="important">\s*<strong>\s*Diese Funktion steht auf Grund einer technischen St.*?rung derzeit leider nicht zur Verf.*?gung.*?</strong>\s*</p>!sm # Testumgebung...
-      or $result = $self->agent->content =~ m!<p class="important">\s*<strong>Sie haben eine Browser-Funktion genutzt, die das Postbanks\s+Online-Banking nicht unterst.*?tzt. Aus Sicherheitsgr.*?nden haben wir einige\s+Funktionen, die Ihr Browser normalerweise bietet, unterbunden.\s*</strong>\s*</p>!sm # Testumgebung...
-      or warn $self->agent->content;
-  } else {
-    $result = 'Never logged in';
-  };
-  $self->agent(undef);
-  $result;
+    $result;
 };
 
 sub account_numbers {
@@ -310,7 +315,7 @@ sub account_numbers {
         my @numbers = $self->agent->content =~ /<option[^>]*?value="(\d+)"[^>]*>\s*(\d+)\s+/gi;
         if( 0+@numbers != 2*(0+@check_numbers)) {
             warn "Inconsistent number of accounts found. Maybe the website has changed.";
-            warn sprintf "Found %d (%s), expected %d numbers.", 
+            warn sprintf "Found %d (%s), expected %d numbers.",
                  0+@numbers,
                  join( ",", @numbers),
                  0+@check_numbers;
@@ -363,7 +368,7 @@ sub get_account_statement {
       return;
   };
   $agent->form_with_fields( 'selectForm:kontoauswahl' );
-  
+
   my $past_days = $args{past_days} || $self->{past_days};
   if($past_days) {
     my ($day, $month, $year) = split/\./, $agent->current_form->value('umsatzanzeigeGiro:salesForm:umsatzFilterOptionenAufklappbarSuchfeldPanel:accordion:vonBisDatum:datumForm:bisGruppe:bisDatum');
@@ -389,7 +394,6 @@ sub get_account_statement {
   $self->log("Downloading text version");
   $agent->click('selectForm:kontoauswahlButton');
   # Neue Seite, neue URLs
-warn "Initializing session urls";
   $self->init_session_urls();
 
   my $response;
@@ -636,7 +640,7 @@ L<perl>, L<WWW::Mechanize>.
 
 =head1 REPOSITORY
 
-The public repository of this module is 
+The public repository of this module is
 L<https://github.com/Corion/Finance-Bank-Postbank_de>.
 
 =head1 SUPPORT
