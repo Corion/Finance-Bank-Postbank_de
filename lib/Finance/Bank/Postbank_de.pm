@@ -141,7 +141,7 @@ sub get_login_page {
   );
 
   my $agent = $self->agent();
-  $agent->add_header("If-SSL-Cert-Subject" => qr{/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC|jurisdictionCountryName)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.2\E|jurisdictionST|jurisdictionStateOrProvinceName)=Nordrhein-Westfalen/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL|jurisdictionLocalityName)=Bonn/(?:\Q2.5.4.15\E|businessCategory)=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=PB Systems AG/CN=banking.postbank.de$});
+  $agent->add_header("If-SSL-Cert-Subject" => qr{^/(?:\Q2.5.4.15\E|businessCategory)=Private Organization/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC|jurisdictionCountryName)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.2\E|jurisdictionST|jurisdictionStateOrProvinceName)=Hessen/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL|jurisdictionLocalityName)=Frankfurt am Main/serialNumber=HRB 47141/C=DE/ST=Nordrhein-Westfalen/L=Bonn/O=DB Privat- und Firmenkundenbank AG/OU=Postbank Systems AG/CN=banking.postbank.de$});
 
   $agent->get(LOGIN);
   $self->log_httpresult();
