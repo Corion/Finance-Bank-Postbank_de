@@ -1,0 +1,164 @@
+
+[![Build Status](https://travis-ci.org/Corion/Filter-signatures.svg?branch=master)](https://github.com/Corion/Filter-signatures)
+
+# NAME
+
+Finance::Bank::Postbank\_de - Check your Postbank.de bank account from Perl
+
+# SYNOPSIS
+
+    use strict;
+    require Crypt::SSLeay; # It's a prerequisite
+    use Finance::Bank::Postbank_de;
+    my $account = Finance::Bank::Postbank_de->new(
+                  login => '9999999999',
+                  password => '11111',
+                  status => sub { shift;
+                                  print join(" ", @_),"\n"
+                                    if ($_[0] eq "HTTP Code")
+                                        and ($_[1] != 200)
+                                    or ($_[0] ne "HTTP Code");
+
+                                },
+                );
+    # Retrieve account data :
+    my $retrieved_statement = $account->get_account_statement();
+    print "Statement date : ",$retrieved_statement->balance->[0],"\n";
+    print "Balance : ",$retrieved_statement->balance->[1]," EUR\n";
+
+    # Output CSV for the transactions
+    for my $row ($retrieved_statement->transactions) {
+      print join( ";", map { $row->{$_} } (qw( tradedate valuedate type comment receiver sender amount ))),"\n";
+    };
+
+    $account->close_session;
+    # See Finance::Bank::Postbank_de::Account for
+    # a simpler example
+
+# DESCRIPTION
+
+This module provides a rudimentary interface to the Postbank online banking system at
+https://banking.postbank.de/. You will need either Crypt::SSLeay or IO::Socket::SSL
+installed for HTTPS support to work with LWP.
+
+The interface was cooked up by me without taking a look at the other Finance::Bank
+modules. If you have any proposals for a change, they are welcome !
+
+# WARNING
+
+This is code for online banking, and that means your money, and that means BE CAREFUL. You are encouraged, nay, expected, to audit the source of this module yourself to reassure yourself that I am not doing anything untoward with your banking data. This software is useful to me, but is provided under NO GUARANTEE, explicit or implied.
+
+# WARNUNG
+
+Dieser Code beschaeftigt sich mit Online Banking, das heisst, hier geht es um Dein Geld und das bedeutet SEI VORSICHTIG ! Ich gehe
+davon aus, dass Du den Quellcode persoenlich anschaust, um Dich zu vergewissern, dass ich nichts unrechtes mit Deinen Bankdaten
+anfange. Diese Software finde ich persoenlich nuetzlich, aber ich stelle sie OHNE JEDE GARANTIE zur Verfuegung, weder eine
+ausdrueckliche noch eine implizierte Garantie.
+
+# METHODS
+
+## new
+
+Creates a new object. It takes three named parameters :
+
+- login => '9999999999'
+
+    This is your account number.
+
+- password => '11111'
+
+    This is your PIN.
+
+- status => sub {}
+
+    This is an optional
+    parameter where you can specify a callback that will receive the messages the object
+    Finance::Bank::Postbank produces per session.
+
+## $account->new\_session
+
+Closes the current session and logs in to the website using
+the credentials given at construction time.
+
+## $account->close\_session
+
+Closes the session and invalidates it on the server.
+
+## $account->agent
+
+Returns the `WWW::Mechanize` object. You can retrieve the
+content of the current page from there.
+
+## `$session->account_numbers`
+
+Returns the account numbers. Only numeric account numbers
+are returned - the credit card account numbers are not
+returned.
+
+## $account->select\_function STRING
+
+Selects a function. The currently supported functions are
+
+        accountstatement
+        quit
+
+## $account->get\_account\_statement
+
+Navigates to the print version of the account statement. The content can currently
+be retrieved from the agent, but this will most likely change, as the print version
+of the account statement is not a navigable page. The result of the function
+is either undef or a Finance::Bank::Postbank\_de::Account object.
+
+`past_days` - Number of days in the past to request the statement for
+The default is 10.
+
+## $account->unread\_messages
+
+Returns the number of unread messages. There is no way
+to retrieve the messages themselves yet.
+
+## session\_timed\_out
+
+Returns true if our banking session timed out.
+
+## maintenance
+
+Returns true if the banking interface is currently unavailable due to maintenance.
+
+# TODO:
+
+    * Add even more runtime tests to validate the HTML
+    * Streamline the site access to use even less bandwidth
+    * Use a proper HTML parser, like HTML::TreeBuilder
+
+# AUTHOR
+
+Max Maischein, <corion@cpan.org>
+
+# SEE ALSO
+
+[perl](https://metacpan.org/pod/perl), [WWW::Mechanize](https://metacpan.org/pod/WWW::Mechanize).
+
+# REPOSITORY
+
+The public repository of this module is 
+[https://github.com/Corion/Finance-Bank-Postbank\_de](https://github.com/Corion/Finance-Bank-Postbank_de).
+
+# SUPPORT
+
+The public support forum of this module is
+[http://perlmonks.org/](http://perlmonks.org/).
+
+# BUG TRACKER
+
+Please report bugs in this module via the RT CPAN bug queue at
+[https://rt.cpan.org/Public/Dist/Display.html?Name=Finance-Bank-Postbank\_de](https://rt.cpan.org/Public/Dist/Display.html?Name=Finance-Bank-Postbank_de)
+or via mail to [finance-bank-postbank\_de-Bugs@rt.cpan.org](https://metacpan.org/pod/finance-bank-postbank_de-Bugs@rt.cpan.org).
+
+# COPYRIGHT (c)
+
+Copyright 2003-2015 by Max Maischein `corion@cpan.org`.
+
+# LICENSE
+
+This module is released under the same terms as Perl itself.
