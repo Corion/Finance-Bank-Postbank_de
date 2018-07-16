@@ -401,6 +401,7 @@ sub get_account_statement {
   if ($l) {
     $response = $agent->get($l);
     $self->log_httpresult();
+    $agent->back;
   } else {
     # keine Umsaetze
     $self->log("No transactions found");
