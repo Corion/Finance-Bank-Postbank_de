@@ -506,3 +506,5 @@ Max Maischein, E<lt>corion@cpan.orgE<gt>
 =head1 SEE ALSO
 
 L<perl>, L<Finance::Bank::Postbank_de>.
+
+=cut

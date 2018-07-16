@@ -642,7 +642,7 @@ L<https://github.com/Corion/Finance-Bank-Postbank_de>.
 =head1 SUPPORT
 
 The public support forum of this module is
-L<http://perlmonks.org/>.
+L<https://perlmonks.org/>.
 
 =head1 BUG TRACKER
 
@@ -652,7 +652,7 @@ or via mail to L<finance-bank-postbank_de-Bugs@rt.cpan.org>.
 
 =head1 COPYRIGHT (c)
 
-Copyright 2003-2015 by Max Maischein C<corion@cpan.org>.
+Copyright 2003-2018 by Max Maischein C<corion@cpan.org>.
 
 =head1 LICENSE
 
