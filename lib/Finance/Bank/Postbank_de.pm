@@ -20,7 +20,7 @@ our $VERSION = '0.51';
 
 
 BEGIN {
-  Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
+  __PACKAGE__->mk_accessors(qw( agent login password urls ));
 };
 
 use constant LOGIN => 'https://banking.postbank.de/rai/login';

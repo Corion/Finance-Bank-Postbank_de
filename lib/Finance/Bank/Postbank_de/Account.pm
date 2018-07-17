@@ -9,7 +9,7 @@ use base 'Class::Accessor';
 our $VERSION = '0.51';
 
 BEGIN {
-  Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_unavailable balance_prev transactions_future iban blz account_type name));
+  __PACKAGE__->mk_accessors(qw( number balance balance_unavailable balance_prev transactions_future iban blz account_type name));
 };
 
 sub new {
