@@ -37,7 +37,6 @@
             "IO::Socket::SSL" : "0",
             "LWP::Protocol::https" : "0",
             "List::Sliding::Changes" : "0.02",
-            "MIME::Lite" : "3",
             "Mozilla::CA" : "0",
             "WWW::Mechanize" : "1.52",
             "perl" : "5.008"
@@ -45,6 +44,8 @@
       },
       "test" : {
          "requires" : {
+            "MIME::Lite" : "3",
+            "Test::MockObject" : "0",
             "Test::More" : "0",
             "Text::Balanced" : "0"
          }
@@ -58,7 +59,7 @@
          "web" : "https://github.com/Corion/Finance-Bank-Postbank_de"
       }
    },
-   "version" : "0.50",
+   "version" : "0.51",
    "x_serialization_backend" : "JSON::PP version 2.97001",
    "x_static_install" : 1
 }

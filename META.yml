@@ -4,6 +4,8 @@ author:
   - 'Max Maischein <corion@cpan.org>'
 build_requires:
   ExtUtils::MakeMaker: '0'
+  MIME::Lite: '3'
+  Test::MockObject: '0'
   Test::More: '0'
   Text::Balanced: '0'
 configure_requires:
@@ -25,12 +27,11 @@ requires:
   IO::Socket::SSL: '0'
   LWP::Protocol::https: '0'
   List::Sliding::Changes: '0.02'
-  MIME::Lite: '3'
   Mozilla::CA: '0'
   WWW::Mechanize: '1.52'
   perl: '5.008'
 resources:
   repository: git://github.com/Corion/Finance-Bank-Postbank_de.git
-version: '0.50'
+version: '0.51'
 x_serialization_backend: 'CPAN::Meta::YAML version 0.018'
 x_static_install: 1

@@ -16,13 +16,11 @@ use Mozilla::CA;
 
 use IO::Socket::SSL qw(SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
-use vars qw[ $VERSION ];
-
-$VERSION = '0.50';
+our $VERSION = '0.51';
 
 
 BEGIN {
-  Finance::Bank::Postbank_de->mk_accessors(qw( agent login password urls ));
+  __PACKAGE__->mk_accessors(qw( agent login password urls ));
 };
 
 use constant LOGIN => 'https://banking.postbank.de/rai/login';

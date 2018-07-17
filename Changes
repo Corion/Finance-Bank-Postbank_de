@@ -1,38 +1,53 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.51 2018-07-17
+  [Distribution]
+  + Fix prerequisites
+    Test::MockObject was missing, MIME::Lite is only a test prerequisite
+
 0.50 2018-07-16
+  [Certificate fixes]
   + Fix SSL certificate check to reflect the (systems) merger of Postbank
     and Deutsche Bank
+  [Code fixes]
   + Fix handling of session after downloading a CSV file
 
 0.49 2018-04-21
+  [Test fixes]
   + Better maintenance detection, mostly for the demo site
   + Better test resiliency, mostly for the demo site
 
 0.48 2018-02-22
+  [Certificate fixes]
   + Add some text aliases used/produced by some BSD version of SSL
 
 0.47 2017-07-16
+  [Certificate fixes]
   + Add one more numeric identifier for certificates
     This fixes RT #122506, reported by Slaven Rezic
 
 0.46 2017-07-16
+  [Code fixes]
   + Make module more resilient against old versions of IO::Socket::SSL
     which don't have OCSP support
     This was reported by the CPAN testers with at least IO::Socket::SSL
     version 1.967
+  [Certificate fixes]
   + Update certificate
 
 0.45 2017-04-17
+  [Test fixes]
   . Fix test suite that broke due to . (dot) not being in
     @INC anymore, thanks to Ryan Voots
 
 0.44 2016-11-22
+  [Test fixes]
   . Remove the EURO sign from the canned account statement
     This should address RT #117204, again; reported by
     Slaven Rezic, thanks!
 
 0.43 2016-10-15
+  [Code fixes]
   ! We only enable fingerprint verification for OpenSSL versions
     below 1.0.2. For 1.0.2 and higher, we rely on OpenSSL to do
     The Right Thing.
@@ -42,27 +57,33 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
     get loaded twice.
 
 0.42 2016-09-03
+  [Certificate fixes]
   ! Mozilla::CA 2016-01-04 does not support the G3 certificate from Symantec, but postbank.de
     relies on that certificate. We now check the fingerprint of the postbank.de
     certificate instead of verifying the certificate chain.
     An alternative fix is to fall back to the 2013 version of Mozilla::CA.
 
 0.41 2016-09-02
+  [Code fixes]
   + Allow to specify the days to request the statement for
   + Better resiliency against where the EURO sign appears
 
 0.40 2016-06-19
+  [Code fixes]
   + Allow more numerical entities in certificate. Yay ASN
 
 0.39 2016-06-12
   . Add license (Artistic license)
+  [Code fixes]
   . Adapt to new number/currency format in the statement output
 
 0.38 2015-11-15
+  [Code fixes]
   + Adapt to the website changes (new form field names)
 
 0.37 2015-07-31
   + New certificate text
+  [Code fixes]
   + Use ->decoded_content when downloading an account statement, in case
     it gets gzipped
   . Allow OIDs and names in certificate
