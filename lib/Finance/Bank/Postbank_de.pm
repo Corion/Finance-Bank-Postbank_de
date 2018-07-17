@@ -4,7 +4,7 @@ use 5.006; # we use lexical filehandles now
 use strict;
 use warnings;
 use Carp;
-use base 'Class::Accessor';
+use Moo 2;
 
 use Time::Local;
 use POSIX 'strftime';
@@ -18,10 +18,32 @@ use IO::Socket::SSL qw(SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
 our $VERSION = '0.51';
 
+has 'agent' => (
+    is => 'rw',
+);
 
-BEGIN {
-  __PACKAGE__->mk_accessors(qw( agent login password urls ));
-};
+has 'login' => (
+    is => 'ro',
+);
+
+has 'password' => (
+    is => 'ro',
+);
+
+has 'urls' => (
+    is => 'ro',
+    default => sub { {} },
+);
+
+has 'logger' => (
+    is => 'ro',
+    default => sub { {} },
+);
+
+has 'past_days' => (
+    is => 'ro',
+    default => sub { {} },
+);
 
 use constant LOGIN => 'https://banking.postbank.de/rai/login';
 
@@ -33,30 +55,21 @@ BEGIN {
   );
 };
 
-sub new {
-  my ($class,%args) = @_;
+around BUILDARGS => sub {
+    my ($orig,$class,%args) = @_;
 
-  croak "Login/Account number must be specified"
-    unless $args{login};
-  croak "Password/PIN must be specified"
-    unless $args{password};
-  my $logger = $args{status} || sub {};
+    croak "Login/Account number must be specified"
+      unless $args{login};
+    croak "Password/PIN must be specified"
+      unless $args{password};
+    if( exists $args{ status }) {
+        $args{ logger } = delete $args{ status };
+    };
 
-  my $self = {
-    agent => undef,
-    login => $args{login},
-    password => $args{password},
-    logger => $logger,
-    urls => {},
-    past_days => $args{past_days},
-  };
-  bless $self, $class;
-
-  $self->log("New $class created");
-  $self;
+    $orig->($class, %args);
 };
 
-sub log { $_[0]->{logger}->(@_); };
+sub log { $_[0]->logger->(@_); };
 sub log_httpresult { $_[0]->log("HTTP Code",$_[0]->agent->status,$_[0]->agent->res->headers->as_string . $_[0]->agent->content) };
 
 sub new_session {
@@ -87,12 +100,12 @@ sub new_session {
     $self->log_httpresult();
     $result = $agent->status;
     if( $self->is_nutzungshinweis ) {
-print "Nutzungshinweis\n";
+#print "Nutzungshinweis\n";
       $self->skip_nutzungshinweis;
     };
 
     if ($self->is_security_advice) {
-print "Security advice\n";
+#print "Security advice\n";
       $self->skip_security_advice;
     };
     $self->init_session_urls()

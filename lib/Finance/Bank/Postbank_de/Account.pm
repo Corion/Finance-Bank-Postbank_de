@@ -4,28 +4,34 @@ use strict;
 use warnings;
 use Carp qw(croak);
 use POSIX qw(strftime);
-use base 'Class::Accessor';
+use Moo 2;
 
 our $VERSION = '0.51';
 
-BEGIN {
-  __PACKAGE__->mk_accessors(qw( number balance balance_unavailable balance_prev transactions_future iban blz account_type name));
-};
+has [
+    'number',
+    'balance',
+    'balance_unavailable',
+    'balance_prev',
+    'transactions_future',
+    'iban',
+    'blz',
+    'account_type',
+    'name',
+    ] => ( is => 'rw' );
 
-sub new {
-  my $self = $_[0]->SUPER::new();
-  my ($class,%args) = @_;
+around BUILDARGS => sub {
+  my ($orig, $class,%args) = @_;
 
+  if( exists $args{ number } and exists $args{ kontonummer }
+      and $args{ number } ne $args{ kontonummer } ) {
+      croak "'kontonummer' is '$args{kontonummer}' and 'number' is '$args{ number }'";
+  };
   my $num = delete $args{number} || delete $args{kontonummer};
-  croak "'kontonummer' is '$args{kontonummer}' and 'number' is '$num'"
-    if $args{kontonummer} and $args{kontonummer} ne $num;
+  $args{ number } = $num
+      if defined $num;
 
-  $self->number($num) if (defined $num);
-
-  $self->name($args{name})
-    if (exists $args{name});
-
-  $self;
+  $orig->( $class, %args );
 };
 
 { no warnings 'once';
