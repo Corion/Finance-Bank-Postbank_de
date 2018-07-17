@@ -6,9 +6,7 @@ use Carp qw(croak);
 use POSIX qw(strftime);
 use base 'Class::Accessor';
 
-use vars qw[ $VERSION %tags %totals %columns %safety_check ];
-
-$VERSION = '0.51';
+our $VERSION = '0.51';
 
 BEGIN {
   Finance::Bank::Postbank_de::Account->mk_accessors(qw( number balance balance_unavailable balance_prev transactions_future iban blz account_type name));
@@ -34,12 +32,12 @@ sub new {
 *kontonummer = *number;
 }
 
-%safety_check = (
+our %safety_check = (
   name		=> 1,
   kontonummer	=> 1,
 );
 
-%tags = (
+our %tags = (
   #Girokonto => [qw(Name BLZ Kontonummer IBAN)],
   "gebuchte Ums\x{00E4}tze" => [qw(Name BLZ Kontonummer IBAN)],
   Tagesgeldkonto => [qw(Name BLZ Kontonummer IBAN)],
@@ -48,7 +46,7 @@ sub new {
   Kreditkarte => [qw(Name BLZ Kontonummer IBAN)],
 );
 
-%totals = (
+our %totals = (
   "gebuchte Ums\x{00E4}tze" => [
       [qr'^Aktueller Kontostand' => 'balance'],
       [qr'^Summe vorgemerkter Ums.tze' => 'transactions_future'],
@@ -59,7 +57,7 @@ sub new {
   Tagesgeldkonto => [[qr'Aktueller Kontostand' => 'balance'],],
 );
 
-%columns = (
+our %columns = (
   qr'Buchungstag'			=> 'tradedate',
   qr'Wertstellung'		=> 'valuedate',
   qr'Umsatzart'			=> 'type',
