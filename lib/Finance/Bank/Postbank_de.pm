@@ -47,7 +47,7 @@ has 'past_days' => (
 
 use constant LOGIN => 'https://banking.postbank.de/rai/login';
 
-use vars qw(%functions);
+our %functions;
 BEGIN {
   %functions = (
     quit		=> [ text_regex => qr'\bBanking\s+beenden\b' ],
