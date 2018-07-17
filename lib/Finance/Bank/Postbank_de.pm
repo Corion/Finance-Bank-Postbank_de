@@ -18,7 +18,7 @@ use IO::Socket::SSL qw(SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
 use vars qw[ $VERSION ];
 
-$VERSION = '0.50';
+$VERSION = '0.51';
 
 
 BEGIN {
