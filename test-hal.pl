@@ -56,7 +56,7 @@ for my $account ($finanzstatus->get_accountsPrivate ) {
         print join " ", $depot->date, $depot->depotValue, $depot->depotCurrency;
         print "\n";
         for my $pos ($depot->positions) {
-            print join " ", $pos->amount, $pos->isin, $pos->depotCurrQuote, $pos->quoteCurrency,
+            print join "\t", $pos->amount, $pos->isin, $pos->averageQuote, $pos->depotCurrQuote, $pos->quoteCurrency,
                             $pos->depotCurrValue, $pos->winOrLoss, $pos->winOrLossCurrency,
                             ;
             print "\n";
