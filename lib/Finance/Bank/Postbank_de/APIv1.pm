@@ -47,21 +47,54 @@ has ua => (
     }
 );
 
-
 has config => (
     is => 'rw',
 );
+
+has certificate_subject => (
+    is => 'ro',
+    default => sub {
+        +{
+                                    #/jurisdictionC=DE/jurisdictionST=Nordrhein-Westfalen/jurisdictionL=Bonn/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=PB Systems AG/CN=meine.postbank.de
+            #meine_postbank_de => qr{^/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC|jurisdictionCountryName)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.2\E|jurisdictionST|jurisdictionStateOrProvinceName)=Nordrhein-Westfalen/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL|jurisdictionLocalityName)=Bonn/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=PB Systems AG/CN=meine.postbank.de$},
+            api_public_postbank_de => qr{^/(?:\Q2.5.4.15\E|businessCategory)=Private Organization/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC|jurisdictionCountryName)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.2\E|jurisdictionST|jurisdictionStateOrProvinceName)=Hessen/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL|jurisdictionLocalityName)=Frankfurt am Main/serialNumber=HRB 47141/C=DE/ST=Nordrhein-Westfalen/L=Bonn/O=DB Privat- und Firmenkundenbank AG/OU=Postbank Systems AG/CN=bankapi-public.postbank.de$}
+        },
+    },
+);
+
+sub diagnoseCertificateError( $self, $error=$@ ) {
+    my( $found, $re ) = ($error =~ m#'(.+?)' !~ /\Q(?^:\E(.+?)/ at #)
+        or die "$error"; # reraise
+    warn $found;
+    warn $re;
+    my @found_parts = split m!/!, $found;
+    my @re_parts = split m!/!, $re;
+
+    for my $i (0..$#re_parts ) {
+        if( $found_parts[ $i ] =~ $re_parts[ $i ]) {
+            warn "'$found_parts[ $i ]' =~ /$re_parts[ $i ]/, OK\n";
+        } else {
+            warn "'$found_parts[ $i ]' !~ /$re_parts[ $i ]/, not OK\n";
+        };
+    };
+    die "Certificate mismatch";
+}
 
 sub fetch_config( $self ) {
     # Do an initial fetch to set up cookies
     my $ua = $self->ua;
     $self->configure_ua_ssl;
-    $ua->add_header(
-                                    #/jurisdictionC=DE/jurisdictionST=Nordrhein-Westfalen/jurisdictionL=Bonn/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=PB Systems AG/CN=meine.postbank.de
-        "If-SSL-Cert-Subject" => qr{^/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC|jurisdictionCountryName)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.2\E|jurisdictionST|jurisdictionStateOrProvinceName)=Nordrhein-Westfalen/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL|jurisdictionLocalityName)=Bonn/businessCategory=Private Organization/serialNumber=HRB6793/C=DE/postalCode=53113/ST=Nordrhein-Westfalen/L=Bonn/street=Friedrich Ebert Allee 114 126/O=Deutsche Postbank AG/OU=PB Systems AG/CN=meine.postbank.de$}
-    );
-    $ua->get('https://meine.postbank.de');
-    $ua->get('https://meine.postbank.de/configuration.json');
+    #my $re = join "|", values %{ $self->certificate_subject };
+    #$ua->add_header(
+    #    "If-SSL-Cert-Subject" => qr/$re/,
+    #);
+    eval {
+        $ua->get('https://meine.postbank.de');
+        $ua->get('https://meine.postbank.de/configuration.json');
+    };
+    if( my $err = $@ ) {
+        $self->diagnoseCertificateError( "$@ ");
+    };
     my $config = decode_json( $ua->content );
     $self->config( $config );
     $config
@@ -107,7 +140,7 @@ sub configure_ua( $self, $config = $self->fetch_config ) {
         accept => ['application/hal+json', '*/*'],
         keep_alive => 1,
         #                            /                businessCategory =Private Organization/                                jurisdictionC                         =DE/                                jurisdictionST                                 =Hessen/                                jurisdictionL                          =Frankfurt am Main/serialNumber=HRB 47141/C=DE/ST=Nordrhein-Westfalen/L=Bonn/O=DB Privat- und Firmenkundenbank AG/OU=Postbank Systems AG/CN=(?:banking|bankapi-public).postbank.de
-        "If-SSL-Cert-Subject" => qr{^/(?:\Q2.5.4.15\E|businessCategory)=Private Organization/(?:\Q1.3.6.1.4.1.311.60.2.1.3\E|jurisdictionC|jurisdictionCountryName)=DE/(?:\Q1.3.6.1.4.1.311.60.2.1.2\E|jurisdictionST|jurisdictionStateOrProvinceName)=Hessen/(?:\Q1.3.6.1.4.1.311.60.2.1.1\E|jurisdictionL|jurisdictionLocalityName)=Frankfurt am Main/serialNumber=HRB 47141/C=DE/ST=Nordrhein-Westfalen/L=Bonn/O=DB Privat- und Firmenkundenbank AG/OU=Postbank Systems AG/CN=bankapi-public.postbank.de$}
+        "If-SSL-Cert-Subject" => $self->certificate_subject->{ api_public_postbank_de },
     );
 };
 
@@ -121,14 +154,14 @@ sub login_url( $self ) {
 sub login( $self, $username, $password ) {
     my $ua = $self->ua;
     my $loginUrl = $self->login_url();
-    
-    my $r = 
+
+    my $r =
     $ua->post(
         $loginUrl,
         content => sprintf 'dummy=value&password=%s&username=%s', $password, $username
-        
+
     );
-    
+
     my $postbank = HAL::Resource->new(
         ua => $ua,
         %{ decode_json($ua->content)}
