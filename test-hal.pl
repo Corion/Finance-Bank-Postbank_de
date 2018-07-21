@@ -9,14 +9,25 @@ use HTTP::CookieJar::LWP;
 use Data::Dumper;
 use Finance::Bank::Postbank_de::APIv1;
 
+use Getopt::Long;
+use Pod::Usage;
+
+GetOptions(
+    'username=s' => \my $username,
+    'password=s' => \my $password,
+) or pod2usage(2);
+
 #my $logger = debug_ua($ua);
 #$logger->dump_content(0);
 #$logger->dump_text(0);
 
+$username ||= 'Petra.Pfiffig';
+$password ||= '11111';
+
 my $api = Finance::Bank::Postbank_de::APIv1->new();
 $api->configure_ua();
 
-my $postbank = $api->login( 'Petra.Pfiffig', '11111' );
+my $postbank = $api->login( $username, $password );
 
 my $finanzstatus = $postbank->navigate(
     class => 'Finance::Bank::Postbank_de::APIv1::Finanzstatus',
