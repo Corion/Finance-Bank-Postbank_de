@@ -41,7 +41,7 @@ my $finanzstatus = $postbank->navigate(
 
 my $messages = $finanzstatus->fetch_resource( 'messagebox' ); # messagebox->count
 
-my @columns = qw(amount isin averageQuote depotCurrQuote quoteCurrency depotCurrValue winOrLoss winOrLossCurrency );
+my @columns = qw(isin shortDescription amount averageQuote depotCurrQuote quoteCurrency depotCurrValue winOrLoss winOrLossCurrency );
 my @output;
 for my $account ( grep { $_->productType eq 'depot' } $finanzstatus->get_accountsPrivate ) {
 
