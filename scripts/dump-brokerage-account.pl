@@ -18,6 +18,8 @@ GetOptions(
     'username=s' => \my $username,
     'password=s' => \my $password,
     'csv'        => \my $output_csv,
+
+    'o|output_file=s' => \my $output_file,
 ) or pod2usage(2);
 
 #my $logger = debug_ua($ua);
@@ -48,6 +50,11 @@ for my $account ( grep { $_->productType eq 'depot' } $finanzstatus->get_account
     for my $pos ($depot->positions) {
         push @output, [ map { $pos->$_ } @columns ];
     };
+};
+
+if( $output_file ) {
+    open *STDOUT, '>', $output_file;
+    binmode *STDOUT;
 };
 
 if( $output_csv ) {
