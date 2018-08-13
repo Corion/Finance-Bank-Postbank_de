@@ -15,9 +15,12 @@ use Getopt::Long;
 use Pod::Usage;
 
 GetOptions(
-    'username=s' => \my $username,
-    'password=s' => \my $password,
-    'csv'        => \my $output_csv,
+    'username=s'      => \my $username,
+    'password=s'      => \my $password,
+
+    'csv'             => \my $output_csv,
+    'xlsx'            => \my $output_xlsx,
+    'xml'             => \my $output_xml,
 
     'o|output_file=s' => \my $output_file,
 ) or pod2usage(2);
@@ -46,7 +49,7 @@ my @output;
 for my $account ( grep { $_->productType eq 'depot' } $finanzstatus->get_accountsPrivate ) {
 
     my $depot = $account->fetch_resource('depot', class => 'Finance::Bank::Postbank_de::APIv1::Depot');
-    
+
     for my $pos ($depot->positions) {
         push @output, [ map { $pos->$_ } @columns ];
     };
@@ -59,6 +62,11 @@ if( $output_file ) {
 
 if( $output_csv ) {
     csv( in => [\@columns, @output], out => \*STDOUT, sep => ';' );
+} elsif( $output_xlsx ) {
+    require Excel::Writer::XLSX;
+    my $workbook = Excel::Writer::XLSX->new(\*STDOUT);
+    my $sheet = $workbook->add_worksheet();
+    $sheet->write_col( 'A1', \@output );
 } else {
     my $table = Text::Table->new( @columns );
     $table->load( @output );
