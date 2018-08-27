@@ -1,5 +1,11 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.52 2018-08-27
+  [Distribution]
+  + Merge the API branch, as the old website got switched off.
+  + There is no compatibility shim yet to restore the functionality of the old
+    module. The tests will currently fail, sorry.
+
 0.51 2018-07-17
   [Distribution]
   + Fix prerequisites
