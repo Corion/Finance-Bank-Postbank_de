@@ -16,7 +16,7 @@ use Mozilla::CA;
 
 use IO::Socket::SSL qw(SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
-our $VERSION = '0.51';
+our $VERSION = '0.52';
 
 has 'agent' => (
     is => 'rw',
