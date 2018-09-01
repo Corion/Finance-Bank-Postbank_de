@@ -6,6 +6,8 @@ no warnings 'experimental::signatures';
 use feature 'signatures';
 use Future;
 
+use Carp qw(croak);
+
 our $VERSION = '0.52';
 
 =head1 NAME
@@ -55,7 +57,7 @@ sub fetch_resource_future( $self, $name, %options ) {
     my $class = $options{ class } || ref $self;
     my $ua = $self->ua;
     my $url = $self->resource_url( $name )
-        or die "Couldn't find resource '$name'";
+        or croak "Couldn't find resource '$name' in " . join ",", sort keys %{$self->_links};
     Future->done( $ua->get( $url ))->then( sub( $res ) {
         Future->done( bless { ua => $ua, %{ decode_json( $res->content )} } => $class );
     });
