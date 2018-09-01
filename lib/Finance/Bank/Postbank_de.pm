@@ -218,11 +218,11 @@ sub _build_account_numbers {
   my ($self,%args) = @_;
   
   my $finanzstatus = $self->finanzstatus;
-  (my $bp) = $finanzstatus->get_businesspartners; # always take the first
+  (my $bp) = $finanzstatus->get_businesspartners; # always take the first...
   my %numbers;
   # this currently includes the credit card numbers ...
   for my $acc ( $bp->get_accounts() ) {
-      $numbers{ $acc->iban } = $acc;
+      $numbers{ $acc->iban } = $acc unless $acc->productType eq 'depot';
   };
 
   return $self->_account_numbers( \%numbers );
@@ -255,6 +255,7 @@ sub get_account_statement {
   };
 
   my $account = $accounts->{ $args{ account_number }};
+
   #if (exists $args{account_number}) {
   #  $self->log("Getting account statement for $args{account_number}");
   #  # Load the account numbers if not already loaded
@@ -268,7 +269,6 @@ sub get_account_statement {
   #  my @accounts = $agent->current_form->value('selectForm:kontoauswahl');
   #  $self->log("Getting account statement via default (@accounts)");
   #};
-
   my $content = $account->transactions_csv();
   if( $args{ file }) {
       open my $fh, '>', $args{ file }
