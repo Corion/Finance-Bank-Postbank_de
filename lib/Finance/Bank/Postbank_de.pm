@@ -207,6 +207,7 @@ sub close_session {
 
 sub finanzstatus {
     my( $self ) = @_;
+    $self->new_session unless $self->session;
     my $finanzstatus = $self->session->navigate(
         class => 'Finance::Bank::Postbank_de::APIv1::Finanzstatus',
         path => ['banking_v1' => 'financialstatus']
