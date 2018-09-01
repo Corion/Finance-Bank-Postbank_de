@@ -20,7 +20,7 @@ sub save_content {
 
 my @accounts = (
   ['Login with wrong password', Finance::Bank::Postbank_de->new(
-                  login => '9999999999',
+                  login => 'Petra.Pfiffig',
                   password => 'xxxxx',
                   status => sub {
                               shift;
@@ -29,8 +29,8 @@ my @accounts = (
                             },
   )],
   ["Login with too short account number", Finance::Bank::Postbank_de->new(
-                    login => '999999999', # One nine too few
-                    password => '11111',
+                    login => 'Petra.Pfiffi', # One nine too few
+                    password => '12345678',
                     status => sub {
                                 shift;
                                 diag join " ",@_
@@ -38,8 +38,8 @@ my @accounts = (
                               },
                   )],
   ["Login with too long account number", Finance::Bank::Postbank_de->new(
-                    login => '99999999999', # One nine too many
-                    password => '11111',
+                    login => 'Petra.Pfiffigg', # One nine too many
+                    password => '12345678',
                     status => sub {
                                 shift;
                                 diag join " ",@_

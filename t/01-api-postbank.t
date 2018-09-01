@@ -4,7 +4,7 @@ use Test::More tests => 4;
 
 use_ok("Finance::Bank::Postbank_de");
 
-my $account = Finance::Bank::Postbank_de->new(login => '9999999999',password => '11111');
+my $account = Finance::Bank::Postbank_de->new(login => '9999999999',password => '12345678');
 can_ok($account, qw(
   new
   agent

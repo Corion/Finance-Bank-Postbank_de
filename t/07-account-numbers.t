@@ -21,8 +21,8 @@ use Finance::Bank::Postbank_de;
 
 sub login {
   Finance::Bank::Postbank_de->new(
-                  login => '9999999999',
-                  password => '11111',
+                  login => 'Petra.Pfiffig',
+                  password => '12345678',
                   status => sub {
                               shift;
                               diag join " ",@_
@@ -105,8 +105,8 @@ SKIP: {
   close F;
 
   my $account = Finance::Bank::Postbank_de->new(
-                  login => '9999999999',
-                  password => '11111',
+                  login => 'Petra.Pfiffig',
+                  password => '12345678',
                   status => sub {
                               shift;
                               diag join " ",@_

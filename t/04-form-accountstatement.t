@@ -19,8 +19,8 @@ SKIP: {
     unless LWP::Protocol::implementor('https');
 
   my $account = Finance::Bank::Postbank_de->new(
-                  login => '9999999999',
-                  password => '11111',
+                  login => 'Petra.Pfiffig',
+                  password => '12345678',
                   status => sub {
                               shift;
                               diag join " ",@_

@@ -22,7 +22,7 @@ GetOptions(
 #$logger->dump_text(0);
 
 $username ||= 'Petra.Pfiffig';
-$password ||= '11111';
+$password ||= '12345678';
 
 my $api = Finance::Bank::Postbank_de::APIv1->new();
 $api->configure_ua();

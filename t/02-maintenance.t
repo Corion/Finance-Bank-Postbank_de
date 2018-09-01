@@ -10,7 +10,7 @@ BEGIN { use_ok("Finance::Bank::Postbank_de"); };
 # Check that we have SSL installed :
 SKIP: {
   my $account = Finance::Bank::Postbank_de->new(
-                  login => '9999999999',
+                  login => 'Petra.Pfiffig',
                   password => 'xxxxx',
                   status => sub {
                               shift;
