@@ -90,7 +90,7 @@ sub new_session {
     if ($self->session);
   my $pb;
   my $ok = eval {
-    $self->api->login( $self->login, $self->password );
+    $pb = $self->api->login( $self->login, $self->password );
     1
   };
   if( ! $ok ) {
