@@ -88,8 +88,17 @@ sub new_session {
 
   $self->close_session()
     if ($self->session);
-  my $pb = $self->api->login( $self->login, $self->password );
-  $self->session( $pb );
+  my $pb;
+  my $ok = eval {
+    $self->api->login( $self->login, $self->password );
+    1
+  };
+  if( ! $ok ) {
+    #warn sprintf "Got HTTP error %d, message %s", $self->api->ua->status, $self->api->ua->message;
+    #croak $@;
+  } else {
+    $self->session( $pb );
+  }
 };
 
 sub is_security_advice {
@@ -120,6 +129,7 @@ sub skip_nutzungshinweis {
 sub error_page {
   # Check if an error page is shown
   my ($self) = @_;
+  $self->api->ua->status != 200
   #return unless $self->agent;
   #
   #$self->agent->content =~ m!<p\s+class="form-error">!sm
@@ -154,6 +164,7 @@ sub maintenance {
 
 sub access_denied {
   my ($self) = @_;
+  $self->api->ua->status == 401
   #if ($self->error_page) {
   #  my $message = $self->error_message;
   #
@@ -166,7 +177,6 @@ sub access_denied {
   #} else {
   #  return;
   #};
-  ()
 };
 
 sub session_timed_out {
