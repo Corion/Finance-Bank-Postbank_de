@@ -7,8 +7,8 @@ use Test::More tests => 3;
 
 BEGIN { use_ok("Finance::Bank::Postbank_de"); };
 
-# Check that we have SSL installed :
 SKIP: {
+  skip "We currently don't know what maintenance mode looks like", 2;
   my $account = Finance::Bank::Postbank_de->new(
                   login => 'Petra.Pfiffig',
                   password => 'xxxxx',

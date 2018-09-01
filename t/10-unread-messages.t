@@ -26,15 +26,16 @@ SKIP: {
 
   # Check that we got a wellformed page back
   SKIP: {
-    unless ($status == 200) {
-      diag $account->agent->res->as_string;
-      diag $account->agent->title;
-      skip "Didn't get a connection to ".&Finance::Bank::Postbank_de::LOGIN."(LWP: $status)", 7;
-    };
-    skip "Banking is unavailable due to maintenance", 9
-      if $account->maintenance;
+    ;
+    #unless ($status == 200) {
+    #  diag $account->agent->res->as_string;
+    #  diag $account->agent->title;
+    #  skip "Didn't get a connection to ".&Finance::Bank::Postbank_de::LOGIN."(LWP: $status)", 7;
+    #};
+    #skip "Banking is unavailable due to maintenance", 9
+    #  if $account->maintenance;
   };
-    diag $account->unread_messages;
-    is $account->unread_messages, 1, "We have one unread message";
+    #diag $account->unread_messages;
+    is $account->unread_messages, 5, "We have five unread messages";
 
 };
