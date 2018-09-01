@@ -151,7 +151,7 @@ sub parse_statement {
   if( $lines[0] =~ /([\t;])/) {
     $sep = $1;
   };
-  for my $tag (@{ $tags{ $self->account_type }||[] }) {
+  for my $tag (@{ $tags{ $account_type }||[] }) {
     $lines[0] =~ /^\Q$tag\E$sep(.*?)$sep?$/
       or croak "Field '$tag' not found in account statement ($lines[0])";
     my $method = lc($tag);
@@ -169,7 +169,7 @@ sub parse_statement {
   while ($lines[0] !~ /^\s*$/) {
     my $line = shift @lines;
     my ($method,$balance);
-    for my $total (@{ $totals{ $self->account_type }||[] }) {
+    for my $total (@{ $totals{ $account_type }||[] }) {
       my ($re,$possible_method) = @$total;
       if ($line =~ /$re$sep\s*(?:(?:(\S+)\s*(?:\x{20AC}|\x{80}))|(null))$sep$/) {
         $method = $possible_method;
