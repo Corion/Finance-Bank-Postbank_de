@@ -58,6 +58,7 @@ my %module = (
         'Text::Balanced'   => 0,
         'Test::MockObject' => 0,
         'MIME::Lite'       => 3.00,
+        'File::Temp'       => 0,
     },
 
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
