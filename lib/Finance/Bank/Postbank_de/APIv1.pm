@@ -6,6 +6,7 @@ no warnings 'experimental::signatures';
 use feature 'signatures';
 use WWW::Mechanize;
 use Mozilla::CA;
+use HTTP::CookieJar::LWP;
 use IO::Socket::SSL qw(SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
 use HAL::Resource;
@@ -159,7 +160,6 @@ sub login( $self, $username, $password ) {
     $ua->post(
         $loginUrl,
         content => sprintf 'dummy=value&password=%s&username=%s', $password, $username
-
     );
 
     my $postbank = HAL::Resource->new(

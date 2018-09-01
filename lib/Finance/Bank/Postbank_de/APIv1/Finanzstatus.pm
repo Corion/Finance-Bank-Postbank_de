@@ -5,6 +5,9 @@ no warnings 'experimental::signatures';
 use feature 'signatures';
 extends 'HAL::Resource';
 
+use Finance::Bank::Postbank_de::APIv1::BusinessPartner;
+use Finance::Bank::Postbank_de::APIv1::Message;
+
 our $VERSION = '0.52';
 
 =head1 NAME
@@ -13,18 +16,15 @@ Finance::Bank::Postbank_de::APIv1::Finanzstatus - Postbank Finanzstatus
 
 =head1 SYNOPSIS
 
-    my $ua = WWW::Mechanize->new();
-    my $res = $ua->get('https://api.example.com/');
-    my $r = HAL::Resource->new(
-        ua => $ua,
-        %{ decode_json( $res->decoded_content ) },
+    my $finanzstatus = $postbank->navigate(
+        class => 'Finance::Bank::Postbank_de::APIv1::Finanzstatus',
+        path => ['banking_v1' => 'financialstatus']
     );
 
 =cut
 
-has [ 'accountsPrivate', 'accountsBusiness',
-      'amountBusiness',
-      'amountPrivate',
+has [ 'businesspartners',
+      'amount',
       'brokerageable',
       'hash',
       'md5Hash',
@@ -43,10 +43,10 @@ sub available_messages( $self ) {
     );
 }
 
-sub get_accountsPrivate( $self ) {
+sub get_businesspartners( $self ) {
     $self->inflate_list(
-        'Finance::Bank::Postbank_de::APIv1::Account',
-        $self->accountsPrivate
+        'Finance::Bank::Postbank_de::APIv1::BusinessPartner',
+        $self->businesspartners
     );
 }
 
