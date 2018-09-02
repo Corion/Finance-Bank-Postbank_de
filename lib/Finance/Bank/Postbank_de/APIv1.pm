@@ -177,9 +177,10 @@ This is the hierarchy of the resources in the API:
 
     APIv1
         Finanzstatus
-            Account
-                Transaction
-                Message
-                    Attachment
-                Depot
-=cut
+            BusinessPartner
+                Account
+                    Transaction
+                    Message
+                        Attachment
+                    Depot
+
