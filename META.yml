@@ -9,6 +9,7 @@ build_requires:
   Test::MockObject: '0'
   Test::More: '0'
   Text::Balanced: '0'
+  Text::Table: '0'
 configure_requires:
   ExtUtils::MakeMaker: '0'
 dynamic_config: 0

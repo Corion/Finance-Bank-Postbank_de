@@ -60,6 +60,7 @@ my %module = (
         'Test::MockObject' => 0,
         'MIME::Lite'       => 3.00,
         'File::Temp'       => 0,
+        'Text::Table'      => 0, # well, author tests, but ...
     },
 
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
