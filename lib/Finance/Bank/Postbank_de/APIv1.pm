@@ -17,7 +17,7 @@ use Finance::Bank::Postbank_de::APIv1::Account;
 use Finance::Bank::Postbank_de::APIv1::Depot;
 use Finance::Bank::Postbank_de::APIv1::Position;
 
-our $VERSION = '0.52';
+our $VERSION = '0.53';
 
 =head1 NAME
 

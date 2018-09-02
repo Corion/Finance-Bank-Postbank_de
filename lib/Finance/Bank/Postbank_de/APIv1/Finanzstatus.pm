@@ -8,7 +8,7 @@ extends 'HAL::Resource';
 use Finance::Bank::Postbank_de::APIv1::BusinessPartner;
 use Finance::Bank::Postbank_de::APIv1::Message;
 
-our $VERSION = '0.52';
+our $VERSION = '0.53';
 
 =head1 NAME
 

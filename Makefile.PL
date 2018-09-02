@@ -52,6 +52,7 @@ my %module = (
         'Moo'                    => 2,
         'List::Sliding::Changes' => 0.02,
         'Encode'                 => 0, # for decoding the content and dealing with umlauts
+        'Filter::signatures'     => 0.15,
     }, # e.g., Module::Name => 1.1
     MIN_PERL_VERSION => '5.008', # 5.8 for Encode, 5.6 for the syntax
     TEST_REQUIRES => {

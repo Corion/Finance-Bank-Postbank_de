@@ -1,5 +1,9 @@
 Revision history for Perl extension Finance::Bank::Postbank_de.
 
+0.53 2018-09-02
+  + Add missing prerequisite for Filter::signatures
+    This addresses RT #127022 , reported by Slaven Rezic
+
 0.52 2018-09-02
   [Distribution]
   + This is most likely a breaking change. I've tried to keep the old interface
