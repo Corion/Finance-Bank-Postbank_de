@@ -4,6 +4,7 @@ author:
   - 'Max Maischein <corion@cpan.org>'
 build_requires:
   ExtUtils::MakeMaker: '0'
+  File::Temp: '0'
   MIME::Lite: '3'
   Test::MockObject: '0'
   Test::More: '0'
