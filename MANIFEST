@@ -4,6 +4,7 @@ lib/Finance/Bank/Postbank_de.pm
 lib/Finance/Bank/Postbank_de/Account.pm
 lib/Finance/Bank/Postbank_de/APIv1.pm
 lib/Finance/Bank/Postbank_de/APIv1/Account.pm
+lib/Finance/Bank/Postbank_de/APIv1/BusinessPartner.pm
 lib/Finance/Bank/Postbank_de/APIv1/Depot.pm
 lib/Finance/Bank/Postbank_de/APIv1/Finanzstatus.pm
 lib/Finance/Bank/Postbank_de/APIv1/Message.pm
