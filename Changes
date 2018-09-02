@@ -5,6 +5,7 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
   + Merge the API branch, as the old website got switched off.
   + There is no compatibility shim yet to restore the functionality of the old
     module. The tests will currently fail, sorry.
+  + All files are now stored and read as UTF-8 indiscriminately.
 
 0.51 2018-07-17
   [Distribution]

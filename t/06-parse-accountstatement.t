@@ -19,7 +19,7 @@ my @acctnames = ("$FindBin::Bin/accountstatement.txt","$FindBin::Bin/accountstat
 my $canned_statement = do {local $/ = undef;
                            open my $fh, "< $acctnames[0]"
                              or die "Couldn't read $acctnames[0] : $!";
-                           binmode $fh, ':encoding(CP-1252)';
+                           binmode $fh, ':encoding(UTF-8)';
                            <$fh>};
 
 # Check that the parameter passing works :

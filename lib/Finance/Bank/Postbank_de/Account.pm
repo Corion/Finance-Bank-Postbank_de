@@ -103,7 +103,7 @@ sub slurp_file {
   local $/ = undef;
   open my $fh, "< $filename"
     or croak "Couldn't read from file '$filename' : $!";
-  binmode $fh, ':encoding(CP-1252)';
+  binmode $fh, ':encoding(UTF-8)';
   <$fh>;
 };
 
