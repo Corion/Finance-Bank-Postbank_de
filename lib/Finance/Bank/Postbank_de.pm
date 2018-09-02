@@ -376,8 +376,7 @@ EOX
 =head1 DESCRIPTION
 
 This module provides a rudimentary interface to the Postbank online banking system at
-https://banking.postbank.de/. You will need either Crypt::SSLeay or IO::Socket::SSL
-installed for HTTPS support to work with LWP.
+https://meine.postbank.de/.
 
 The interface was cooked up by me without taking a look at the other Finance::Bank
 modules. If you have any proposals for a change, they are welcome !
@@ -401,13 +400,13 @@ Creates a new object. It takes three named parameters :
 
 =over 4
 
-=item login => '9999999999'
+=item login => 'Petra.Pfiffig'
 
-This is your account number.
+This is your Postbank ID account name.
 
-=item password => '11111'
+=item password => '123456789'
 
-This is your PIN.
+This is your PIN / password.
 
 =item status => sub {}
 
@@ -466,12 +465,6 @@ Returns true if our banking session timed out.
 =head2 maintenance
 
 Returns true if the banking interface is currently unavailable due to maintenance.
-
-=head1 TODO:
-
-  * Add even more runtime tests to validate the HTML
-  * Streamline the site access to use even less bandwidth
-  * Use a proper HTML parser, like HTML::TreeBuilder
 
 =head1 AUTHOR
 
