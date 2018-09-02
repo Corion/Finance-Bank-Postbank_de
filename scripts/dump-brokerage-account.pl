@@ -42,11 +42,13 @@ my $finanzstatus = $postbank->navigate(
     path => ['banking_v1' => 'financialstatus']
 );
 
-my $messages = $finanzstatus->fetch_resource( 'messagebox' ); # messagebox->count
+#my $messages = $finanzstatus->fetch_resource( 'messagebox' ); # messagebox->count
 
 my @columns = qw(isin shortDescription amount averageQuote depotCurrQuote quoteCurrency depotCurrValue winOrLoss winOrLossCurrency );
 my @output;
-for my $account ( grep { $_->productType eq 'depot' } $finanzstatus->get_accountsPrivate ) {
+push @output, \@columns;
+my ($bp) = $finanzstatus->get_businesspartners;
+for my $account ( grep { $_->productType eq 'depot' } $bp->get_accounts ) {
 
     my $depot = $account->fetch_resource('depot', class => 'Finance::Bank::Postbank_de::APIv1::Depot');
 
