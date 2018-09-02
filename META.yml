@@ -24,6 +24,7 @@ no_index:
     - inc
 requires:
   Encode: '0'
+  HTTP::CookieJar::LWP: '0'
   IO::Socket::SSL: '0'
   LWP::Protocol::https: '0'
   List::Sliding::Changes: '0.02'

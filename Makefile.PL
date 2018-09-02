@@ -46,6 +46,7 @@ my %module = (
     'PREREQ_PM'    => {
         'WWW::Mechanize'         => 1.52,
         'LWP::Protocol::https'   => 0,
+        'HTTP::CookieJar::LWP'   => 0,
         'IO::Socket::SSL'        => 0, # For some constants as to what we want to verify
         'Mozilla::CA'            => 0,
         'Moo'                    => 2,
