@@ -2,6 +2,9 @@ Revision history for Perl extension Finance::Bank::Postbank_de.
 
 0.52 2018-09-02
   [Distribution]
+  + This is most likely a breaking change. I've tried to keep the old interface
+    alive and so far, the test suite passes with what I think are mostly
+    data changes and removal of old tests that reached too deep.
   + Merge the API branch, as the old website got switched off.
   + There is no compatibility shim yet to restore the functionality of the old
     module. The tests will currently fail, sorry.
