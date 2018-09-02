@@ -3,12 +3,14 @@ abstract: 'Check your Postbank.de bank account from Perl'
 author:
   - 'Max Maischein <corion@cpan.org>'
 build_requires:
+  Excel::Writer::XLSX: '0'
   ExtUtils::MakeMaker: '0'
   File::Temp: '0'
   MIME::Lite: '3'
   Test::MockObject: '0'
   Test::More: '0'
   Text::Balanced: '0'
+  Text::CSV_XS: '0'
   Text::Table: '0'
 configure_requires:
   ExtUtils::MakeMaker: '0'

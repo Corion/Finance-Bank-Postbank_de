@@ -48,11 +48,13 @@
       },
       "test" : {
          "requires" : {
+            "Excel::Writer::XLSX" : "0",
             "File::Temp" : "0",
             "MIME::Lite" : "3",
             "Test::MockObject" : "0",
             "Test::More" : "0",
             "Text::Balanced" : "0",
+            "Text::CSV_XS" : "0",
             "Text::Table" : "0"
          }
       }

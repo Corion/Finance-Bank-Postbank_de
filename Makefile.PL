@@ -58,13 +58,14 @@ my %module = (
     }, # e.g., Module::Name => 1.1
     MIN_PERL_VERSION => '5.008', # 5.8 for Encode, 5.6 for the syntax
     TEST_REQUIRES => {
-        'Test::More'       => 0,
-        'Text::Balanced'   => 0,
-        'Test::MockObject' => 0,
-        'MIME::Lite'       => 3.00,
-        'File::Temp'       => 0,
-        'Text::Table'      => 0, # well, author tests, but ...
-        'Text::CSV_XS'     => 0,
+        'Test::More'          => 0,
+        'Text::Balanced'      => 0,
+        'Test::MockObject'    => 0,
+        'MIME::Lite'          => 3.00,
+        'File::Temp'          => 0,
+        'Text::Table'         => 0, # well, author tests, but ...
+        'Text::CSV_XS'        => 0,
+        'Excel::Writer::XLSX' => 0,
     },
 
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
