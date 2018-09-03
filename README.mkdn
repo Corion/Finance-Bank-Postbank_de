@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/Corion/Filter-signatures.svg?branch=master)](https://github.com/Corion/Filter-signatures)
+[![Build Status](https://travis-ci.org/Corion/Finance-Bank-Postbank_de.svg?branch=master)](https://travis-ci.org/Corion/Finance-Bank-Postbank_de)
 
 # NAME
 
@@ -38,8 +38,7 @@ Finance::Bank::Postbank\_de - Check your Postbank.de bank account from Perl
 # DESCRIPTION
 
 This module provides a rudimentary interface to the Postbank online banking system at
-https://banking.postbank.de/. You will need either Crypt::SSLeay or IO::Socket::SSL
-installed for HTTPS support to work with LWP.
+https://meine.postbank.de/.
 
 The interface was cooked up by me without taking a look at the other Finance::Bank
 modules. If you have any proposals for a change, they are welcome !
@@ -61,13 +60,13 @@ ausdrueckliche noch eine implizierte Garantie.
 
 Creates a new object. It takes three named parameters :
 
-- login => '9999999999'
+- login => 'Petra.Pfiffig'
 
-    This is your account number.
+    This is your Postbank ID account name.
 
-- password => '11111'
+- password => '123456789'
 
-    This is your PIN.
+    This is your PIN / password.
 
 - status => sub {}
 
@@ -125,12 +124,6 @@ Returns true if our banking session timed out.
 
 Returns true if the banking interface is currently unavailable due to maintenance.
 
-# TODO:
-
-    * Add even more runtime tests to validate the HTML
-    * Streamline the site access to use even less bandwidth
-    * Use a proper HTML parser, like HTML::TreeBuilder
-
 # AUTHOR
 
 Max Maischein, <corion@cpan.org>
@@ -141,13 +134,13 @@ Max Maischein, <corion@cpan.org>
 
 # REPOSITORY
 
-The public repository of this module is 
+The public repository of this module is
 [https://github.com/Corion/Finance-Bank-Postbank\_de](https://github.com/Corion/Finance-Bank-Postbank_de).
 
 # SUPPORT
 
 The public support forum of this module is
-[http://perlmonks.org/](http://perlmonks.org/).
+[https://perlmonks.org/](https://perlmonks.org/).
 
 # BUG TRACKER
 
@@ -157,7 +150,7 @@ or via mail to [finance-bank-postbank\_de-Bugs@rt.cpan.org](https://metacpan.org
 
 # COPYRIGHT (c)
 
-Copyright 2003-2015 by Max Maischein `corion@cpan.org`.
+Copyright 2003-2018 by Max Maischein `corion@cpan.org`.
 
 # LICENSE
 

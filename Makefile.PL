@@ -85,7 +85,7 @@ sub get_module_info { %module }
 
 if( ! caller ) {
     # I should maybe use something like Shipwright...
-    #regen_README($main_file);
+    regen_README($main_file);
     #regen_EXAMPLES();
     WriteMakefile1(get_module_info);
 
