@@ -66,7 +66,7 @@ my %module = (
         'Text::Table'         => 0, # well, author tests, but ...
         'Text::CSV_XS'        => 0,
         'Excel::Writer::XLSX' => 0,
-        'Mojolicious'         => 0,
+        'Mojolicious::Lite'   => 0,
     },
 
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

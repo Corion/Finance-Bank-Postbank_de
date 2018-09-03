@@ -7,7 +7,7 @@ build_requires:
   ExtUtils::MakeMaker: '0'
   File::Temp: '0'
   MIME::Lite: '3'
-  Mojolicious: '0'
+  Mojolicious::Lite: '0'
   Test::MockObject: '0'
   Test::More: '0'
   Text::Balanced: '0'
