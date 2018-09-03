@@ -19,6 +19,7 @@ META.json
 META.yml
 README
 scripts/dump-brokerage-account.pl
+scripts/serve-brokerage-account.pl
 scripts/test-hal.pl
 t/01-api-account.t
 t/01-api-postbank.t

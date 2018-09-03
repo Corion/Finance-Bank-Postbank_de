@@ -67,6 +67,7 @@ my %module = (
         'Text::CSV_XS'        => 0,
         'Excel::Writer::XLSX' => 0,
         'Mojolicious::Lite'   => 0,
+        'POSIX'               => 0, # just to be complete
     },
 
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
