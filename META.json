@@ -52,6 +52,7 @@
             "File::Temp" : "0",
             "MIME::Lite" : "3",
             "Mojolicious::Lite" : "0",
+            "POSIX" : "0",
             "Test::MockObject" : "0",
             "Test::More" : "0",
             "Text::Balanced" : "0",
@@ -68,7 +69,7 @@
          "web" : "https://github.com/Corion/Finance-Bank-Postbank_de"
       }
    },
-   "version" : "0.54",
+   "version" : "0.55",
    "x_serialization_backend" : "JSON::PP version 2.97001",
    "x_static_install" : 1
 }
