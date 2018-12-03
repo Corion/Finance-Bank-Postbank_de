@@ -222,7 +222,7 @@ sub _build_account_numbers {
   my %numbers;
   # this currently includes the credit card numbers ...
   for my $acc ( $bp->get_accounts() ) {
-      $numbers{ $acc->iban } = $acc unless $acc->productType eq 'depot';
+      $numbers{ $acc->iban } = $acc if ($acc->productType ne 'DEPOT' and $acc->productType ne 'BAUFINANZIERUNG');
   };
 
   return $self->_account_numbers( \%numbers );
