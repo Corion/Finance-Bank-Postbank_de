@@ -11,8 +11,8 @@ Finance::Bank::Postbank\_de - Check your Postbank.de bank account from Perl
     require Crypt::SSLeay; # It's a prerequisite
     use Finance::Bank::Postbank_de;
     my $account = Finance::Bank::Postbank_de->new(
-                  login => '9999999999',
-                  password => '11111',
+                  login => 'Petra.Pfiffig',
+                  password => '123456789',
                   status => sub { shift;
                                   print join(" ", @_),"\n"
                                     if ($_[0] eq "HTTP Code")
