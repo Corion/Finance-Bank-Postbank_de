@@ -313,8 +313,8 @@ Finance::Bank::Postbank_de::Account - Postbank bank account class
   require Crypt::SSLeay; # It's a prerequisite
   use Finance::Bank::Postbank_de::Account;
   my $statement = Finance::Bank::Postbank_de::Account->parse_statement(
-                number => '9999999999',
-                password => '11111',
+                login => 'Petra.Pfiffig',
+                password => '123456789',
               );
   # Retrieve account data :
   print "Balance : ",$statement->balance->[1]," EUR\n";
