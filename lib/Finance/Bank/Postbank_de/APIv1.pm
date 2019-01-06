@@ -116,7 +116,7 @@ sub configure_ua_ssl( $self, $ua=$self->ua ) {
         @verify = ();
     } elsif( Net::SSLeay::SSLeay() <= 0x100010bf ) { # 1.0.1k
         @verify = (
-            SSL_fingerprint => 'sha256$C0F407E7D1562B52D8896B4A00DFF538CBC84407E95D8E0A7E5BFC6647B98967',
+            SSL_fingerprint => 'sha256$99043D1F58197BDDFAEA3F914A8693588B067D7DC85BF532D7B773A9ED98F915',
             SSL_ocsp_mode => IO::Socket::SSL::SSL_OCSP_NO_STAPLE(),
         );
     } else {
