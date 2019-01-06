@@ -142,7 +142,7 @@ sub configure_ua( $self, $config = $self->fetch_config ) {
 
     $ua->add_header(
         'api-key' => $config->{'iob5-base'}->{apiKey},
-        #'device-signature' => '494f423500225fd9',
+        'device-signature' => $config->{'iob5-base'}->{apiKey},
         accept => ['application/hal+json', '*/*'],
         keep_alive => 1,
         #                            /                businessCategory =Private Organization/                                jurisdictionC                         =DE/                                jurisdictionST                                 =Hessen/                                jurisdictionL                          =Frankfurt am Main/serialNumber=HRB 47141/C=DE/ST=Nordrhein-Westfalen/L=Bonn/O=DB Privat- und Firmenkundenbank AG/OU=Postbank Systems AG/CN=(?:banking|bankapi-public).postbank.de
