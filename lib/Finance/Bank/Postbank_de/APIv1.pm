@@ -32,19 +32,32 @@ Finance::Bank::Postbank_de::APIv1 - Postbank connection
 
 =cut
 
-#my $logger;
+has diagnostics => (
+    is => 'ro',
+    default => undef,
+);
+
+has logger => (
+    is => 'rw',
+    default => undef,
+);
+
 has ua => (
     is => 'ro',
-    default => sub( $class ) {
+    default => sub( $self ) {
         my $ua = WWW::Mechanize->new(
-            autocheck  => 1,
+            autocheck  => 0,
             keep_alive => 1,
             cookie_jar => HTTP::CookieJar::LWP->new(),
         );
-#use LWP::ConsoleLogger::Easy qw( debug_ua );
-#$logger = debug_ua($ua);
-#$logger->dump_content(0);
-#$logger->dump_text(0);
+
+        if( $self->diagnostics ) {
+            require LWP::ConsoleLogger::Easy;
+            my $logger = LWP::ConsoleLogger::Easy::debug_ua( $ua );
+            $logger->dump_content(0);
+            $logger->dump_text(0);
+            $self->logger($logger);
+        };
         $ua
     }
 );
