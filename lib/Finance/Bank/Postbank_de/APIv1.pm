@@ -161,14 +161,14 @@ sub login( $self, $username, $password ) {
     my $ua = $self->ua;
     my $loginUrl = $self->login_url();
 
-    my $r =
-    $ua->post(
+    local $ua->{autocheck};
+    my $r = $ua->post(
         $loginUrl,
-        #content => sprintf 'dummy=value&password=%s&username=%s', $password, $username
-        #content => sprintf 'password=%s&username=%s', $password, $username
         content => sprintf 'username=%s&password=%s', $username, $password
     );
-
+    if( ! $r->is_success ) {
+        die sprintf "HTTP Error: %03d %s", $r->code, $r->message;
+    };
     my $postbank = HAL::Resource->new(
         ua => $ua,
         %{ decode_json($ua->content)}
