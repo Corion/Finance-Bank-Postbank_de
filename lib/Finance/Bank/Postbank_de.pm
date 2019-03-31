@@ -16,7 +16,7 @@ use Mozilla::CA;
 
 #use IO::Socket::SSL qw(SSL_VERIFY_PEER SSL_VERIFY_NONE);
 
-our $VERSION = '0.56';
+our $VERSION = '0.57';
 
 has 'login' => (
     is => 'ro',

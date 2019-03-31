@@ -7,7 +7,7 @@ extends 'HAL::Resource';
 
 use Finance::Bank::Postbank_de::APIv1::Account;
 
-our $VERSION = '0.56';
+our $VERSION = '0.57';
 
 =head1 NAME
 
