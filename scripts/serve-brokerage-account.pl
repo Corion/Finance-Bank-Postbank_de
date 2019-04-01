@@ -38,8 +38,8 @@ sub fetch_information {
         path => ['banking_v1' => 'financialstatus']
     );
     
-    my @columns = qw(isin shortDescription amount averageQuote depotCurrQuote quoteCurrency depotCurrValue winOrLoss winOrLossCurrency );
-    my %nums; undef @nums{ qw(amount averageQuote depotCurrQuote depotCurrValue winOrLoss ) };
+    my @columns = qw(isin shortDescription amount depotCurrAverageQuote depotCurrQuote quoteCurrency depotCurrValue depotCurrWinOrLoss depotCurrency );
+    my %nums; undef @nums{ qw(amount depotCurrAverageQuote depotCurrQuote depotCurrValue depotCurrWinOrLoss ) };
     my @output;
     push @output, \@columns;
     my ($bp) = $finanzstatus->get_businesspartners;
