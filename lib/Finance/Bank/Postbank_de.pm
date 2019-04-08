@@ -222,6 +222,7 @@ sub _build_account_numbers {
   my %numbers;
   # this currently includes the credit card numbers ...
   for my $acc ( $bp->get_accounts() ) {
+      next unless defined $acc->iban;
       $numbers{ $acc->iban } = $acc if (!$acc->is_depot and !$acc->is_mortgage);
   };
 
