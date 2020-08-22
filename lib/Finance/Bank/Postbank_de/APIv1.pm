@@ -1,6 +1,6 @@
 package Finance::Bank::Postbank_de::APIv1;
 use Moo;
-use JSON 'decode_json';
+use JSON 'decode_json', 'encode_json';
 use Filter::signatures;
 no warnings 'experimental::signatures';
 use feature 'signatures';
@@ -178,6 +178,7 @@ sub login( $self, $username, $password ) {
     my $r = $ua->post(
         $loginUrl,
         content => sprintf 'username=%s&password=%s', $username, $password
+        content => encode_json( { postbankId => $username } ),
     );
     if( ! $r->is_success ) {
         die sprintf "HTTP Error: %03d %s", $r->code, $r->message;
