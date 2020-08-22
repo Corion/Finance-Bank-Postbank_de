@@ -166,7 +166,9 @@ sub configure_ua( $self, $config = $self->fetch_config ) {
 
 sub login_url( $self ) {
     my $config = $self->config;
+    #my $loginUrl = $config->{'iob5-base'}->{loginUrl};
     my $loginUrl = $config->{login}->{url};
+    #$loginUrl =~ s!%(\w+)%!$config->{'iob5-base'}->{$1}!ge;
     $loginUrl
 }
 
