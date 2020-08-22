@@ -111,7 +111,7 @@ sub fetch_config( $self ) {
         $self->diagnoseCertificateError( "$@ ");
     };
     my $config = decode_json( $ua->content );
-    if( ! exists $config->{ 'iob5-base' }) {
+    if( ! exists $config->{ 'base' }) {
         require Data::Dumper;
         croak "Invalid config retrieved: " . Data::Dumper::Dumper($config);
     };
@@ -154,8 +154,8 @@ sub configure_ua( $self, $config = $self->fetch_config ) {
     my $ua = $self->ua;
 
     $ua->add_header(
-        'api-key' => $config->{'iob5-base'}->{apiKey},
-        'device-signature' => $config->{'iob5-base'}->{apiKey},
+        'api-key' => $config->{'base'}->{apiKey},
+        #'device-signature' => $config->{'iob5-base'}->{apiKey},
         accept => ['application/hal+json', '*/*'],
         keep_alive => 1,
         #                            /                businessCategory =Private Organization/                                jurisdictionC                         =DE/                                jurisdictionST                                 =Hessen/                                jurisdictionL                          =Frankfurt am Main/serialNumber=HRB 47141/C=DE/ST=Nordrhein-Westfalen/L=Bonn/O=DB Privat- und Firmenkundenbank AG/OU=Postbank Systems AG/CN=(?:banking|bankapi-public).postbank.de
@@ -165,8 +165,7 @@ sub configure_ua( $self, $config = $self->fetch_config ) {
 
 sub login_url( $self ) {
     my $config = $self->config;
-    my $loginUrl = $config->{'iob5-base'}->{loginUrl};
-    $loginUrl =~ s!%(\w+)%!$config->{'iob5-base'}->{$1}!ge;
+    my $loginUrl = $config->{login}->{url};
     $loginUrl
 }
 
